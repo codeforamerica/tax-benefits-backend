@@ -1,6 +1,7 @@
 name: Plan the deployment pipeline
 
 on:
+  pull_request:
   workflow_call:
     inputs:
       environment:
