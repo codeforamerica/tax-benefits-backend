@@ -1,16 +1,18 @@
 name: Plan the deployment pipeline
 
 on:
-  pull_request:
   workflow_call:
     inputs:
       environment:
+        description: 'Environment to plan on'
+        default: 'aws-prod'
         required: true
         type: string
-      congfig:
+      config:
+        description: 'The OpenTofu configuration to plan'
         required: true
         type: string
-    config:
+    outputs:
       plan:
         description: "The plan output from the tofu plan command"
         value: ${{ jobs.plan.outputs.plan }}
@@ -23,6 +25,7 @@ on:
     inputs:
       environment:
         description: 'Environment to plan on'
+        default: 'aws-prod'
         required: true
         type: environment
       config:
@@ -62,4 +65,5 @@ jobs:
         working-directory: ./tofu/config/${{ inputs.config }}
         run: tofu plan -no-color
 
-      - run: echo "${{ steps.plan.outputs.stdout }}"
+      - name: Display plan
+        run: echo "${{ steps.plan.outputs.stdout }}"
