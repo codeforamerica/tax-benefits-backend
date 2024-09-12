@@ -10,13 +10,8 @@ module "logging" {
   # tflint-ignore: terraform_module_pinned_source
   source = "github.com/codeforamerica/tofu-modules/aws/logging"
 
-  bucket                   = "fyst-demo-logs"
-  acl                      = "private"
-  control_object_ownership = true
-  object_ownership         = "ObjectWriter"
-}
-  project     = "fyst"
-  environment = "demo"
+  project                  = "fyst"
+  environment              = "demo"
   cloudwatch_log_retention = 30
   log_groups = {
     "waf" = {
@@ -37,5 +32,5 @@ module "waf" {
   environment = "demo"
   domain      = "fileyourstatetaxes.org"
   log_bucket  = module.logging.bucket_domain_name
-  log_group = module.logging.log_groups["waf"]
+  log_group   = module.logging.log_groups["waf"]
 }
