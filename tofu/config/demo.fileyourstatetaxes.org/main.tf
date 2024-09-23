@@ -6,19 +6,19 @@ terraform {
   }
 }
 
-# TODO: Make a logging bucket module to make sure this is properly configured.
-#trivy:ignore:avd-aws-0088
-#trivy:ignore:avd-aws-0089
-#trivy:ignore:avd-aws-0090
-#trivy:ignore:avd-aws-0132
-module "log_bucket" {
-  source = "terraform-aws-modules/s3-bucket/aws"
-  version = "~> 4.1"
+module "logging" {
+  # tflint-ignore: terraform_module_pinned_source
+  source = "github.com/codeforamerica/tofu-modules/aws/logging"
 
-  bucket                   = "fyst-demo-logs"
-  acl                      = "private"
-  control_object_ownership = true
-  object_ownership         = "ObjectWriter"
+  project                  = "fyst"
+  environment              = "demo"
+  cloudwatch_log_retention = 30
+  log_groups = {
+    "waf" = {
+      name = "aws-waf-logs-cfa/fyst/demo"
+      tags = { source = "waf" }
+    }
+  }
 }
 
 # TODO: Make sure we have access logging configured.
@@ -31,5 +31,6 @@ module "waf" {
   project     = "fyst"
   environment = "demo"
   domain      = "fileyourstatetaxes.org"
-  log_bucket  = module.log_bucket.s3_bucket_bucket_domain_name
+  log_bucket  = module.logging.bucket_domain_name
+  log_group   = module.logging.log_groups["waf"]
 }
