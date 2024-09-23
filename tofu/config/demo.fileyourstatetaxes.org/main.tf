@@ -16,21 +16,24 @@ module "logging" {
   log_groups = {
     "waf" = {
       name = "aws-waf-logs-cfa/fyst/demo"
-      tags = { source = "waf" }
+      tags = {
+        source = "waf"
+        webacl = "fyst-demo"
+        domain = "demo.fileyourstatetaxes.org"
+      }
     }
   }
 }
 
-# TODO: Make sure we have access logging configured.
-#trivy:ignore:avd-aws-0010
+# TODO: Allow Detectify https://support.detectify.com/support/solutions/articles/48001049001-how-do-i-allow-detectify-to-scan-my-assets-
+
 module "waf" {
-  # TODO: Create releases for tofu-modules and pin to a release.
-  # tflint-ignore: terraform_module_pinned_source
-  source = "github.com/codeforamerica/tofu-modules/aws/cloudfront_waf"
+  source = "../../modules/aptible_waf"
 
   project     = "fyst"
   environment = "demo"
   domain      = "fileyourstatetaxes.org"
   log_bucket  = module.logging.bucket_domain_name
   log_group   = module.logging.log_groups["waf"]
+  aptible_environment = "vita-min-demo"
 }

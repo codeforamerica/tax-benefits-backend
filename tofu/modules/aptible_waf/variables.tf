@@ -1,0 +1,30 @@
+variable "aptible_environment" {
+    type        = string
+    description = "Name of the Aptible environment to attach the WAF to."
+}
+
+variable "domain" {
+  description = "Domain the WAF is protecting."
+  type        = string
+}
+
+variable "environment" {
+  description = "The environment in which the WAF is being deployed."
+  type        = string
+  default     = "development"
+}
+
+variable "log_bucket" {
+  type        = string
+  description = "S3 Bucket to send logs to."
+}
+
+variable "log_group" {
+  type        = string
+  description = "CloudWatch log group to send WAF logs to."
+}
+
+variable "project" {
+  type        = string
+  description = "Project the WAF is being deployed for."
+}
