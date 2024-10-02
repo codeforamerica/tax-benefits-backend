@@ -10,10 +10,11 @@ module "waf" {
   log_group   = var.log_group
 }
 
-data "aws_ip_ranges" "cloudfront" {
-  regions  = ["global"]
-  services = ["cloudfront"]
-}
+# TODO: Aptible endpoints only support up to 50 CIDRs, while CloudFront has 99.
+# data "aws_ip_ranges" "cloudfront" {
+#   regions  = ["global"]
+#   services = ["cloudfront"]
+# }
 
 module "endpoint" {
   # tflint-ignore: terraform_module_pinned_source
