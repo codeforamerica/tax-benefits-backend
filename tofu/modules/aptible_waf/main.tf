@@ -1,7 +1,7 @@
 module "waf" {
   # TODO: Create releases for tofu-modules and pin to a release.
   # tflint-ignore: terraform_module_pinned_source
-  source = "github.com/codeforamerica/tofu-modules?ref=aptible-endpoint/aws/cloudfront_waf"
+  source = "github.com/codeforamerica/tofu-modules/aws/cloudfront_waf"
 
   project     = var.project
   environment = var.environment
@@ -17,14 +17,14 @@ data "aws_ip_ranges" "cloudfront" {
 
 module "endpoint" {
   # tflint-ignore: terraform_module_pinned_source
-  source = "github.com/codeforamerica/tofu-modules?ref=aptible-endpoint/aptible/managed_endpoint"
+  source = "github.com/codeforamerica/tofu-modules/aptible/managed_endpoint"
 
   aptible_environment = var.aptible_environment
-  aptible_resource = "17865"
+  aptible_resource = 17865
   domain = var.domain
   subdomain = "origin.demo"
   public = true
 
-  # TODO: This fails with "Ip whitelist must contain at most 50 addresses or CIDRs"
-#   allowed_cidrs = data.aws_ip_ranges.cloudfront.cidr_blocks
+  # TODO: Aptible endpoints only support up to 50 CIDRs, while CloudFront has 99.
+  # allowed_cidrs = data.aws_ip_ranges.cloudfront.cidr_blocks
 }
