@@ -1,3 +1,17 @@
+resource "aws_wafv2_ip_set" "scanners" {
+  name               = "${var.project}-${var.environment}-security-scanners"
+  description        = "Security scanners that are allowed to access the site."
+  scope              = "CLOUDFRONT"
+  ip_address_version = "IPV4"
+  addresses          = [
+    # Detectify
+    "52.17.9.21/32",
+    "52.17.98.131/32",
+    # SecurityMetrics
+    "162.211.152.0/24"
+  ]
+}
+
 module "waf" {
   # TODO: Create releases for tofu-modules and pin to a release.
   # tflint-ignore: terraform_module_pinned_source
@@ -8,6 +22,15 @@ module "waf" {
   domain      = var.domain
   log_bucket  = var.log_bucket
   log_group   = var.log_group
+
+  ip_set_rules = {
+    detectify = {
+      name = "fyst-demo-security-scanners"
+      priority = 0
+      action = "allow"
+      arn = aws_wafv2_ip_set.scanners.arn
+    }
+  }
 }
 
 # TODO: Aptible endpoints only support up to 50 CIDRs, while CloudFront has 99.
