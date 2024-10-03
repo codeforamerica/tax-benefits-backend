@@ -1,6 +1,12 @@
+variable "allow_security_scanners" {
+  type        = bool
+  description = "Allow security scanners to access the site."
+  default     = false
+}
+
 variable "aptible_environment" {
-    type        = string
-    description = "Name of the Aptible environment to attach the WAF to."
+  type        = string
+  description = "Name of the Aptible environment to attach the WAF to."
 }
 
 variable "domain" {

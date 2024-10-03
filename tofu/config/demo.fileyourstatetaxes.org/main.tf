@@ -25,15 +25,14 @@ module "logging" {
   }
 }
 
-# TODO: Allow Detectify https://support.detectify.com/support/solutions/articles/48001049001-how-do-i-allow-detectify-to-scan-my-assets-
-
 module "waf" {
   source = "../../modules/aptible_waf"
 
-  project     = "fyst"
-  environment = "demo"
-  domain      = "fileyourstatetaxes.org"
-  log_bucket  = module.logging.bucket_domain_name
-  log_group   = module.logging.log_groups["waf"]
-  aptible_environment = "vita-min-demo"
+  project                 = "fyst"
+  environment             = "demo"
+  domain                  = "fileyourstatetaxes.org"
+  log_bucket              = module.logging.bucket_domain_name
+  log_group               = module.logging.log_groups["waf"]
+  aptible_environment     = "vita-min-demo"
+  allow_security_scanners = true
 }
