@@ -16,7 +16,6 @@ resource "aws_wafv2_ip_set" "scanners" {
 
 module "waf" {
   # TODO: Create releases for tofu-modules and pin to a release.
-  # tflint-ignore: terraform_module_pinned_source
   source = "github.com/codeforamerica/tofu-modules/aws/cloudfront_waf"
 
   project     = var.project
@@ -42,8 +41,7 @@ module "waf" {
 # }
 
 module "endpoint" {
-  # tflint-ignore: terraform_module_pinned_source
-  source = "github.com/codeforamerica/tofu-modules/aptible/managed_endpoint"
+  source = "github.com/codeforamerica/tofu-modules-aptible-managed-endpoint"
 
   aptible_environment = var.aptible_environment
   aptible_resource    = 17865

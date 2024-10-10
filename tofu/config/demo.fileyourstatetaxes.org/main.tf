@@ -7,7 +7,6 @@ terraform {
 }
 
 module "logging" {
-  # tflint-ignore: terraform_module_pinned_source
   source = "github.com/codeforamerica/tofu-modules/aws/logging"
 
   project                  = "fyst"
