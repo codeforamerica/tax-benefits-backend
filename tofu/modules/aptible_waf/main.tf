@@ -15,8 +15,7 @@ resource "aws_wafv2_ip_set" "scanners" {
 }
 
 module "waf" {
-  # TODO: Create releases for tofu-modules and pin to a release.
-  source = "github.com/codeforamerica/tofu-modules/aws/cloudfront_waf"
+  source = "github.com/codeforamerica/tofu-modules-aws-cloudfront-waf?ref=1.0.0"
 
   project     = var.project
   environment = var.environment
@@ -41,7 +40,7 @@ module "waf" {
 # }
 
 module "endpoint" {
-  source = "github.com/codeforamerica/tofu-modules-aptible-managed-endpoint"
+  source = "github.com/codeforamerica/tofu-modules-aptible-managed-endpoint?ref=1.0.0"
 
   aptible_environment = var.aptible_environment
   aptible_resource    = 17865
