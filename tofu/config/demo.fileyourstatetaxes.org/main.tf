@@ -3,12 +3,12 @@ terraform {
     bucket = "tax-benefits-prod-tfstate"
     key    = "demo.fileyourstatetaxes.org.tfstate"
     region = "us-east-1"
+    dynamodb_table = "prod.tfstate"
   }
 }
 
 module "logging" {
-  # tflint-ignore: terraform_module_pinned_source
-  source = "github.com/codeforamerica/tofu-modules/aws/logging"
+  source = "github.com/codeforamerica/tofu-modules-aws-logging?ref=1.0.0"
 
   project                  = "fyst"
   environment              = "demo"

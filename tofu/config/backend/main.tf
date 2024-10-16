@@ -3,13 +3,12 @@ terraform {
     bucket = "tax-benefits-prod-tfstate"
     key    = "backend.tfstate"
     region = "us-east-1"
+    dynamodb_table = "prod.tfstate"
   }
 }
 
 module "backend" {
-  # TODO: Create releases for tofu-modules and pin to a release.
-  # tflint-ignore: terraform_module_pinned_source
-  source = "github.com/codeforamerica/tofu-modules/aws/backend"
+  source = "github.com/codeforamerica/tofu-modules-aws-backend?ref=1.0.0"
 
   project     = "tax-benefits"
   environment = "prod"

@@ -33,4 +33,4 @@ rm terraform.tfstate terraform.tfstate.backup
 
 Updates can be applied as usual with `tofu plan` and `tofu apply`.
 
-[backend-module]: https://github.com/codeforamerica/tofu-modules/tree/main/aws/backend
+[backend-module]: https://github.com/codeforamerica/tofu-modules-aws-backend
