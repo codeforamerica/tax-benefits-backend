@@ -9,6 +9,11 @@ variable "aptible_environment" {
   description = "Name of the Aptible environment to attach the WAF to."
 }
 
+variable "aptible_app_id" {
+  type = number
+  description = "Id of the Aptible app to attach the WAF to."
+}
+
 variable "domain" {
   description = "Domain the WAF is protecting."
   type        = string

@@ -43,9 +43,9 @@ module "endpoint" {
   source = "github.com/codeforamerica/tofu-modules-aptible-managed-endpoint?ref=1.0.0"
 
   aptible_environment = var.aptible_environment
-  aptible_resource    = 17865
+  aptible_resource    = var.aptible_app_id
   domain              = var.domain
-  subdomain           = "origin.demo"
+  subdomain           = "origin.${var.environment}"
   public              = true
 
   # TODO: Aptible endpoints only support up to 50 CIDRs, while CloudFront has 99.
