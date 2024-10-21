@@ -15,13 +15,14 @@ resource "aws_wafv2_ip_set" "scanners" {
 }
 
 module "waf" {
-  source = "github.com/codeforamerica/tofu-modules-aws-cloudfront-waf?ref=1.0.0"
+  source = "github.com/codeforamerica/tofu-modules-aws-cloudfront-waf?ref=1.1.0"
 
   project     = var.project
   environment = var.environment
   domain      = var.domain
   log_bucket  = var.log_bucket
   log_group   = var.log_group
+  passive     = var.passive
 
   ip_set_rules = var.allow_security_scanners ? {
     detectify = {
