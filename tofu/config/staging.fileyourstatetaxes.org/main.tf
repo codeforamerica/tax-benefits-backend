@@ -8,7 +8,7 @@ terraform {
 }
 
 module "logging" {
-  source = "github.com/codeforamerica/tofu-modules-aws-logging?ref=1.1.0"
+  source = "github.com/codeforamerica/tofu-modules-aws-logging?ref=1.2.1"
 
   project                  = "fyst"
   environment              = "staging"
