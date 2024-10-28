@@ -45,3 +45,9 @@ variable "project" {
   type        = string
   description = "Project the WAF is being deployed for."
 }
+
+variable "subdomain" {
+  type        = string
+  description = "Subdomain for the application. Defaults to the environment."
+  default     = ""
+}

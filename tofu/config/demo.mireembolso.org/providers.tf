@@ -3,8 +3,8 @@ provider "aws" {
 
   default_tags {
     tags = {
-      project     = "fyst"
-      environment = "staging"
+      project     = "gyr-es"
+      environment = "demo"
     }
   }
 }

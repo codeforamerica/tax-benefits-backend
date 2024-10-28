@@ -3,7 +3,7 @@ provider "aws" {
 
   default_tags {
     tags = {
-      project     = "gyr-es"
+      project     = "ctc"
       environment = "staging"
     }
   }

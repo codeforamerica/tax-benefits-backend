@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     bucket = "tax-benefits-prod-tfstate"
-    key    = "staging.mireembolso.org.tfstate"
+    key    = "ctc.staging.getyourrefund.org.tfstate"
     region = "us-east-1"
     dynamodb_table = "prod.tfstate"
   }
@@ -10,16 +10,16 @@ terraform {
 module "logging" {
   source = "github.com/codeforamerica/tofu-modules-aws-logging?ref=1.1.0"
 
-  project                  = "gyr-es"
+  project                  = "ctc"
   environment              = "staging"
   cloudwatch_log_retention = 30
   log_groups = {
     "waf" = {
-      name = "aws-waf-logs-cfa/gyr-es/staging"
+      name = "aws-waf-logs-cfa/ctc/staging"
       tags = {
         source = "waf"
-        webacl = "gyr-es-staging"
-        domain = "staging.mireembolso.org"
+        webacl = "ctc-staging"
+        domain = "ctc.staging.getyourrefund.org"
       }
     }
   }
@@ -28,9 +28,10 @@ module "logging" {
 module "waf" {
   source = "../../modules/aptible_waf"
 
-  project                 = "gyr-es"
+  project                 = "ctc"
   environment             = "staging"
-  domain                  = "mireembolso.org"
+  domain                  = "getyourrefund.org"
+  subdomain               = "ctc.staging"
   log_bucket              = module.logging.bucket_domain_name
   log_group               = module.logging.log_groups["waf"]
   aptible_environment     = "vita-min-staging"
