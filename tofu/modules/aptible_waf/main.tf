@@ -16,7 +16,7 @@ resource "aws_wafv2_ip_set" "scanners" {
 }
 
 module "waf" {
-  source = "github.com/codeforamerica/tofu-modules-aws-cloudfront-waf?ref=1.1.0"
+  source = "github.com/codeforamerica/tofu-modules-aws-cloudfront-waf?ref=1.2.0"
 
   project     = var.project
   environment = var.environment
@@ -32,6 +32,15 @@ module "waf" {
       priority = 0
       action   = "allow"
       arn      = aws_wafv2_ip_set.scanners["this"].arn
+    }
+  } : {}
+
+  rate_limit_rules = var.rate_limit_requests > 0 ? {
+    base = {
+      action = var.passive ? "count" : "block"
+      priority = 100
+      limit = var.rate_limit_requests
+      window = var.rate_limit_window
     }
   } : {}
 }

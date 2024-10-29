@@ -36,5 +36,4 @@ module "waf" {
   aptible_environment     = "vita-min-demo"
   aptible_app_id          = 17865
   allow_security_scanners = true
-  passive                 = true
 }
