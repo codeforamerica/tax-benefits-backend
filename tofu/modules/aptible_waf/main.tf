@@ -24,7 +24,7 @@ module "waf" {
   log_bucket  = var.log_bucket
   log_group   = var.log_group
   passive     = var.passive
-  subdomain = local.subdomain
+  subdomain   = local.subdomain
 
   ip_set_rules = var.allow_security_scanners ? {
     detectify = {
@@ -37,10 +37,10 @@ module "waf" {
 
   rate_limit_rules = var.rate_limit_requests > 0 ? {
     base = {
-      action = var.passive ? "count" : "block"
+      action   = var.passive ? "count" : "block"
       priority = 100
-      limit = var.rate_limit_requests
-      window = var.rate_limit_window
+      limit    = var.rate_limit_requests
+      window   = var.rate_limit_window
     }
   } : {}
 }

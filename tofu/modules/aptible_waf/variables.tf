@@ -10,7 +10,7 @@ variable "aptible_environment" {
 }
 
 variable "aptible_app_id" {
-  type = number
+  type        = number
   description = "Id of the Aptible app to attach the WAF to."
 }
 

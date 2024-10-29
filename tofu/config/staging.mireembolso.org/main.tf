@@ -1,8 +1,8 @@
 terraform {
   backend "s3" {
-    bucket = "tax-benefits-prod-tfstate"
-    key    = "staging.mireembolso.org.tfstate"
-    region = "us-east-1"
+    bucket         = "tax-benefits-prod-tfstate"
+    key            = "staging.mireembolso.org.tfstate"
+    region         = "us-east-1"
     dynamodb_table = "prod.tfstate"
   }
 }
