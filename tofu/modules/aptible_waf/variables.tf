@@ -49,7 +49,7 @@ variable "project" {
 variable "rate_limit_requests" {
   type        = number
   description = "Number of requests allowed in the rate limit window. Minimum of 10, or set to 0 to disable rate limiting."
-  default     = 20
+  default     = 100
 }
 
 variable "rate_limit_window" {
