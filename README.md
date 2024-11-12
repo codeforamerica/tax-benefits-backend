@@ -12,7 +12,8 @@ the equivalent version of [Terraform].
 ### Local
 
 To run the configurations locally, you will need to have AWS credentials loaded
-from [Identity Center][identity-center], and installed OpenTofu.
+from [Identity Center][identity-center], an [Aptible SSO token][aptible-sso],
+and OpenTofu installed.
 
 Navigate to the configuration you would like to plan or apply, then run the
 plan command to see what changes will be made:
@@ -56,6 +57,7 @@ gh run view <run-id> --log
 To run the workflow for a branch other than `main`, you can pass the
 `--ref <branch-name>` flag.
 
+[aptible-sso]: https://www.aptible.com/docs/core-concepts/security-compliance/authentication/sso#cli-token-for-sso
 [deploy]: https://github.com/codeforamerica/tax-benefits-backend/actions/workflows/deploy.yaml
 [github-cli]: https://cli.github.com/
 [hcl]: https://github.com/hashicorp/hcl

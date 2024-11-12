@@ -30,6 +30,7 @@ override.tf.json
 
 # Ignore the plan output of command: terraform plan -out=tfplan
 *tfplan*
+import.tf
 
 # Ignore CLI configuration files
 .terraformrc
