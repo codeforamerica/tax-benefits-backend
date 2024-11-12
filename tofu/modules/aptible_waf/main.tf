@@ -1,18 +1,11 @@
 resource "aws_wafv2_ip_set" "scanners" {
-  for_each = var.allow_security_scanners ? toset(["this"]) : []
-  # for_each = toset(["this"])
+  for_each = var.allow_security_scans ? toset(["this"]) : []
 
   name               = "${var.project}-${var.environment}-security-scanners"
   description        = "Security scanners that are allowed to access the site."
   scope              = "CLOUDFRONT"
   ip_address_version = "IPV4"
-  addresses = [
-    # Detectify
-    "52.17.9.21/32",
-    "52.17.98.131/32",
-    # SecurityMetrics
-    "162.211.152.0/24"
-  ]
+  addresses = var.security_scan_cidrs
 }
 
 module "waf" {
@@ -26,7 +19,7 @@ module "waf" {
   passive     = var.passive
   subdomain   = local.subdomain
 
-  ip_set_rules = var.allow_security_scanners ? {
+  ip_set_rules = var.allow_security_scans ? {
     detectify = {
       name     = "fyst-demo-security-scanners"
       priority = 0

@@ -36,5 +36,5 @@ module "waf" {
   log_group               = module.logging.log_groups["waf"]
   aptible_environment     = "vita-min-staging"
   aptible_app_id          = 17866
-  allow_security_scanners = false
+  allow_security_scans = false
 }

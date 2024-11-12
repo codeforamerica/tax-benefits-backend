@@ -1,17 +1,17 @@
-variable "allow_security_scanners" {
+variable "allow_security_scans" {
   type        = bool
-  description = "Allow security scanners to access the site."
+  description = "Allow security scanners to bypass the WAF."
   default     = false
-}
-
-variable "aptible_environment" {
-  type        = string
-  description = "Name of the Aptible environment to attach the WAF to."
 }
 
 variable "aptible_app_id" {
   type        = number
   description = "Id of the Aptible app to attach the WAF to."
+}
+
+variable "aptible_environment" {
+  type        = string
+  description = "Name of the Aptible environment to attach the WAF to."
 }
 
 variable "domain" {
@@ -56,6 +56,18 @@ variable "rate_limit_window" {
   type        = number
   description = "Time window, in seconds, for the rate limit. Options are: 60, 120, 300, 600"
   default     = 60
+}
+
+variable "security_scan_cidrs" {
+  type = list(string)
+  description = "CIDRs for security scanners to allow through the WAF. Defaults to Detectify and SecurityMetrics CIDRs."
+  default     = [
+    # Detectify
+    "52.17.9.21/32",
+    "52.17.98.131/32",
+    # SecurityMetrics
+    "162.211.152.0/24"
+  ]
 }
 
 variable "subdomain" {
