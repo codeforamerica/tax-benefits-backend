@@ -14,9 +14,11 @@ crash.*.log
 # control as they are data points which are potentially sensitive and subject
 # to change depending on the environment.
 *.tfvars
-!testing.tfvars
+!trivy.tfvars
 *.tfvars.json
 .env
+*.env
+!sample.env
 
 # Ignore override files as they are usually used to override resources locally and so
 # are not checked in

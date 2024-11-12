@@ -1,0 +1,66 @@
+site_name: Tax Benefits Backend Infrastructure
+repo_url: https://github.com/codeforamerica/tax-benefits-backend
+edit_uri: edit/main/docs/
+
+plugins:
+  - mkdocs-nav-weight
+  - search
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - github-callouts
+  - footnotes
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+
+extra_javascript:
+  - assets/javascripts/mermaid.js
+theme:
+  name: material
+  icon:
+    logo: material/cloud-braces
+  palette:
+    scheme: slate
+  features:
+    - content.code.copy
+    - content.code.select
+    - content.action.edit
+    - navigation.path
+    - navigation.top
+    - toc.follow
+    - toc.integrate
+    - search.highlight
+    - search.suggest
+
+extra:
+  generator: false
+  social:
+    - icon: material/web
+      link: https://codeforamerica.org/
+      name: Code for America website
+    - icon: fontawesome/brands/github
+      link: https://github.com/codeforamerica
+      name: Code for America on GitHub
+    - icon: fontawesome/brands/threads
+      link: https://www.twitter.com/codeforamerica
+      name: Code for America on Threads
+    - icon: fontawesome/brands/x-twitter
+      link: https://www.threads.net/@codeforamerica
+      name: Code for America on X (formerly Twitter)
+
+copyright: Produced by Code for America under the MIT license.
