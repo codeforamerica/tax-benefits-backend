@@ -1,0 +1,3 @@
+misconfigurations:
+  # Ignore Dockerfile healthcheck.
+  - id: AVD-DS-0026
