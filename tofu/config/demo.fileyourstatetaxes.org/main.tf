@@ -28,12 +28,12 @@ module "logging" {
 module "waf" {
   source = "../../modules/aptible_waf"
 
-  project                 = "fyst"
-  environment             = "demo"
-  domain                  = "fileyourstatetaxes.org"
-  log_bucket              = module.logging.bucket_domain_name
-  log_group               = module.logging.log_groups["waf"]
-  aptible_environment     = "vita-min-demo"
-  aptible_app_id          = 17865
+  project              = "fyst"
+  environment          = "demo"
+  domain               = "fileyourstatetaxes.org"
+  log_bucket           = module.logging.bucket_domain_name
+  log_group            = module.logging.log_groups["waf"]
+  aptible_environment  = "vita-min-demo"
+  aptible_app_id       = 17865
   allow_security_scans = true
 }
