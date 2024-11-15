@@ -1,3 +1,9 @@
+variable "allow_gyr_uploads" {
+  type        = bool
+  description = "Exempt GetYourRefund upload paths from body size restrictions."
+  default     = false
+}
+
 variable "allow_security_scans" {
   type        = bool
   description = "Allow security scanners to bypass the WAF."
@@ -59,9 +65,9 @@ variable "rate_limit_window" {
 }
 
 variable "security_scan_cidrs" {
-  type = list(string)
+  type        = list(string)
   description = "CIDRs for security scanners to allow through the WAF. Defaults to Detectify and SecurityMetrics CIDRs."
-  default     = [
+  default = [
     # Detectify
     "52.17.9.21/32",
     "52.17.98.131/32",

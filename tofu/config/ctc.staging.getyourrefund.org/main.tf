@@ -28,13 +28,13 @@ module "logging" {
 module "waf" {
   source = "../../modules/aptible_waf"
 
-  project                 = "ctc"
-  environment             = "staging"
-  domain                  = "getyourrefund.org"
-  subdomain               = "ctc.staging"
-  log_bucket              = module.logging.bucket_domain_name
-  log_group               = module.logging.log_groups["waf"]
-  aptible_environment     = "vita-min-staging"
-  aptible_app_id          = 17866
+  project              = "ctc"
+  environment          = "staging"
+  domain               = "getyourrefund.org"
+  subdomain            = "ctc.staging"
+  log_bucket           = module.logging.bucket_domain_name
+  log_group            = module.logging.log_groups["waf"]
+  aptible_environment  = "vita-min-staging"
+  aptible_app_id       = 17866
   allow_security_scans = false
 }

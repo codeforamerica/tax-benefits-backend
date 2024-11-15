@@ -5,11 +5,11 @@ resource "aws_wafv2_ip_set" "scanners" {
   description        = "Security scanners that are allowed to access the site."
   scope              = "CLOUDFRONT"
   ip_address_version = "IPV4"
-  addresses = var.security_scan_cidrs
+  addresses          = var.security_scan_cidrs
 }
 
 module "waf" {
-  source = "github.com/codeforamerica/tofu-modules-aws-cloudfront-waf?ref=1.2.0"
+  source = "github.com/codeforamerica/tofu-modules-aws-cloudfront-waf?ref=1.4.0"
 
   project     = var.project
   environment = var.environment
@@ -18,6 +18,8 @@ module "waf" {
   log_group   = var.log_group
   passive     = var.passive
   subdomain   = local.subdomain
+
+  upload_paths = var.allow_gyr_uploads ? local.gyr_upload_paths : []
 
   ip_set_rules = var.allow_security_scans ? {
     detectify = {
