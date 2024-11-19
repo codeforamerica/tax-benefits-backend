@@ -25,6 +25,15 @@ module "logging" {
   }
 }
 
+# We don't need to create any secrets here, but we need the infrastructure for
+# other modules to utilize.
+module "secrets" {
+  source = "github.com/codeforamerica/tofu-modules-aws-secrets?ref=1.0.0"
+
+  project     = "gyr"
+  environment = "demo"
+}
+
 module "waf" {
   source = "../../modules/aptible_waf"
 
@@ -38,4 +47,5 @@ module "waf" {
   allow_gyr_uploads    = true
   allow_security_scans = true
   rate_limit_requests  = 200
+  secrets_key_arn      = module.secrets.kms_key_arn
 }
