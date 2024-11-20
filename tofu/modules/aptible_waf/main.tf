@@ -8,8 +8,27 @@ resource "aws_wafv2_ip_set" "scanners" {
   addresses          = var.security_scan_cidrs
 }
 
+module "origin_secret" {
+  source  = "terraform-aws-modules/secrets-manager/aws"
+  version = "~> 1.3"
+
+  name_prefix             = "${var.project}/${var.environment}/origin/token-"
+  create_random_password  = true
+  description             = "Token used to verify traffic at the origin."
+  kms_key_id              = var.secrets_key_arn
+  # TODO: Update the window
+  recovery_window_in_days = 0
+
+  ignore_secret_changes = true
+}
+
+data "aws_secretsmanager_secret_version" "origin_token" {
+  secret_id = module.origin_secret.secret_id
+}
+
 module "waf" {
   source = "github.com/codeforamerica/tofu-modules-aws-cloudfront-waf?ref=1.4.0"
+  depends_on = [module.origin_secret.secret_id]
 
   project     = var.project
   environment = var.environment
@@ -18,6 +37,10 @@ module "waf" {
   log_group   = var.log_group
   passive     = var.passive
   subdomain   = local.subdomain
+
+  custom_headers = {
+    x-origin-token = data.aws_secretsmanager_secret_version.origin_token.secret_string
+  }
 
   upload_paths = var.allow_gyr_uploads ? local.gyr_upload_paths : []
 

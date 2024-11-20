@@ -64,6 +64,11 @@ variable "rate_limit_window" {
   default     = 60
 }
 
+variable "secrets_key_arn" {
+  type        = string
+  description = "ARN of the KMS key for secrets. This will be used to store and reference the origin token."
+}
+
 variable "security_scan_cidrs" {
   type        = list(string)
   description = "CIDRs for security scanners to allow through the WAF. Defaults to Detectify and SecurityMetrics CIDRs."

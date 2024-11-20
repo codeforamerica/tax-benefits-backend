@@ -25,6 +25,15 @@ module "logging" {
   }
 }
 
+# We don't need to create any secrets here, but we need the infrastructure for
+# other modules to utilize.
+module "secrets" {
+  source = "github.com/codeforamerica/tofu-modules-aws-secrets?ref=1.0.0"
+
+  project     = "fyst"
+  environment = "staging"
+}
+
 module "waf" {
   source = "../../modules/aptible_waf"
 
@@ -36,4 +45,5 @@ module "waf" {
   aptible_environment  = "vita-min-staging"
   aptible_app_id       = 17866
   allow_security_scans = false
+  secrets_key_arn      = module.secrets.kms_key_arn
 }
