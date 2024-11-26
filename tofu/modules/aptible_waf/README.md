@@ -38,9 +38,9 @@ tofu plan
 ## Rules
 
 > [!NOTE]
-> These rules are managed by the `cloudfront_waf` module. Review the
-> [documentation][cloudfront-waf] for this module for the most up to date
-> information.
+> These rules are managed by the
+> [`codeforamerica/tofu-modules-aws-cloudfront-waf`][cloudfront-waf] module.
+> Review the documentation for this module for the most up-to-date information.
 
 The WAF is configured with the following managed rules groups. The priorities of
 these rules are spaced out to allow for custom rules to be inserted between.
