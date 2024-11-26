@@ -63,12 +63,6 @@ module "waf" {
   } : {}
 }
 
-# TODO: Aptible endpoints only support up to 50 CIDRs, while CloudFront has 99.
-# data "aws_ip_ranges" "cloudfront" {
-#   regions  = ["global"]
-#   services = ["cloudfront"]
-# }
-
 module "endpoint" {
   source = "github.com/codeforamerica/tofu-modules-aptible-managed-endpoint?ref=1.0.0"
 
@@ -77,7 +71,4 @@ module "endpoint" {
   domain              = var.domain
   subdomain           = "origin.${local.subdomain}"
   public              = true
-
-  # TODO: Aptible endpoints only support up to 50 CIDRs, while CloudFront has 99.
-  # allowed_cidrs = data.aws_ip_ranges.cloudfront.cidr_blocks
 }
