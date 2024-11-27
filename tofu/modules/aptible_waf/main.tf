@@ -12,10 +12,10 @@ module "origin_secret" {
   source  = "terraform-aws-modules/secrets-manager/aws"
   version = "~> 1.3"
 
-  name_prefix             = "${var.project}/${var.environment}/origin/token-"
-  create_random_password  = true
-  description             = "Token used to verify traffic at the origin."
-  kms_key_id              = var.secrets_key_arn
+  name_prefix            = "${var.project}/${var.environment}/origin/token-"
+  create_random_password = true
+  description            = "Token used to verify traffic at the origin."
+  kms_key_id             = var.secrets_key_arn
   # TODO: Update the window
   recovery_window_in_days = 0
 
@@ -27,7 +27,7 @@ data "aws_secretsmanager_secret_version" "origin_token" {
 }
 
 module "waf" {
-  source = "github.com/codeforamerica/tofu-modules-aws-cloudfront-waf?ref=1.4.0"
+  source     = "github.com/codeforamerica/tofu-modules-aws-cloudfront-waf?ref=1.4.1"
   depends_on = [module.origin_secret.secret_id]
 
   project     = var.project
