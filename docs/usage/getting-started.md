@@ -1,3 +1,7 @@
+---
+# Make sure this is the first page in the navigation order.
+weight: -1
+---
 # Getting Started
 
 Before you can begin, you must have the following prerequisites installed:
@@ -6,7 +10,7 @@ Before you can begin, you must have the following prerequisites installed:
 > It can be useful to place any required environment variables, such as
 > `AWS_PROFILE` in a `.env` file. You can find a [sample `.env`][sample-env]
 > file in the root of the repository.
-> 
+>
 > This file can be sourced using `source .env` or by using a tool like
 > [oh-my-zsh][omz], and will be ignored by version control.
 
@@ -26,7 +30,7 @@ unintended consequences.
 > [!NOTE]
 > For the following examples, we'll use the `staging.fileyourstatetaxes.org`
 > configuration. Replace this with the appropriate configuration directory.
-> 
+>
 > All commands should be run from the configuration directory.
 
 First, we'll need to move to the configuration directory and make sure it's
