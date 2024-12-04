@@ -27,7 +27,7 @@ data "aws_secretsmanager_secret_version" "origin_token" {
 }
 
 module "waf" {
-  source     = "github.com/codeforamerica/tofu-modules-aws-cloudfront-waf?ref=1.4.1"
+  source     = "github.com/codeforamerica/tofu-modules-aws-cloudfront-waf?ref=1.5.0"
   depends_on = [module.origin_secret.secret_id]
 
   project     = var.project
