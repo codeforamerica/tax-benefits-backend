@@ -45,5 +45,6 @@ module "waf" {
   aptible_environment  = "vita-min-staging"
   aptible_app_id       = 17866
   allow_security_scans = false
+  allow_gyr_uploads    = true
   secrets_key_arn      = module.secrets.kms_key_arn
 }
