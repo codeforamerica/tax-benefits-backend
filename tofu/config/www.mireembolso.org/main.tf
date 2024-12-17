@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     bucket         = "tax-benefits-prod-tfstate"
-    key            = "demo.mireembolso.org.tfstate"
+    key            = "www.mireembolso.org.tfstate"
     region         = "us-east-1"
     dynamodb_table = "prod.tfstate"
   }
@@ -11,15 +11,15 @@ module "logging" {
   source = "github.com/codeforamerica/tofu-modules-aws-logging?ref=1.2.1"
 
   project                  = "gyr-es"
-  environment              = "demo"
+  environment              = "production"
   cloudwatch_log_retention = 30
   log_groups = {
     "waf" = {
-      name = "aws-waf-logs-cfa/gyr-es/demo"
+      name = "aws-waf-logs-cfa/gyr-es/production"
       tags = {
         source = "waf"
-        webacl = "gyr-es-demo"
-        domain = "demo.mireembolso.org"
+        webacl = "gyr-es-production"
+        domain = "www.mireembolso.org"
       }
     }
   }
@@ -31,20 +31,22 @@ module "secrets" {
   source = "github.com/codeforamerica/tofu-modules-aws-secrets?ref=1.0.0"
 
   project     = "gyr-es"
-  environment = "demo"
+  environment = "production"
 }
 
 module "waf" {
   source = "../../modules/aptible_waf"
 
   project              = "gyr-es"
-  environment          = "demo"
+  environment          = "production"
   domain               = "mireembolso.org"
+  subdomain            = "www"
   log_bucket           = module.logging.bucket_domain_name
   log_group            = module.logging.log_groups["waf"]
-  aptible_environment  = "vita-min-demo"
-  aptible_app_id       = 17865
+  aptible_environment  = "vita-min-prod"
+  aptible_app_id       = 17832
   allow_security_scans = false
   allow_gyr_uploads    = true
   secrets_key_arn      = module.secrets.kms_key_arn
+  passive              = true
 }
