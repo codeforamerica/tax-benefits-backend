@@ -10,5 +10,11 @@ terraform {
 module "datadog" {
   source = "github.com/codeforamerica/tofu-modules-datadog-waf?ref=1.0.0"
 
-  default_webacls = ["fyst-demo"]
+  # Default to the production ACLs.
+  default_webacls = [
+    "ctc-production",
+    "gyr-production",
+    "gyr-es-production",
+    "fyst-production"
+  ]
 }
