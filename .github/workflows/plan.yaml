@@ -34,12 +34,27 @@ on:
         type: choice
         options:
           - backend
+          - ctc.demo.getyourrefund.org
+          - ctc.staging.getyourrefund.org
+          - datadog
           - demo.fileyourstatetaxes.org
+          - demo.getyourrefund.org
+          - demo.mireembolso.org
+          - staging.fileyourstatetaxes.org
+          - staging.getyourrefund.org
+          - staging.mireembolso.org
+          - www.fileyourstatetaxes.org
+          - www.getctc.org
+          - www.getyourrefund.org
+          - www.mireembolso.org
 
 jobs:
   plan:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
+    env:
+      APTIBLE_USERNAME: ${{ secrets.APTIBLE_USERNAME }}
+      APTIBLE_PASSWORD: ${{ secrets.APTIBLE_PASSWORD }}
     outputs:
       plan: ${{ steps.plan.outputs.stdout }}
     steps:

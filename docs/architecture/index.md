@@ -1,3 +1,4 @@
+
 # Architecture
 
 Tax benefits applications are deployed as containers to an [Aptible]
