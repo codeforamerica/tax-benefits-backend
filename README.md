@@ -5,7 +5,7 @@ Infrastructure configuration for Tax Benefits services.
 ## Requirements
 
 The configurations are written in [HCL] and support both [OpenTofu][tofu] and
-the equivalent version of [Terraform]. 
+the equivalent version of [Terraform].
 
 ## Usage
 
@@ -45,7 +45,7 @@ Additionally, these workflows can be triggered using the
 gh workflow run <workflow>.yaml -f config=backend
 ```
 
-You can then run `gh workflow list --workflow plan.yaml` to see the status of
+You can then run `gh run list --workflow <workflow>.yaml` to see the status of
 the execution and get its id. With this id, you can watch the run and get the
 logs:
 
