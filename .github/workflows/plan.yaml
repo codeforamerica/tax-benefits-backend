@@ -81,4 +81,6 @@ jobs:
         run: tofu plan -no-color
 
       - name: Display plan
-        run: echo "${{ steps.plan.outputs.stdout }}"
+        uses: imesense/gha-echo-action@v0.2
+        with:
+          input-string: ${{ steps.plan.outputs.stdout }}
