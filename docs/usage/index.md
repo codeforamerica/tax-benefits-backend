@@ -1,7 +1,3 @@
----
-# Make sure this is the first page in the navigation order.
-weight: -1
----
 # Getting Started
 
 Before you can begin, you must have the following prerequisites installed:
