@@ -45,7 +45,7 @@ module "waf" {
   log_group            = module.logging.log_groups["waf"]
   aptible_environment  = "vita-min-prod"
   aptible_app_id       = 17832
-  allow_security_scans = false
+  allow_security_scans = true
   secrets_key_arn      = module.secrets.kms_key_arn
   passive              = true
 }
