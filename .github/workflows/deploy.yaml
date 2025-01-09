@@ -1,4 +1,4 @@
-name: Deploy pipeline
+name: Deploy infrastructure
 
 on:
   workflow_dispatch:
@@ -30,6 +30,7 @@ on:
 
 jobs:
   deploy:
+    name: Deploy ${{ inputs.config }} to ${{ inputs.environment }}
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment }}
     env:
