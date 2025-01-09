@@ -1,4 +1,4 @@
-name: Plan the deployment pipeline
+name: Plan infrastructure changes
 
 on:
   workflow_call:
@@ -50,6 +50,7 @@ on:
 
 jobs:
   plan:
+    name: Plan ${{ inputs.config }} on ${{ inputs.environment }}
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     env:
