@@ -27,7 +27,7 @@ data "aws_secretsmanager_secret_version" "origin_token" {
 }
 
 module "waf" {
-  source     = "github.com/codeforamerica/tofu-modules-aws-cloudfront-waf?ref=1.6.0"
+  source     = "github.com/codeforamerica/tofu-modules-aws-cloudfront-waf?ref=1.7.0"
   depends_on = [module.origin_secret.secret_id]
 
   project     = var.project
@@ -43,6 +43,7 @@ module "waf" {
   }
 
   upload_paths = var.allow_gyr_uploads ? local.gyr_upload_paths : []
+  webhooks     = local.webhooks
 
   ip_set_rules = var.allow_security_scans ? {
     detectify = {
