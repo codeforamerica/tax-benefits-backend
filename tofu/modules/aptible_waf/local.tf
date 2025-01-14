@@ -21,14 +21,6 @@ locals {
         field      = "header"
         name       = "authorization"
         value = "Basic "
-        # value = "Basic"
-      }]
-      action = "allow"
-    }
-    omniauth = {
-      paths = [{
-        constraint = "EXACTLY"
-        path      = "/users/omniauth_callbacks"
       }]
       action = "allow"
     }
