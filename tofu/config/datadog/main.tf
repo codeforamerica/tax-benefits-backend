@@ -8,7 +8,7 @@ terraform {
 }
 
 module "datadog" {
-  source = "github.com/codeforamerica/tofu-modules-datadog-waf?ref=1.0.0"
+  source = "github.com/codeforamerica/tofu-modules-datadog-waf?ref=1.1.0"
 
   # Default to the production ACLs.
   default_webacls = [
