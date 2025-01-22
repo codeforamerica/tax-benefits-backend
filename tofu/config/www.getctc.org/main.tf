@@ -47,5 +47,5 @@ module "waf" {
   aptible_app_id       = 17832
   allow_security_scans = false
   secrets_key_arn      = module.secrets.kms_key_arn
-  passive              = true
+  passive              = false
 }
