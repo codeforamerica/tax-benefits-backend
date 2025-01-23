@@ -52,28 +52,41 @@ these rules are spaced out to allow for custom rules to be inserted between.
 | [AWSManagedRulesKnownBadInputsRuleSet][rules-inputs]  | 400      | Protects against known bad inputs.                    |
 | [AWSManagedRulesSQLiRuleSet][rules-sqli]              | 500      | Protects against SQL injection attacks.               |
 
+## SSL Certificates
+
+By default, the module with use a managed certificate from ACM for the
+CloudFront distribution. You can use the `certificate_imported` and
+`certificate_domain` variables to use an imported certificate instead.
+
+See the `codeforamerica/tofu-modules-aws-cloudfront-waf` module's
+[documentation][cloudfront-waf-ssl] for more information on using imported SSL
+certificates.
+
 ## Inputs
 
-| Name                 | Description                                                                                                | Type           | Default                                                    | Required |
-|----------------------|------------------------------------------------------------------------------------------------------------|----------------|------------------------------------------------------------|----------|
-| aptible_app_id       | Id of the Aptible app to attach the WAF to.                                                                | `number`       | n/a                                                        | yes      |
-| aptible_environment  | Name of the Aptible environment to attach the WAF to.                                                      | `string`       | n/a                                                        | yes      |
-| domain               | Primary domain for the distribution. The hosted zone for this domain should be in the same account.        | `string`       | n/a                                                        | yes      |
-| log_bucket           | Domain name of the S3 bucket to send logs to.                                                              | `string`       | n/a                                                        | yes      |
-| log_group            | CloudWatch log group to send WAF logs to.                                                                  | `string`       | n/a                                                        | yes      |
-| project              | Project that these resources are supporting.                                                               | `string`       | n/a                                                        | yes      |
-| secrets_key_arn      | ARN of the KMS key for secrets. This will be used to store and reference the origin token.                 | `string`       | n/a                                                        | yes      |
-| allow_gyr_uploads    | Exempt GetYourRefund upload paths from body size restrictions.                                             | `bool`         | `false`                                                    | no       |
-| allow_security_scans | Allow security scanners to bypass the WAF.                                                                 | `bool`         | `false`                                                    | no       |
-| environment          | The environment for the deployment.                                                                        | `string`       | `"dev"`                                                    | no       |
-| passive              | Enable passive mode for the WAF, counting all requests rather than blocking.                               | `bool`         | `false`                                                    | no       |
-| rate_limit_requests  | Number of requests allowed in the rate limit window. Minimum of 10, or set to 0 to disable rate limiting.  | `number`       | `100`                                                      | no       |
-| rate_limit_window    | Time window, in seconds, for the rate limit. Options are: 60, 120, 300, 600                                | `number`       | `60`                                                       | no       |
-| security_scan_cidrs  | CIDRs for security scanners to allow through the WAF. Defaults to [Detectify] and [SecurityMetrics] CIDRs. | `list(string)` | `["52.17.9.21/32", "52.17.98.131/32", "162.211.152.0/24"]` | no       |
-| subdomain            | Subdomain for the distribution. Defaults to the environment.                                               | `string`       | n/a                                                        | no       |
+| Name                 | Description                                                                                                           | Type           | Default                                                    | Required |
+|----------------------|-----------------------------------------------------------------------------------------------------------------------|----------------|------------------------------------------------------------|----------|
+| aptible_app_id       | Id of the Aptible app to attach the WAF to.                                                                           | `number`       | n/a                                                        | yes      |
+| aptible_environment  | Name of the Aptible environment to attach the WAF to.                                                                 | `string`       | n/a                                                        | yes      |
+| domain               | Primary domain for the distribution. The hosted zone for this domain should be in the same account.                   | `string`       | n/a                                                        | yes      |
+| log_bucket           | Domain name of the S3 bucket to send logs to.                                                                         | `string`       | n/a                                                        | yes      |
+| log_group            | CloudWatch log group to send WAF logs to.                                                                             | `string`       | n/a                                                        | yes      |
+| project              | Project that these resources are supporting.                                                                          | `string`       | n/a                                                        | yes      |
+| secrets_key_arn      | ARN of the KMS key for secrets. This will be used to store and reference the origin token.                            | `string`       | n/a                                                        | yes      |
+| allow_gyr_uploads    | Exempt GetYourRefund upload paths from body size restrictions.                                                        | `bool`         | `false`                                                    | no       |
+| allow_security_scans | Allow security scanners to bypass the WAF.                                                                            | `bool`         | `false`                                                    | no       |
+| certificate_domain   | Domain for the imported certificate, if different from the endpoint. Used in conjunction with `certificate_imported`. | `string`       | `""`                                                       | no       |
+| certificate_imported | Whether the certificate is imported or managed by ACM.                                                                | `bool`         | `false`                                                    | no       |
+| environment          | The environment for the deployment.                                                                                   | `string`       | `"dev"`                                                    | no       |
+| passive              | Enable passive mode for the WAF, counting all requests rather than blocking.                                          | `bool`         | `false`                                                    | no       |
+| rate_limit_requests  | Number of requests allowed in the rate limit window. Minimum of 10, or set to 0 to disable rate limiting.             | `number`       | `100`                                                      | no       |
+| rate_limit_window    | Time window, in seconds, for the rate limit. Options are: 60, 120, 300, 600                                           | `number`       | `60`                                                       | no       |
+| security_scan_cidrs  | CIDRs for security scanners to allow through the WAF. Defaults to [Detectify] and [SecurityMetrics] CIDRs.            | `list(string)` | `["52.17.9.21/32", "52.17.98.131/32", "162.211.152.0/24"]` | no       |
+| subdomain            | Subdomain for the distribution. Defaults to the environment.                                                          | `string`       | n/a                                                        | no       |
 
 [acl]: https://docs.aws.amazon.com/waf/latest/APIReference/API_WebACL.html
 [cloudfront-waf]: https://github.com/codeforamerica/tofu-modules-aws-cloudfront-waf
+[cloudfront-waf-ssl]: https://github.com/codeforamerica/tofu-modules-aws-cloudfront-waf#ssl-certificates
 [detectify]: https://support.detectify.com/support/solutions/articles/48001049001-how-do-i-allow-detectify-to-scan-my-assets
 [distribution]: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-working-with.html
 [managed-endpoint]: https://www.aptible.com/docs/core-concepts/apps/connecting-to-apps/app-endpoints/https-endpoints/overview

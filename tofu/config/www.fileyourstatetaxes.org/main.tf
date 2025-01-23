@@ -48,4 +48,8 @@ module "waf" {
   allow_security_scans = true
   secrets_key_arn      = module.secrets.kms_key_arn
   passive              = false
+
+  # The IRS requires an EV certificate, which AWS can't issue.
+  certificate_imported = true
+  certificate_domain   = "fileyourstatetaxes.org"
 }

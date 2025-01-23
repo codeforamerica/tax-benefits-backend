@@ -34,6 +34,15 @@ architecture-beta
   containers:T -- T:s3
 ```
 
+## Tagging
+
+All AWS resources should include the following tags:
+
+| Key           | Desdcription                                     | Values                          |
+|---------------|--------------------------------------------------|---------------------------------|
+| `project`     | The name of the project the resource belongs to. | `ctc`, `fyst`, `gyr`, `gry-es`  |
+| `environment` | The environment the resource is deployed in.     | `demo`, `production`, `staging` |
+
 ## Web Application Firewall
 
 When a request is made to an application, it first passed through the WAF. The
@@ -145,5 +154,5 @@ validation.
 [rules-rate]: https://docs.aws.amazon.com/waf/latest/developerguide/waf-rule-statement-type-rate-based-request-limiting.html
 [rules-sqli]: https://docs.aws.amazon.com/waf/latest/developerguide/aws-managed-rule-groups-use-case.html#aws-managed-rule-groups-use-case-sql-db
 [s3]: https://aws.amazon.com/s3/
-[scanners]: usage/security-scans.md
+[scanners]: ../usage/security-scans.md
 [waf]: https://aws.amazon.com/waf/
