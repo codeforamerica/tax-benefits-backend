@@ -47,6 +47,7 @@ module "waf" {
   aptible_app_id       = 17832
   allow_security_scans = true
   allow_gyr_uploads    = true
+  rate_limit_requests  = 200
   secrets_key_arn      = module.secrets.kms_key_arn
   passive              = false
 }
