@@ -27,25 +27,26 @@ data "aws_secretsmanager_secret_version" "origin_token" {
 }
 
 module "waf" {
-  source     = "github.com/codeforamerica/tofu-modules-aws-cloudfront-waf?ref=1.8.0"
+  source     = "github.com/codeforamerica/tofu-modules-aws-cloudfront-waf?ref=1.8.2"
   depends_on = [module.origin_secret.secret_id]
 
-  project     = var.project
-  environment = var.environment
-  domain      = var.domain
-  log_bucket  = var.log_bucket
-  log_group   = var.log_group
-  passive     = var.passive
-  subdomain   = local.subdomain
+  project              = var.project
+  environment          = var.environment
+  domain               = var.domain
+  log_bucket           = var.log_bucket
+  log_group            = var.log_group
+  passive              = var.passive
+  subdomain            = local.subdomain
   certificate_imported = var.certificate_imported
-  certificate_domain = var.certificate_domain
+  certificate_domain   = var.certificate_domain
 
   custom_headers = {
     x-origin-token = data.aws_secretsmanager_secret_version.origin_token.secret_string
   }
 
-  upload_paths = var.allow_gyr_uploads ? local.gyr_upload_paths : []
-  webhooks     = local.webhooks
+  upload_paths          = var.allow_gyr_uploads ? local.gyr_upload_paths : []
+  upload_rules_capacity = var.allow_gyr_uploads ? local.gyr_upload_capacity : null
+  webhooks              = local.webhooks
 
   ip_set_rules = var.allow_security_scans ? {
     detectify = {

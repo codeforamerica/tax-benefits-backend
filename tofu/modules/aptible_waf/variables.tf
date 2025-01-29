@@ -20,7 +20,7 @@ variable "aptible_environment" {
   description = "Name of the Aptible environment to attach the WAF to."
 }
 
-variable "certificate_domain"  {
+variable "certificate_domain" {
   type        = string
   description = "Domain for the imported certificate. Used in conjunction with certificate_imported."
   default     = ""
