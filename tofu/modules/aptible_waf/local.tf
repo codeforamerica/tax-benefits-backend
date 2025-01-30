@@ -1,45 +1,54 @@
 locals {
-  subdomain = var.subdomain != "" ? var.subdomain : var.environment
+  subdomain           = var.subdomain != "" ? var.subdomain : var.environment
+  gyr_upload_capacity = 45
   gyr_upload_paths = [{
     constraint = "ENDS_WITH"
     path       = "/documents"
+    },
+    {
+      constraint = "CONTAINS"
+      path       = "/documents/"
+    },
+    {
+      constraint = "STARTS_WITH"
+      path       = "/en/hub/state_routings/"
   }]
 
   webhooks = {
     mailgun = {
       paths = [{
-          constraint = "EXACTLY"
-          path      = "/incoming_emails"
+        constraint = "EXACTLY"
+        path       = "/incoming_emails"
         },
         {
           constraint = "EXACTLY"
-          path      = "/outgoing_email_status"
+          path       = "/outgoing_email_status"
       }]
       criteria = [{
         type       = "byte"
         constraint = "STARTS_WITH"
         field      = "header"
         name       = "authorization"
-        value = "Basic "
+        value      = "Basic "
       }]
       action = "allow"
     }
     twilio = {
       paths = [{
-          constraint = "EXACTLY"
-          path      = "/incoming_text_messages"
+        constraint = "EXACTLY"
+        path       = "/incoming_text_messages"
         },
         {
           constraint = "STARTS_WITH"
-          path      = "/outbound_calls/"
+          path       = "/outbound_calls/"
         },
         {
           constraint = "STARTS_WITH"
-          path      = "/outgoing_text_messages/"
+          path       = "/outgoing_text_messages/"
         },
         {
           constraint = "STARTS_WITH"
-          path      = "/webhooks/twilio/update_status/"
+          path       = "/webhooks/twilio/update_status/"
       }]
       criteria = [{
         type       = "size"
