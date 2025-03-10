@@ -1,6 +1,6 @@
 locals {
   subdomain           = var.subdomain != "" ? var.subdomain : var.environment
-  gyr_upload_capacity = 69
+  gyr_upload_capacity = 100
   gyr_upload_paths = [
     {
       constraint = "ENDS_WITH"
@@ -21,6 +21,12 @@ locals {
     {
       constraint = "ENDS_WITH"
       path       = "/outgoing_emails"
+    },
+    # The token in the invitation can trigger SQLi rules if it contains certain
+    # combinations of characters.
+    {
+      constraint = "EXACTLY"
+      path       = "/en/hub/invitation"
     },
     # These last two don't include file uploads, but they can be large enough to
     # trigger the size limit rule.
