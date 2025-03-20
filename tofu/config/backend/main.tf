@@ -8,7 +8,7 @@ terraform {
 }
 
 module "backend" {
-  source = "github.com/codeforamerica/tofu-modules-aws-backend?ref=1.0.0"
+  source = "github.com/codeforamerica/tofu-modules-aws-backend?ref=1.1.1"
 
   project     = "tax-benefits"
   environment = "prod"
