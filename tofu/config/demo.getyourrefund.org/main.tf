@@ -25,6 +25,27 @@ module "logging" {
   }
 }
 
+module "vpc" {
+  source = "github.com/codeforamerica/tofu-modules-aws-vpc?ref=1.1.1"
+
+  project        = "gyr"
+  environment    = "demo"
+  cidr           = "10.0.32.0/22"
+  logging_key_id = module.logging.kms_key_arn
+
+  private_subnets = ["10.0.34.0/26", "10.0.34.64/26", "10.0.34.128/26"]
+  public_subnets  = ["10.0.32.0/26", "10.0.32.64/26", "10.0.32.128/26"]
+
+  peers = {
+    aptible = {
+      account_id = "916150859591",
+      vpc_id     = "vpc-08bd7f3e997318d6b",
+      region     = "us-east-1",
+      cidr       = "10.210.0.0/16"
+    }
+  }
+}
+
 # We don't need to create any secrets here, but we need the infrastructure for
 # other modules to utilize.
 module "secrets" {
