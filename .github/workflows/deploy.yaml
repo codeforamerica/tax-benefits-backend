@@ -4,12 +4,12 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment to deploy to'
-        default: 'aws-prod'
+        description: Environment to deploy to.
+        default: aws-prod
         required: true
         type: environment
       config:
-        description: 'The OpenTofu configuration to plan'
+        description: The OpenTofu configuration to plan.
         required: true
         type: choice
         options:
@@ -28,6 +28,9 @@ on:
           - www.getyourrefund.org
           - www.mireembolso.org
 
+permissions:
+  contents: read
+
 jobs:
   deploy:
     name: Deploy ${{ inputs.config }} to ${{ inputs.environment }}
@@ -39,21 +42,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
       - name: Set up AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-
       - name: Setup OpenTofu
         uses: opentofu/setup-opentofu@v1
-
       - name: Initialize OpenTofu
         working-directory: ./tofu/config/${{ inputs.config }}
         run: tofu init
-
       # TODO: Add a manual approval step here. For now, we'll use GitHub
       # Actions' environment protection feature for sensitive environments.
       - name: Apply changes
