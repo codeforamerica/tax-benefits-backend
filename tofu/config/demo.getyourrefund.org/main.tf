@@ -55,6 +55,38 @@ module "secrets" {
   environment = "demo"
 }
 
+module "database" {
+  source = "github.com/codeforamerica/tofu-modules-aws-serverless-database?ref=instance-count"
+
+  project     = "gyr"
+  environment = "demo"
+
+  logging_key_arn = module.logging.kms_key_arn
+  secrets_key_arn = module.secrets.kms_key_arn
+  vpc_id          = module.vpc.vpc_id
+  subnets         = module.vpc.private_subnets
+  ingress_cidrs   = concat(module.vpc.private_subnets_cidr_blocks, ["10.210.0.0/16"])
+  instances       = 1
+  backup_retention_period = 7
+
+  min_capacity      = 2
+  max_capacity      = 10
+  apply_immediately = true
+  enable_data_api   = true
+  force_delete      = true
+
+}
+
+module "bastion" {
+  source = "github.com/codeforamerica/tofu-modules-aws-ssm-bastion?ref=1.0.0"
+
+  project                 = "gyr"
+  environment             = "demo"
+  private_subnet_ids      = module.vpc.private_subnets
+  vpc_id                  = module.vpc.vpc_id
+  kms_key_recovery_period = 7
+}
+
 module "waf" {
   source = "../../modules/aptible_waf"
 

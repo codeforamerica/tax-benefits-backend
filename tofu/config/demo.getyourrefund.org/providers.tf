@@ -5,6 +5,11 @@ provider "aws" {
     tags = {
       project     = "gyr"
       environment = "demo"
+      application = "gyr-demo"
     }
+  }
+
+  ignore_tags {
+    keys = ["awsApplication"]
   }
 }
