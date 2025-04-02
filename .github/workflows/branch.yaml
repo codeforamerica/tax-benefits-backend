@@ -11,7 +11,7 @@ permissions:
 jobs:
   find-modules:
     permissions:
-      pull-requests: read
+      pull-requests: write
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
