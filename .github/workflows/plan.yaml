@@ -79,7 +79,3 @@ jobs:
         id: plan
         working-directory: ./tofu/config/${{ inputs.config }}
         run: tofu plan -no-color -concise
-      - name: Display plan
-        uses: imesense/gha-echo-action@v0.2
-        with:
-          input-string: ${{ steps.plan.outputs.stdout }}
