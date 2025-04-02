@@ -11,9 +11,13 @@ permissions:
 jobs:
   find-modules:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Find all terraform modules
         id: find
         uses: bendrucker/find-terraform-modules@v1
