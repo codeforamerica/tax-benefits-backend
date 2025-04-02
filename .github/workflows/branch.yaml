@@ -16,8 +16,6 @@ jobs:
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Find all terraform modules
         id: find
         uses: bendrucker/find-terraform-modules@v1
@@ -32,6 +30,7 @@ jobs:
         id: diff
         uses: technote-space/get-diff-action@v6
         with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FORMAT: json
       - name: Show changed files
         run: |
