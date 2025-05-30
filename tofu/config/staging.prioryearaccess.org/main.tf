@@ -34,8 +34,16 @@ module "secrets" {
   environment = "staging"
 }
 
-module "cloudfront_waf" {
-  source = "github.com/codeforamerica/tofu-modules-aws-cloudfront-waf?ref=1.9.0"
+# module "cloudfront_waf" {
+#   source = "github.com/codeforamerica/tofu-modules-aws-cloudfront-waf?ref=1.9.0"
+#
+#   project     = "pya"
+#   environment = "staging"
+#   domain      = "staging.prioryearaccess.org"
+#   log_bucket  = module.logging.bucket
+#   /*  The argument "log_group" is required, but no definition was found. What should this be? */
+# }
+#
 
   project     = "pya"
   environment = "staging"
