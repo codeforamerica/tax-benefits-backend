@@ -3,7 +3,6 @@ terraform {
     bucket         = "tax-benefits-staging-pya"
     key            = "staging.prioryearaccess.org"
     region         = "us-east-1"
-    dynamodb_table = "staging.tfstate"
   }
 }
 
