@@ -45,10 +45,17 @@ module "secrets" {
 # }
 #
 
-  project     = "pya"
-  environment = "staging"
-  domain      = "staging.prioryearaccess.org"
-  log_bucket  = module.logging.bucket
+
+module "vpc" {
+  source = "github.com/codeforamerica/tofu-modules-aws-vpc?ref=1.1.1"
+
+  project        = "pya"
+  environment    = "staging"
+  cidr           = "10.0.20.0/22"
+  logging_key_id = module.logging.kms_key_arn
+
+  private_subnets = ["10.0.22.0/26", "10.0.22.64/26", "10.0.22.128/26"]
+  public_subnets  = ["10.0.20.0/26", "10.0.20.64/26", "10.0.20.128/26"]
 }
 
 module "web" {
