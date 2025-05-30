@@ -15,7 +15,7 @@ module "logging" {
   cloudwatch_log_retention = 30
   log_groups = {
     "waf" = {
-      name = "aws-waf-logs-cfa/fyst/staging"
+      name = "aws-waf-logs-cfa/pya/staging"
       tags = {
         source = "waf"
         webacl = "pya-staging"
