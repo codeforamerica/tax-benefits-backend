@@ -47,6 +47,7 @@ module "web" {
   source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.2.0"
 
   project       = "pya"
+  project_short = "pya"
   environment   = "staging"
   service       = "web"
   service_short = "web"
@@ -67,6 +68,7 @@ module "workers" {
   source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.2.0"
 
   project       = "pya"
+  project_short = "pya"
   environment   = "staging"
   service       = "worker"
   service_short = "wrk"
