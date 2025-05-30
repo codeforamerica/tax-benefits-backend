@@ -90,27 +90,28 @@ module "web" {
   }
 }
 
-# module "workers" {
-#   source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.2.0"
-#
-#   project       = "pya"
-#   project_short = "pya"
-#   environment   = "staging"
-#   service       = "worker"
-#   service_short = "wrk"
-#
-#   vpc_id          = module.vpc.vpc_id
-#   private_subnets = module.vpc.private_subnets
-#   public_subnets  = module.vpc.public_subnets
-#   logging_key_id  = module.logging.kms_key_arn
-#   container_port  = 3000
-#   version_parameter = module.web.version_parameter
-#   image_url = module.web.repository_url
-#
-#   environment_variables = {
-#     RACK_ENV = "staging"
-#   }
-# }
+module "workers" {
+  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.2.0"
+
+  project       = "pya"
+  project_short = "pya"
+  environment   = "staging"
+  service       = "worker"
+  service_short = "wrk"
+
+  vpc_id          = module.vpc.vpc_id
+  private_subnets = module.vpc.private_subnets
+  public_subnets  = module.vpc.public_subnets
+  logging_key_id  = module.logging.kms_key_arn
+  container_port  = 3000
+  version_parameter = module.web.version_parameter
+  image_url = module.web.repository_url
+  create_endpoint = false
+
+  environment_variables = {
+    RACK_ENV = "staging"
+  }
+}
 
 module "database" {
   source = "github.com/codeforamerica/tofu-modules-aws-serverless-database?ref=log-exports"
