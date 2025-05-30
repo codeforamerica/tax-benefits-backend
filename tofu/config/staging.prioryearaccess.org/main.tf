@@ -99,3 +99,22 @@ module "workers" {
     RACK_ENV = "staging"
   }
 }
+
+
+module "database" {
+  source = "github.com/codeforamerica/tofu-modules-aws-serverless-database?ref=1.2.0"
+
+  project     = "pya"
+  environment = "staging"
+  service     = "web"
+
+  logging_key_arn = module.logging.kms_key_arn
+  secrets_key_arn = module.secrets.kms_key_arn
+  vpc_id          = module.vpc.vpc_id
+  subnets         = module.vpc.private_subnets
+  ingress_cidrs   = module.vpc.private_subnets_cidr_blocks
+
+  min_capacity = 2
+  max_capacity = 32
+  cluster_parameters = []
+}
