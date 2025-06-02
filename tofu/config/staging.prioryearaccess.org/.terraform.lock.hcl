@@ -1,26 +1,6 @@
 # This file is maintained automatically by "tofu init".
 # Manual edits may be lost in future updates.
 
-provider "registry.opentofu.org/aptible/aptible" {
-  version     = "0.9.13"
-  constraints = "~> 0.9"
-  hashes = [
-    "h1:2Smprh/xZAfd/JyFTsviVhpvXOE56WCMq13iYbfA2ww=",
-    "zh:0c0788aee0b543d1e9d0f06f485b4379d6681d1064aad55628b69f94612855da",
-    "zh:1c40e6726c000193acde16d1d4253f6831a771badd24a84af8fd5a69b971dc03",
-    "zh:25b33e2037ef97400f90bb9d9d2a28a723a5a05694c7fac339f6c6ced06fb2e8",
-    "zh:662e052089d14e095611417cc5c80822ffca60b07fb03776c5cd858754698589",
-    "zh:70fa227b8441df6568c7134275c81813d002bc6b4d7bd4c54493d23627df86dd",
-    "zh:b5982bb0014f50d172c8fa0415e2c8956a71f20fed7920797f0e87ebcb716f7f",
-    "zh:b97557195a02aa1603957c782784869cead3f6ba991c4a24d95a2627fd9e0d7e",
-    "zh:cb5e7b889eba7c1a855be9482ae0c7f51281132c1a93f683fb38957546a95e4d",
-    "zh:d8a02e684c42a9c3a040f10bfc74626b1ab7f26a8f3f7c938a735ea9c357a9f8",
-    "zh:d92cb16f3965963edcbbdd7970f8ee01832cf12cd808665a8e0eb3c0f8eaf641",
-    "zh:ddd8d4302a6da5fc05c2b4552a5eedbb7d266ce61a43569e31aad6ba96a0edd6",
-    "zh:f8eaef88893ec7bf5dbefc8f27a321eb4b600cbc4372198909a9c2c20feffc34",
-  ]
-}
-
 provider "registry.opentofu.org/hashicorp/aws" {
   version     = "5.99.0"
   constraints = ">= 5.44.0, ~> 5.44"
