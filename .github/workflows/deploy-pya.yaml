@@ -49,3 +49,4 @@ jobs:
         working-directory: ./tofu/config/${{ env.CONFIG }}
         run: tofu apply --auto-approve
 # force registration
+# trigger registration
