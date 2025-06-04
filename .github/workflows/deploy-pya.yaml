@@ -19,7 +19,7 @@ on:
         options:
           - staging
           - production
-          - qa
+          - demo
 env:
   CONFIG: ${{ inputs.config || github.event.client_payload.config }}
 
