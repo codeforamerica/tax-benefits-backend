@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     bucket         = "pya-staging-tfstate"
-    key            = "staging.prioryearaccess.org"
+    key            = "staging.pya.fileyourstatetaxes.org"
     region         = "us-east-1"
     dynamodb_table = "staging.tfstate"
   }
