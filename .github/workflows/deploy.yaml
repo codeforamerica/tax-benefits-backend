@@ -1,6 +1,9 @@
 name: Deploy infrastructure
 
 on:
+  repository_dispatch:
+    types:
+      - deploy
   workflow_dispatch:
     inputs:
       environment:
@@ -23,6 +26,7 @@ on:
           - staging.fileyourstatetaxes.org
           - staging.getyourrefund.org
           - staging.mireembolso.org
+          - staging.pya.fileyourstatetaxes.org
           - www.fileyourstatetaxes.org
           - www.getctc.org
           - www.getyourrefund.org
