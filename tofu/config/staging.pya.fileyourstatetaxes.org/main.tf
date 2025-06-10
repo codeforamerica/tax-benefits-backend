@@ -39,6 +39,12 @@ module "secrets" {
 
   project     = "pya"
   environment = "staging"
+
+  secrets = {
+    secret_key_base = {
+     description = "Rails secret_key_base"
+    }
+  }
 }
 
 # module "cloudfront_waf" {
