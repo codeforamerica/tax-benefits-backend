@@ -31,6 +31,8 @@ on:
           - www.getctc.org
           - www.getyourrefund.org
           - www.mireembolso.org
+env:
+  CONFIG: ${{ inputs.config || github.event.client_payload.config }}
 
 permissions:
   contents: read
@@ -39,7 +41,7 @@ jobs:
   deploy:
     name: Deploy ${{ inputs.config }} to ${{ inputs.environment }}
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment }}
+    environment: ${{ inputs.environment || github.event.client_payload.environment }}
     env:
       APTIBLE_USERNAME: ${{ secrets.APTIBLE_USERNAME }}
       APTIBLE_PASSWORD: ${{ secrets.APTIBLE_PASSWORD }}
@@ -55,10 +57,10 @@ jobs:
       - name: Setup OpenTofu
         uses: opentofu/setup-opentofu@v1
       - name: Initialize OpenTofu
-        working-directory: ./tofu/config/${{ inputs.config }}
+        working-directory: ./tofu/config/${{ env.config }}
         run: tofu init
       # TODO: Add a manual approval step here. For now, we'll use GitHub
       # Actions' environment protection feature for sensitive environments.
       - name: Apply changes
-        working-directory: ./tofu/config/${{ inputs.config }}
+        working-directory: ./tofu/config/${{ env.config }}
         run: tofu apply --auto-approve
