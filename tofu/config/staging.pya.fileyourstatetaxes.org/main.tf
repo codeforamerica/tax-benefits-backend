@@ -39,6 +39,15 @@ module "secrets" {
 
   project     = "pya"
   environment = "staging"
+
+  secrets = {
+    "rails_secret_key_base" = {
+      description = "secret_key_base for Rails app"
+      start_value = jsonencode({
+        key = ""
+      })
+    }
+  }
 }
 
 # module "cloudfront_waf" {
@@ -83,9 +92,13 @@ module "web" {
   create_repository	= true
   create_version_parameter = true
   public = true
+  health_check_path = "/up"
 
   environment_variables = {
     RACK_ENV = "staging"
+  }
+  environment_secrets = {
+    SECRET_KEY_BASE = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}:key"
   }
 }
 
