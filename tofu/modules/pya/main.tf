@@ -23,6 +23,15 @@ module "secrets" {
 
   project     = "pya"
   environment = var.environment
+
+  secrets = {
+    "rails_secret_key_base" = {
+      description = "secret_key_base for Rails app"
+      start_value = jsonencode({
+        key = ""
+      })
+    }
+  }
 }
 
 module "vpc" {
