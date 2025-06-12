@@ -65,9 +65,13 @@ module "web" {
   create_repository	= true
   create_version_parameter = true
   public = true
+  health_check_path = "/up"
 
   environment_variables = {
     RACK_ENV = var.environment
+  }
+  environment_secrets = {
+    SECRET_KEY_BASE = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}:key"
   }
 }
 
