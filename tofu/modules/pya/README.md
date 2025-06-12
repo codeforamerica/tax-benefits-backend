@@ -46,5 +46,5 @@ Any changes made to the module will be reflected in the configurations of those 
 - To run `tofu apply` and actually make changes to the infrastructure, merge in the approved PR with the changes, and run [the `deploy` github workflow](https://github.com/codeforamerica/tax-benefits-backend/actions/workflows/deploy.yaml).
   - Use workflow from: `main`
   - Environment to deploy to: `pya-nonprod` (for staging, `pya-prod` for production)
-  - The OpenTofu configuration to plan: `staging.pya.fileyourstatetaxes.org`
+  - The OpenTofu configuration to plan: `staging.pya.fileyourstatetaxes.org` (`pya.fileyourstatetaxes.org` for production)
 - More often, the deploy action will run as a result of updates on [`pya` repository](https://github.com/codeforamerica/pya) and the subsequent GitHub deploy actions which trigger the deploy action on pya infrastructure.
