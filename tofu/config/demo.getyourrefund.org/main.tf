@@ -32,6 +32,7 @@ module "vpc" {
   environment    = "demo"
   cidr           = "10.0.32.0/22"
   logging_key_id = module.logging.kms_key_arn
+  single_nat_gateway = true
 
   private_subnets = ["10.0.34.0/26", "10.0.34.64/26", "10.0.34.128/26"]
   public_subnets  = ["10.0.32.0/26", "10.0.32.64/26", "10.0.32.128/26"]
@@ -56,7 +57,7 @@ module "secrets" {
 }
 
 module "database" {
-  source = "github.com/codeforamerica/tofu-modules-aws-serverless-database?ref=instance-count"
+  source = "github.com/codeforamerica/tofu-modules-aws-serverless-database?ref=1.2.0"
 
   project     = "gyr"
   environment = "demo"
@@ -69,12 +70,63 @@ module "database" {
   instances       = 1
   backup_retention_period = 7
 
+  # We need to allow egress to the Aptible VPC for the database to be able to
+  # connect to the primary database.
+  security_group_rules = {
+    replication = {
+      type = "egress"
+      cidr_blocks = ["10.210.0.0/16"]
+      description = "Allow egress to Aptible VPC for replication."
+      to_port = 20414
+      from_port = 20414
+    }
+  }
+
   min_capacity      = 2
   max_capacity      = 10
   apply_immediately = true
   enable_data_api   = true
+  iam_authentication = true
   force_delete      = true
+  skip_final_snapshot = true
+  engine_version = "16"
 
+  cluster_parameters = [
+    {
+      name  = "rds.logical_replication"
+      value = "1"
+      apply_method = "pending-reboot"
+    },
+    {
+      name = "shared_preload_libraries"
+      value = "pg_stat_statements,pglogical"
+      apply_method = "pending-reboot"
+    },
+    # {
+    #   name = "log_min_messages"
+    #   value = "DEBUG5"
+    # },
+    {
+      name = "log_min_error_statement"
+      value = "DEBUG5"
+    },
+    {
+      name = "log_error_verbosity"
+      value = "VERBOSE"
+    },
+    {
+      name = "log_statement"
+      value = "all"
+    },
+    {
+      name = "log_replication_commands"
+      value = "1"
+    },
+    {
+      name = "pglogical.conflict_log_level"
+      value = "DEBUG5"
+    },
+  ]
 }
 
 module "bastion" {
