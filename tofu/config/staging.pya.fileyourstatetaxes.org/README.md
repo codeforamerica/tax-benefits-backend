@@ -4,6 +4,8 @@ This configures and manages the tofu (or terraform) backend for [Prior Year Acce
 
 ## Running
 
+You may need to set up OpenTofu and set up your `AWS_PROFILE` in order to run `tofu init` and `tofu plan`.
+You can read the [set up walkthrough here](https://www.notion.so/cfa/Setting-up-new-tax-benefits-backend-infrastructure-using-OpenTofu-200373fd79b2809cab2fc8c0eead8d1a?source=copy_link#200373fd79b280ce8b43c466ec7093e5).
 This configuration uses the [shared PYA module](https://github.com/codeforamerica/tax-benefits-backend/tree/main/tofu/modules/pya).
 
 ### Updates
