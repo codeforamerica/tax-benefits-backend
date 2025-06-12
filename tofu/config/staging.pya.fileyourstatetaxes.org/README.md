@@ -9,6 +9,12 @@ This configuration uses the [shared PYA module](https://github.com/codeforameric
 ### Updates
 
 - Make updates to the `main.tf`, `providers.tf`, `variables.tf`, `versions.tf` as needed.
+  - Most of the `main.tf` utilizes the [pya module](https://github.com/codeforamerica/tax-benefits-backend/tree/main/tofu/modules/pya), which require some variables. Please read the [PYA module README](https://github.com/codeforamerica/tax-benefits-backend/tree/add-read-me/tofu/modules/pya) for more information.
+    - domain
+    - environment
+    - cidr
+    - private_subnets
+    - public_subnets
 - If you are utilizing new modules, make sure to use `moved.tf` to tell OpenTofu that these resources have moved and where they can now be found by using a series of `moved` blocks.
 Updates can be applied as usual with `tofu plan` and `tofu apply`.
 - `tofu plan`: **always review the changes you are making to the configuration**. Have the reviewer also confirm the changes before they approve the pull request.
