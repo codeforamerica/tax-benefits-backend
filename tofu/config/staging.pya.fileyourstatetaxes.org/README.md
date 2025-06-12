@@ -25,3 +25,4 @@ Updates can be applied as usual with `tofu plan` and `tofu apply`.
   - Use workflow from: `main`
   - Environment to deploy to: `pya-nonprod`
   - The OpenTofu configuration to plan: `staging.pya.fileyourstatetaxes.org`
+- More often, the deploy action will run as a result of updates on [`pya` repository](https://github.com/codeforamerica/pya) and the subsequent GitHub deploy actions [which trigger the deploy action on pya infrastructure](https://github.com/codeforamerica/pya/blob/main/.github/workflows/deploy-to-staging.yml#L84-L98).

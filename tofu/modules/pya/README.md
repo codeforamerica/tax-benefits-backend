@@ -47,4 +47,4 @@ Any changes made to the module will be reflected in the configurations of those 
   - Use workflow from: `main`
   - Environment to deploy to: `pya-nonprod` (for staging, `pya-prod` for production)
   - The OpenTofu configuration to plan: `staging.pya.fileyourstatetaxes.org` (`pya.fileyourstatetaxes.org` for production)
-- More often, the deploy action will run as a result of updates on [`pya` repository](https://github.com/codeforamerica/pya) and the subsequent GitHub deploy actions which trigger the deploy action on pya infrastructure.
+- More often, the deploy action will run as a result of updates on [`pya` repository](https://github.com/codeforamerica/pya) and the subsequent GitHub deploy actions [which trigger the deploy action on pya infrastructure](https://github.com/codeforamerica/pya/blob/main/.github/workflows/deploy-to-staging.yml#L84-L98).
