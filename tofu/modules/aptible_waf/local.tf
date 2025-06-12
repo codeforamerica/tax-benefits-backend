@@ -1,6 +1,6 @@
 locals {
   subdomain           = var.subdomain != "" ? var.subdomain : var.environment
-  gyr_upload_capacity = 100
+  gyr_upload_capacity = 108
   gyr_upload_paths = [
     {
       constraint = "ENDS_WITH"
@@ -28,7 +28,7 @@ locals {
       constraint = "EXACTLY"
       path       = "/en/hub/invitation"
     },
-    # These last two don't include file uploads, but they can be large enough to
+    # These last few don't include file uploads, but they can be large enough to
     # trigger the size limit rule.
     {
       constraint = "STARTS_WITH"
@@ -37,6 +37,10 @@ locals {
     {
       constraint = "STARTS_WITH"
       path       = "/en/hub/clients/"
+    },
+    {
+      constraint = "STARTS_WITH"
+      path       = "/en/hub/faq/"
     },
   ]
 
