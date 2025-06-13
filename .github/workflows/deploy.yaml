@@ -35,6 +35,10 @@ on:
 permissions:
   contents: read
 
+env:
+  CONFIG: ${{ inputs.config || github.event.client_payload.config }}
+  ENVIRONMENT: ${{ inputs.environment || github.event.client_payload.environment }}
+
 jobs:
   deploy:
     name: Deploy ${{ env.CONFIG }} to ${{ env.ENVIRONMENT }}
@@ -45,8 +49,6 @@ jobs:
     env:
       APTIBLE_USERNAME: ${{ secrets.APTIBLE_USERNAME }}
       APTIBLE_PASSWORD: ${{ secrets.APTIBLE_PASSWORD }}
-      CONFIG: ${{ inputs.config || github.event.client_payload.config }}
-      ENVIRONMENT: ${{ inputs.environment || github.event.client_payload.environment }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
