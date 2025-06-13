@@ -94,7 +94,7 @@ module "workers" {
   create_endpoint = false
 
   environment_variables = {
-    RACK_ENV = "${var.environment}"
+    RACK_ENV = var.environment
   }
 }
 
