@@ -36,9 +36,6 @@ env:
   CONFIG: ${{ inputs.config || github.event.client_payload.config }}
   ENVIRONMENT: ${{ inputs.environment || github.event.client_payload.environment }}
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}-${{ env.ENVIRONMENT }}-${{ env.CONFIG }}
-
 permissions:
   contents: read
 
@@ -47,6 +44,8 @@ jobs:
     name: Deploy ${{ env.CONFIG }} to ${{ env.ENVIRONMENT }}
     runs-on: ubuntu-latest
     environment: ${{ env.ENVIRONMENT }}
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}-${{ env.ENVIRONMENT }}-${{ env.CONFIG }}
     env:
       APTIBLE_USERNAME: ${{ secrets.APTIBLE_USERNAME }}
       APTIBLE_PASSWORD: ${{ secrets.APTIBLE_PASSWORD }}
