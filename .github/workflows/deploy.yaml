@@ -31,17 +31,23 @@ on:
           - www.getctc.org
           - www.getyourrefund.org
           - www.mireembolso.org
+
 env:
   CONFIG: ${{ inputs.config || github.event.client_payload.config }}
+  ENVIRONMENT: ${{ inputs.environment || github.event.client_payload.environment }}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ env.ENVIRONMENT }}-${{ env.CONFIG }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
 
 jobs:
   deploy:
-    name: Deploy ${{ inputs.config }} to ${{ inputs.environment }}
+    name: Deploy ${{ env.CONFIG }} to ${{ env.ENVIRONMENT }}
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment || github.event.client_payload.environment }}
+    environment: ${{ env.ENVIRONMENT }}
     env:
       APTIBLE_USERNAME: ${{ secrets.APTIBLE_USERNAME }}
       APTIBLE_PASSWORD: ${{ secrets.APTIBLE_PASSWORD }}
