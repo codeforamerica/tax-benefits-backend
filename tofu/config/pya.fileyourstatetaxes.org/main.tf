@@ -1,11 +1,11 @@
-# terraform {
-#   backend "s3" {
-#     bucket         = "pya-production-tfstate"
-#     key            = "pya.fileyourstatetaxes.org"
-#     region         = "us-east-1"
-#     dynamodb_table = "tfstate"
-#   }
-# }
+terraform {
+  backend "s3" {
+    bucket         = "pya-production-tfstate"
+    key            = "pya.fileyourstatetaxes.org"
+    region         = "us-east-1"
+    dynamodb_table = "production.tfstate"
+  }
+}
 
 module "backend" {
   source = "github.com/codeforamerica/tofu-modules-aws-backend?ref=1.1.1"
