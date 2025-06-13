@@ -32,10 +32,6 @@ on:
           - www.getyourrefund.org
           - www.mireembolso.org
 
-env:
-  CONFIG: ${{ inputs.config || github.event.client_payload.config }}
-  ENVIRONMENT: ${{ inputs.environment || github.event.client_payload.environment }}
-
 permissions:
   contents: read
 
@@ -49,6 +45,8 @@ jobs:
     env:
       APTIBLE_USERNAME: ${{ secrets.APTIBLE_USERNAME }}
       APTIBLE_PASSWORD: ${{ secrets.APTIBLE_PASSWORD }}
+      CONFIG: ${{ inputs.config || github.event.client_payload.config }}
+      ENVIRONMENT: ${{ inputs.environment || github.event.client_payload.environment }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
