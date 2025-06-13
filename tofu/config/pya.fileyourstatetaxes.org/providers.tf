@@ -3,7 +3,7 @@ provider "aws" {
 
   default_tags {
     tags = {
-      project     = "fyst"
+      project     = "pya"
       environment = "production"
     }
   }
