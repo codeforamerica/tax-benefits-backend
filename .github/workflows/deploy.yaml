@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment || github.event.client_payload.environment }}
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}-${{ env.ENVIRONMENT }}-${{ env.CONFIG }}
+      group: ${{ github.workflow }}-${{ github.ref }}-${{ inputs.environment || github.event.client_payload.environment }}-${{ inputs.config || github.event.client_payload.config }}
     env:
       APTIBLE_USERNAME: ${{ secrets.APTIBLE_USERNAME }}
       APTIBLE_PASSWORD: ${{ secrets.APTIBLE_PASSWORD }}
