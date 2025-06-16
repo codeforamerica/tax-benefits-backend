@@ -2,6 +2,15 @@
 
 This configures and manages the tofu (or terraform) backend for [Prior Year Access (PYA)](https://github.com/codeforamerica/pya) staging environment
 
+We utilize several [tofu modules](https://github.com/codeforamerica/tofu-modules?tab=readme-ov-file)
+- [AWS Backend](https://github.com/codeforamerica/tofu-modules-aws-backend)
+- In [PYA module](https://github.com/codeforamerica/tax-benefits-backend/tree/main/tofu/modules/pya)
+  - [AWS Fargate Service Module](https://github.com/codeforamerica/tofu-modules-aws-fargate-service)
+  - [AWS VPC Module](https://github.com/codeforamerica/tofu-modules-aws-vpc)
+  - [AWS Secrets Module](https://github.com/codeforamerica/tofu-modules-aws-secrets)
+  - [AWS Serverless DB Module](https://github.com/codeforamerica/tofu-modules-aws-serverless-database)
+  - [AWS Logging Module](https://github.com/codeforamerica/tofu-modules-aws-logging)
+
 ## Running
 
 You may need to set up OpenTofu and set up your `AWS_PROFILE` in order to run `tofu init` and `tofu plan`.

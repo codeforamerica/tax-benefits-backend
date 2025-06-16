@@ -29,6 +29,9 @@ module "pya" {
 }
 ```
 
+Make sure you are in the correct `/config` folder before running any tofu commands
+with the correct `AWS_PROFILE` set in your shell (`.zshrc`, `.bash_profile`, etc).
+
 Make sure you run `tofu init` after adding the module to your configuration,
 then plan your configuration to see the changes that would be applied:
 
