@@ -41,7 +41,7 @@ env:
 
 jobs:
   deploy:
-    name: Deploy ${{ env.CONFIG }} to ${{ env.ENVIRONMENT }}
+    name: Deploy ${{ inputs.config || github.event.client_payload.config }} to ${{ inputs.environment || github.event.client_payload.environment }}
     runs-on: ubuntu-latest
     environment: ${{ env.ENVIRONMENT }}
     concurrency:
