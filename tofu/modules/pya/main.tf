@@ -6,7 +6,7 @@ module "logging" {
   cloudwatch_log_retention = 30
   log_groups = {
     "waf" = {
-      name = "aws-waf-logs-cfa/pya/staging"
+      name = "aws-waf-logs-cfa/pya/${var.environment}"
       tags = {
         source = "waf"
         webacl = "pya-${var.environment}"
@@ -55,7 +55,7 @@ module "web" {
   service       = "web"
   service_short = "web"
 
-  domain          = "staging.pya.fileyourstatetaxes.org"
+  domain          = var.domain
   vpc_id          = module.vpc.vpc_id
   private_subnets = module.vpc.private_subnets
   public_subnets  = module.vpc.public_subnets
@@ -94,7 +94,7 @@ module "workers" {
   create_endpoint = false
 
   environment_variables = {
-    RACK_ENV = "staging"
+    RACK_ENV = var.environment
   }
 }
 
