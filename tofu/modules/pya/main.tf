@@ -68,6 +68,7 @@ module "web" {
   health_check_path = "/up"
 
   environment_variables = {
+    RACK_ENV = var.environment
     DATABASE_HOST = module.database.cluster_endpoint
   }
   environment_secrets = {
@@ -96,6 +97,7 @@ module "workers" {
   create_endpoint = false
 
   environment_variables = {
+    RACK_ENV = var.environment
     DATABASE_HOST = module.database.cluster_endpoint
   }
   environment_secrets = {
