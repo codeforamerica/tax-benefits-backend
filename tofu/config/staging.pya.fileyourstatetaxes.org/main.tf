@@ -33,4 +33,5 @@ module "pya" {
   cidr                = "10.0.36.0/22"
   private_subnets     = ["10.0.38.0/26", "10.0.38.64/26", "10.0.38.128/26"]
   public_subnets      = ["10.0.36.0/26", "10.0.36.64/26", "10.0.36.128/26"]
+  bucket_arn          = module.backend.bucket
 }

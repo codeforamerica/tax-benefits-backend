@@ -1,8 +1,3 @@
-resource "aws_s3_bucket" "submission_pdfs" {
-  bucket              = "${var.environment}.submission-pdfs"
-  object_lock_enabled = true
-}
-
 module "logging" {
   source = "github.com/codeforamerica/tofu-modules-aws-logging?ref=2.1.0"
 
@@ -122,3 +117,24 @@ module "database" {
   max_capacity = 32
   cluster_parameters = []
 }
+
+locals {
+  aws_logs_path = "/AWSLogs/${data.aws_caller_identity.identity.account_id}"
+  prefix        = "pya-${var.environment}"
+}
+
+data "aws_caller_identity" "identity" {}
+
+data "aws_partition" "current" {}
+
+resource "aws_kms_key" "backend" {
+  description             = "OpenTofu backend encryption key for pya ${var.environment}"
+  deletion_window_in_days = 30
+  enable_key_rotation     = true
+  policy = templatefile("${path.module}/templates/key-policy.json.tftpl", {
+    account_id : data.aws_caller_identity.identity.account_id,
+    partition : data.aws_partition.current.partition,
+    bucket_arn : var.bucket_arn
+  })
+}
+
