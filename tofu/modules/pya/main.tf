@@ -69,7 +69,7 @@ module "web" {
 
   environment_variables = {
     RACK_ENV = var.environment
-    DATABASE_HOST = module.database.cluster_endpoint
+    DATABASE_URL = module.database.cluster_endpoint
   }
   environment_secrets = {
     DATABASE_PASSWORD      = "${module.database.secret_arn}:password"
@@ -98,7 +98,7 @@ module "workers" {
 
   environment_variables = {
     RACK_ENV = var.environment
-    DATABASE_HOST = module.database.cluster_endpoint
+    DATABASE_URL = module.database.cluster_endpoint
   }
   environment_secrets = {
     DATABASE_PASSWORD      = "${module.database.secret_arn}:password"
