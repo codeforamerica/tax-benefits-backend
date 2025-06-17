@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "submission_pdfs" {
-  bucket              = "${var.environment}.submission_pdfs"
+  bucket              = "${var.environment}.submission-pdfs"
   object_lock_enabled = true
 }
 
