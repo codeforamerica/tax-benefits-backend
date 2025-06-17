@@ -8,6 +8,7 @@ We utilize several [tofu modules](https://github.com/codeforamerica/tofu-modules
 - [AWS Secrets Module](https://github.com/codeforamerica/tofu-modules-aws-secrets)
 - [AWS Serverless DB Module](https://github.com/codeforamerica/tofu-modules-aws-serverless-database)
 - [AWS Logging Module](https://github.com/codeforamerica/tofu-modules-aws-logging)
+- [S3 bucket for storing the archived submission_pdfs](https://search.opentofu.org/provider/hashicorp/aws/latest/docs/resources/s3_bucket)
 
 ## Usage
 

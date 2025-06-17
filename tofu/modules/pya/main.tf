@@ -1,3 +1,8 @@
+resource "aws_s3_bucket" "submission_pdfs" {
+  bucket              = "${var.environment}.submission_pdfs"
+  object_lock_enabled = true
+}
+
 module "logging" {
   source = "github.com/codeforamerica/tofu-modules-aws-logging?ref=2.1.0"
 
