@@ -69,8 +69,11 @@ module "web" {
 
   environment_variables = {
     RACK_ENV = var.environment
+    DATABASE_URL = module.database.cluster_endpoint
   }
   environment_secrets = {
+    DATABASE_PASSWORD      = "${module.database.secret_arn}:password"
+    DATABASE_USER          = "${module.database.secret_arn}:username"
     SECRET_KEY_BASE = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}:key"
   }
 }
@@ -95,6 +98,11 @@ module "workers" {
 
   environment_variables = {
     RACK_ENV = var.environment
+    DATABASE_URL = module.database.cluster_endpoint
+  }
+  environment_secrets = {
+    DATABASE_PASSWORD      = "${module.database.secret_arn}:password"
+    DATABASE_USER          = "${module.database.secret_arn}:username"
   }
 }
 
