@@ -35,8 +35,3 @@ variable "kms_key_id" {
   type        = string
   default     = null
 }
-
-variable "bucket_arn" {
-  description = "ARN or ID of the AWS S3 bucket storing tfstate"
-  type = string
-}

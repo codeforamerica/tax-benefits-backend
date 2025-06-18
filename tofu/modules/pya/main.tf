@@ -141,7 +141,7 @@ resource "aws_kms_key" "backend" {
   policy = templatefile("${path.module}/templates/key-policy.json.tftpl", {
     account_id : data.aws_caller_identity.identity.account_id,
     partition : data.aws_partition.current.partition,
-    bucket_arn : var.bucket_arn
+    bucket_arn : aws_s3_bucket.submission_pdfs.bucket
   })
 }
 
