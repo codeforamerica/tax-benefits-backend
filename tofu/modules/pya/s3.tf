@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "submission_pdfs" {
-  bucket        = "submission-pdfs"
+  bucket        = "submission-pdfs-${var.environment}"
   force_destroy = false
 
   lifecycle {
