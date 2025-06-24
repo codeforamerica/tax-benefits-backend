@@ -134,8 +134,8 @@ data "aws_caller_identity" "identity" {}
 
 data "aws_partition" "current" {}
 
-resource "aws_kms_key" "backend" {
-  description             = "OpenTofu backend encryption key for pya ${var.environment}"
+resource "aws_kms_key" "submission_pdfs" {
+  description             = "OpenTofu submission_pdfs S3 encryption key for pya ${var.environment}"
   deletion_window_in_days = 30
   enable_key_rotation     = true
   policy = templatefile("${path.module}/templates/key-policy.json.tftpl", {

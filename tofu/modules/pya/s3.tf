@@ -23,7 +23,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "submission_pdfs" 
     bucket_key_enabled = true
 
     apply_server_side_encryption_by_default {
-      kms_master_key_id = var.kms_key_id
+      kms_master_key_id = aws_kms_key.submission_pdfs.arn
       sse_algorithm     = "aws:kms"
     }
   }
