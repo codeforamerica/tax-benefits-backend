@@ -23,3 +23,9 @@ variable "public_subnets" {
   type        = list(string)
   description = "CIDRs for public_subnets"
 }
+
+variable "state_version_expiration" {
+  type        = number
+  description = "Age (in days) before non-current versions of the state file are expired."
+  default     = 30
+}
