@@ -125,3 +125,23 @@ module "database" {
   max_capacity = 32
   cluster_parameters = []
 }
+
+locals {
+  aws_logs_path = "/AWSLogs/${data.aws_caller_identity.identity.account_id}"
+}
+
+data "aws_caller_identity" "identity" {}
+
+data "aws_partition" "current" {}
+
+resource "aws_kms_key" "submission_pdfs" {
+  description             = "OpenTofu submission_pdfs S3 encryption key for pya ${var.environment}"
+  deletion_window_in_days = 30
+  enable_key_rotation     = true
+  policy = templatefile("${path.module}/templates/key-policy.json.tftpl", {
+    account_id : data.aws_caller_identity.identity.account_id,
+    partition : data.aws_partition.current.partition,
+    bucket_arn : aws_s3_bucket.submission_pdfs.bucket
+  })
+}
+
