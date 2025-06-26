@@ -152,7 +152,6 @@ resource "aws_kms_key" "submission_pdfs" {
 # IAM policy for ECS tasks to access S3
 resource "aws_iam_policy" "ecs_s3_access" {
   name = "pya-${var.environment}-ecs-s3-access"
-  #role = split("/", module.ecs.task_execution_role_arn)[1]
 
   policy = jsonencode({
     Version = "2012-10-17"
