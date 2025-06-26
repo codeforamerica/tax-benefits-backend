@@ -67,6 +67,8 @@ module "web" {
   public = true
   health_check_path = "/up"
 
+  execution_policies = [aws_iam_policy.ecs_s3_access.arn]
+
   environment_variables = {
     RACK_ENV = var.environment
     DATABASE_HOST = module.database.cluster_endpoint
@@ -96,6 +98,8 @@ module "workers" {
   version_parameter = module.web.version_parameter
   image_url = module.web.repository_url
   create_endpoint = false
+
+  execution_policies = [aws_iam_policy.ecs_s3_access.arn]
 
   environment_variables = {
     RACK_ENV = var.environment
@@ -145,6 +149,30 @@ resource "aws_kms_key" "submission_pdfs" {
     account_id : data.aws_caller_identity.identity.account_id,
     partition : data.aws_partition.current.partition,
     bucket_arn : aws_s3_bucket.submission_pdfs.bucket
+  })
+}
+
+# IAM policy for ECS tasks to access S3
+resource "aws_iam_policy" "ecs_s3_access" {
+  name = "pya-${var.environment}-ecs-s3-access"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "s3:GetObject",
+          "s3:PutObject",
+          "s3:ListBucket",
+          "s3:DeleteObject"
+        ]
+        Resource = [
+          aws_s3_bucket.submission_pdfs.arn,
+          "${aws_s3_bucket.submission_pdfs.arn}/*"
+        ]
+      }
+    ]
   })
 }
 
