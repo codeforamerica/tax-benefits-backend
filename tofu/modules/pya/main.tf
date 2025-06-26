@@ -70,11 +70,12 @@ module "web" {
   environment_variables = {
     RACK_ENV = var.environment
     DATABASE_HOST = module.database.cluster_endpoint
+    S3_BUCKET = aws_s3_bucket.submission_pdfs.bucket
   }
   environment_secrets = {
     DATABASE_PASSWORD      = "${module.database.secret_arn}:password"
     DATABASE_USER          = "${module.database.secret_arn}:username"
-    SECRET_KEY_BASE = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}:key"
+    SECRET_KEY_BASE        = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}:key"
   }
 }
 
@@ -98,11 +99,13 @@ module "workers" {
 
   environment_variables = {
     RACK_ENV = var.environment
-    DATABASE_URL = module.database.cluster_endpoint
+    DATABASE_HOST = module.database.cluster_endpoint
+    S3_BUCKET = aws_s3_bucket.submission_pdfs.bucket
   }
   environment_secrets = {
     DATABASE_PASSWORD      = "${module.database.secret_arn}:password"
     DATABASE_USER          = "${module.database.secret_arn}:username"
+    SECRET_KEY_BASE        = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}:key"
   }
 }
 
