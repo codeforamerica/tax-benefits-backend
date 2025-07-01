@@ -28,10 +28,36 @@ module "backend" {
 module "workflow-workbench" {
   source = "../../modules/workflow-workbench"
 
-  environment         = "staging"
-  domain              = "staging.workflow-workbench.fileyourstatetaxes.org"
-  # TODO: set these properly
-  # cidr                = "10.0.36.0/22"
-  # private_subnets     = ["10.0.38.0/26", "10.0.38.64/26", "10.0.38.128/26"]
-  # public_subnets      = ["10.0.36.0/26", "10.0.36.64/26", "10.0.36.128/26"]
+  environment = "staging"
+  domain      = "staging.workflow-workbench.fileyourstatetaxes.org"
+  
+  # Build artifacts - these will be provided by CI/CD
+  lambda_package_path = var.lambda_package_path
+  ui_dist_path        = var.ui_dist_path
+  
+  # Optional: Use existing VPC if available
+  # vpc_id             = module.vpc.vpc_id
+  # private_subnet_ids = module.vpc.private_subnet_ids
+  # public_subnet_ids  = module.vpc.public_subnet_ids
+  
+  # Optional: Use existing KMS key
+  # kms_key_arn = module.backend.kms_key_arn
+  
+  # WAF enabled for staging
+  enable_waf = true
+  
+  # CloudWatch logs retention
+  log_retention_days = 30
+  
+  # CORS configuration
+  allowed_origins = [
+    "https://staging.workflow-workbench.fileyourstatetaxes.org",
+    "http://localhost:1234"  # For local development
+  ]
+  
+  tags = {
+    Environment = "staging"
+    ManagedBy   = "terraform"
+    Repository  = "workflow-workbench"
+  }
 }
