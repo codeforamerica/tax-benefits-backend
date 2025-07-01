@@ -30,6 +30,12 @@ module "secrets" {
       start_value = jsonencode({
         key = ""
       })
+    },
+    "ssn_hashing_key" = {
+      description = "Key for encrypting SSN for archived intakes"
+      start_value = jsonencode({
+        key = ""
+      })
     }
   }
 }
@@ -78,6 +84,7 @@ module "web" {
     DATABASE_PASSWORD      = "${module.database.secret_arn}:password"
     DATABASE_USER          = "${module.database.secret_arn}:username"
     SECRET_KEY_BASE        = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}:key"
+    SSN_HASHING_KEY        = "${module.secrets.secrets["ssn_hashing_key"].secret_arn}:key"
   }
 }
 
@@ -110,6 +117,7 @@ module "workers" {
     DATABASE_PASSWORD      = "${module.database.secret_arn}:password"
     DATABASE_USER          = "${module.database.secret_arn}:username"
     SECRET_KEY_BASE        = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}:key"
+    SSN_HASHING_KEY        = "${module.secrets.secrets["ssn_hashing_key"].secret_arn}:key"
   }
 }
 
