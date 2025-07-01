@@ -29,3 +29,9 @@ variable "state_version_expiration" {
   description = "Age (in days) before non-current versions of the state file are expired."
   default     = 30
 }
+
+variable "review_app" {
+  type        = string
+  description = "whether this is a application for reviewing code changes (staging/heroku/demo)"
+  default     = "true"
+}

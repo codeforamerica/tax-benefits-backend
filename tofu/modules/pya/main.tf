@@ -79,6 +79,7 @@ module "web" {
     RACK_ENV = var.environment
     DATABASE_HOST = module.database.cluster_endpoint
     S3_BUCKET = aws_s3_bucket.submission_pdfs.bucket
+    REVIEW_APP = var.review_app
   }
   environment_secrets = {
     DATABASE_PASSWORD      = "${module.database.secret_arn}:password"
@@ -112,6 +113,7 @@ module "workers" {
     RACK_ENV = var.environment
     DATABASE_HOST = module.database.cluster_endpoint
     S3_BUCKET = aws_s3_bucket.submission_pdfs.bucket
+    REVIEW_APP = var.review_app
   }
   environment_secrets = {
     DATABASE_PASSWORD      = "${module.database.secret_arn}:password"
