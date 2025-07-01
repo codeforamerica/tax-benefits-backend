@@ -23,25 +23,31 @@ on:
           - demo.fileyourstatetaxes.org
           - demo.getyourrefund.org
           - demo.mireembolso.org
+          - heroku.pya.fileyourstatetaxes.org
           - staging.fileyourstatetaxes.org
           - staging.getyourrefund.org
           - staging.mireembolso.org
           - staging.pya.fileyourstatetaxes.org
+          - pya.fileyourstatetaxes.org
           - www.fileyourstatetaxes.org
           - www.getctc.org
           - www.getyourrefund.org
           - www.mireembolso.org
-env:
-  CONFIG: ${{ inputs.config || github.event.client_payload.config }}
 
 permissions:
   contents: read
 
+env:
+  CONFIG: ${{ inputs.config || github.event.client_payload.config }}
+  ENVIRONMENT: ${{ inputs.environment || github.event.client_payload.environment }}
+
 jobs:
   deploy:
-    name: Deploy ${{ inputs.config }} to ${{ inputs.environment }}
+    name: Deploy ${{ inputs.config || github.event.client_payload.config }} to ${{ inputs.environment || github.event.client_payload.environment }}
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment || github.event.client_payload.environment }}
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}-${{ inputs.environment || github.event.client_payload.environment }}-${{ inputs.config || github.event.client_payload.config }}
     env:
       APTIBLE_USERNAME: ${{ secrets.APTIBLE_USERNAME }}
       APTIBLE_PASSWORD: ${{ secrets.APTIBLE_PASSWORD }}

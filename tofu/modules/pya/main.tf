@@ -6,7 +6,7 @@ module "logging" {
   cloudwatch_log_retention = 30
   log_groups = {
     "waf" = {
-      name = "aws-waf-logs-cfa/pya/staging"
+      name = "aws-waf-logs-cfa/pya/${var.environment}"
       tags = {
         source = "waf"
         webacl = "pya-${var.environment}"
@@ -55,7 +55,7 @@ module "web" {
   service       = "web"
   service_short = "web"
 
-  domain          = "staging.pya.fileyourstatetaxes.org"
+  domain          = var.domain
   vpc_id          = module.vpc.vpc_id
   private_subnets = module.vpc.private_subnets
   public_subnets  = module.vpc.public_subnets
@@ -67,11 +67,17 @@ module "web" {
   public = true
   health_check_path = "/up"
 
+  execution_policies = [aws_iam_policy.ecs_s3_access.arn]
+
   environment_variables = {
     RACK_ENV = var.environment
+    DATABASE_HOST = module.database.cluster_endpoint
+    S3_BUCKET = aws_s3_bucket.submission_pdfs.bucket
   }
   environment_secrets = {
-    SECRET_KEY_BASE = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}:key"
+    DATABASE_PASSWORD      = "${module.database.secret_arn}:password"
+    DATABASE_USER          = "${module.database.secret_arn}:username"
+    SECRET_KEY_BASE        = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}:key"
   }
 }
 
@@ -93,8 +99,17 @@ module "workers" {
   image_url = module.web.repository_url
   create_endpoint = false
 
+  execution_policies = [aws_iam_policy.ecs_s3_access.arn]
+
   environment_variables = {
-    RACK_ENV = "staging"
+    RACK_ENV = var.environment
+    DATABASE_HOST = module.database.cluster_endpoint
+    S3_BUCKET = aws_s3_bucket.submission_pdfs.bucket
+  }
+  environment_secrets = {
+    DATABASE_PASSWORD      = "${module.database.secret_arn}:password"
+    DATABASE_USER          = "${module.database.secret_arn}:username"
+    SECRET_KEY_BASE        = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}:key"
   }
 }
 
@@ -117,3 +132,47 @@ module "database" {
   max_capacity = 32
   cluster_parameters = []
 }
+
+locals {
+  aws_logs_path = "/AWSLogs/${data.aws_caller_identity.identity.account_id}"
+}
+
+data "aws_caller_identity" "identity" {}
+
+data "aws_partition" "current" {}
+
+resource "aws_kms_key" "submission_pdfs" {
+  description             = "OpenTofu submission_pdfs S3 encryption key for pya ${var.environment}"
+  deletion_window_in_days = 30
+  enable_key_rotation     = true
+  policy = templatefile("${path.module}/templates/key-policy.json.tftpl", {
+    account_id : data.aws_caller_identity.identity.account_id,
+    partition : data.aws_partition.current.partition,
+    bucket_arn : aws_s3_bucket.submission_pdfs.bucket
+  })
+}
+
+# IAM policy for ECS tasks to access S3
+resource "aws_iam_policy" "ecs_s3_access" {
+  name = "pya-${var.environment}-ecs-s3-access"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "s3:GetObject",
+          "s3:PutObject",
+          "s3:ListBucket",
+          "s3:DeleteObject"
+        ]
+        Resource = [
+          aws_s3_bucket.submission_pdfs.arn,
+          "${aws_s3_bucket.submission_pdfs.arn}/*"
+        ]
+      }
+    ]
+  })
+}
+
