@@ -1,3 +1,5 @@
 misconfigurations:
   # Ignore Dockerfile healthcheck.
   - id: AVD-DS-0026
+  # Ignore AWS EC2 AMI owners check
+  - id: AVD-AWS-0206
