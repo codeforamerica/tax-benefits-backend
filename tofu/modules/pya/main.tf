@@ -109,6 +109,7 @@ module "workers" {
   create_endpoint = false
 
   execution_policies = [aws_iam_policy.ecs_s3_access.arn]
+  task_policies = [aws_iam_policy.ecs_s3_access.arn]
 
   environment_variables = {
     RACK_ENV = var.environment
