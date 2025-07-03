@@ -159,7 +159,7 @@ resource "aws_kms_key" "submission_pdfs" {
     account_id : data.aws_caller_identity.identity.account_id,
     partition : data.aws_partition.current.partition,
     bucket_arn : aws_s3_bucket.submission_pdfs.bucket,
-    task_role_arn: "arn:aws:iam::${data.aws_caller_identity.identity.account_id}:role/pya-${var.environment}-*"
+    environment: var.environment
   })
 }
 

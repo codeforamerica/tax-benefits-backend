@@ -35,16 +35,19 @@
       }
     },
     {
-          "Sid": "Allow ECS Task to use KMS key",
-          "Effect": "Allow",
-          "Principal": {
-            "AWS": "${task_role_arn}"
-          },
-          "Action": [
-            "kms:GenerateDataKey",
-            "kms:Decrypt"
-          ],
-          "Resource": "*"
+      "Sid": "Allow ECS Task to use KMS key",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": [
+          "arn:aws:iam::${account_id}:role/pya-${environment}-web-task",
+          "arn:aws:iam::${account_id}:role/pya-${environment}-worker-task"
+        ]
+      },
+      "Action": [
+        "kms:GenerateDataKey",
+        "kms:Decrypt"
+      ],
+      "Resource": "*"
     }
   ]
 }
