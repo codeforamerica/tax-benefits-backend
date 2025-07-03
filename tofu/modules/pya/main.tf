@@ -175,11 +175,16 @@ resource "aws_iam_policy" "ecs_s3_access" {
           "s3:GetObject",
           "s3:PutObject",
           "s3:ListBucket",
-          "s3:DeleteObject"
+          "s3:DeleteObject",
+          "kms:Decrypt",
+          "kms:Encrypt",
+          "kms:GenerateDataKey",
+          "kms:DescribeKey",
         ]
         Resource = [
           aws_s3_bucket.submission_pdfs.arn,
-          "${aws_s3_bucket.submission_pdfs.arn}/*"
+          "${aws_s3_bucket.submission_pdfs.arn}/*",
+          aws_kms_key.submission_pdfs.arn
         ]
       }
     ]
