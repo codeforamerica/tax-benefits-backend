@@ -48,25 +48,6 @@
         "kms:Decrypt"
       ],
       "Resource": "*"
-    },
-    {
-      "Sid": "Allow ECS Task to Upload Objects in S3",
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": [
-          "arn:aws:iam::${account_id}:role/pya-${environment}-web-task",
-          "arn:aws:iam::${account_id}:role/pya-${environment}-worker-task"
-        ]
-      },
-      "Action": [
-        "s3:GetObject",
-        "s3:PutObject",
-        "s3:ListBucket"
-      ],
-      "Resource": [
-        "${bucket_arn}",
-        "${bucket_arn}/*"
-      ]
     }
   ]
 }

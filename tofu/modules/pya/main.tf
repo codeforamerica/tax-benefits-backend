@@ -74,6 +74,7 @@ module "web" {
   health_check_path = "/up"
 
   execution_policies = [aws_iam_policy.ecs_s3_access.arn]
+  task_policies = [aws_iam_policy.ecs_s3_access.arn]
 
   environment_variables = {
     RACK_ENV = var.environment
