@@ -139,6 +139,7 @@ module "database" {
   subnets         = module.vpc.private_subnets
   ingress_cidrs   = module.vpc.private_subnets_cidr_blocks
   iam_authentication = false
+  enable_data_api = true
 
   min_capacity = 2
   max_capacity = 32
