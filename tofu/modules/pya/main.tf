@@ -139,6 +139,7 @@ module "database" {
   subnets         = module.vpc.private_subnets
   ingress_cidrs   = module.vpc.private_subnets_cidr_blocks
   iam_authentication = false
+  enable_data_api = true
 
   min_capacity = 2
   max_capacity = 32
@@ -194,3 +195,12 @@ resource "aws_iam_policy" "ecs_s3_access" {
   })
 }
 
+module "bastion" {
+  source = "github.com/codeforamerica/tofu-modules-aws-ssm-bastion?ref=1.0.0"
+
+  project            = "pya"
+  environment        = var.environment
+  key_pair_name      = "pya-staging-bastion"
+  private_subnet_ids = module.vpc.private_subnets
+  vpc_id             = module.vpc.vpc_id
+}
