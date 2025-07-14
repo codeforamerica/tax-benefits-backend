@@ -202,7 +202,7 @@ module "bastion" {
 
   project            = "pya"
   environment        = var.environment
-  key_pair_name      = "pya-staging-bastion"
+  key_pair_name      = "pya-${var.environment}-bastion"
   private_subnet_ids = module.vpc.private_subnets
   vpc_id             = module.vpc.vpc_id
 }
