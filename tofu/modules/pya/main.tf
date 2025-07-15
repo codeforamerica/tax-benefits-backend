@@ -72,6 +72,7 @@ module "web" {
   create_version_parameter = true
   public = true
   health_check_path = "/up"
+  enable_execute_command = true
 
   execution_policies = [aws_iam_policy.ecs_s3_access.arn]
   task_policies = [aws_iam_policy.ecs_s3_access.arn]
@@ -107,6 +108,7 @@ module "workers" {
   version_parameter = module.web.version_parameter
   image_url = module.web.repository_url
   create_endpoint = false
+  enable_execute_command = true
 
   execution_policies = [aws_iam_policy.ecs_s3_access.arn]
   task_policies = [aws_iam_policy.ecs_s3_access.arn]
@@ -200,7 +202,7 @@ module "bastion" {
 
   project            = "pya"
   environment        = var.environment
-  key_pair_name      = "pya-staging-bastion"
+  key_pair_name      = "pya-${var.environment}-bastion"
   private_subnet_ids = module.vpc.private_subnets
   vpc_id             = module.vpc.vpc_id
 }
