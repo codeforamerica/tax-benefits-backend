@@ -143,8 +143,8 @@ module "database" {
   iam_authentication = false
   enable_data_api = true
 
-  min_capacity = 2
-  max_capacity = 32
+  min_capacity = 0
+  max_capacity = 10
   cluster_parameters = []
 }
 
