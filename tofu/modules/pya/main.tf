@@ -36,6 +36,24 @@ module "secrets" {
       start_value = jsonencode({
         key = ""
       })
+    },
+      "twilio_account_sid" = {
+      description = "account sid for twilio"
+      start_value = jsonencode({
+        key = ""
+      })
+    },
+    "twilio_auth_token" = {
+      description = "auth token for twilio"
+      start_value = jsonencode({
+        key = ""
+       })
+     },
+    "twilio_messaging_service_sid" = {
+      description = "auth token for twilio"
+      start_value = jsonencode({
+        key = ""
+      })
     }
   }
 }
@@ -88,6 +106,9 @@ module "web" {
     DATABASE_USER          = "${module.database.secret_arn}:username"
     SECRET_KEY_BASE        = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}:key"
     SSN_HASHING_KEY        = "${module.secrets.secrets["ssn_hashing_key"].secret_arn}:key"
+    TWILIO_ACCOUNT_SID     = "${module.secrets.secrets["twilio_account_sid"].secret_arn}:key"
+    TWILIO_AUTH_TOKEN      = "${module.secrets.secrets["twilio_auth_token"].secret_arn}:key"
+    TWILIO_MESSAGING_SERVICE = "${module.secrets.secrets["twilio_messaging_service_sid"].secret_arn}:key"
   }
 }
 
@@ -124,6 +145,9 @@ module "workers" {
     DATABASE_USER          = "${module.database.secret_arn}:username"
     SECRET_KEY_BASE        = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}:key"
     SSN_HASHING_KEY        = "${module.secrets.secrets["ssn_hashing_key"].secret_arn}:key"
+    TWILIO_ACCOUNT_SID     = "${module.secrets.secrets["twilio_account_sid"].secret_arn}:key"
+    TWILIO_AUTH_TOKEN      = "${module.secrets.secrets["twilio_auth_token"].secret_arn}:key"
+    TWILIO_MESSAGING_SERVICE = "${module.secrets.secrets["twilio_messaging_service_sid"].secret_arn}:key"
   }
 }
 
