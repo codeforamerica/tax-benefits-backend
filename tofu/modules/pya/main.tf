@@ -152,7 +152,7 @@ module "workers" {
 }
 
 module "database" {
-  source = "github.com/codeforamerica/tofu-modules-aws-serverless-database?ref=log-exports"
+  source = "github.com/codeforamerica/tofu-modules-aws-serverless-database?ref=1.3.1"
 
   project     = "pya"
   environment = var.environment
@@ -164,7 +164,7 @@ module "database" {
   vpc_id          = module.vpc.vpc_id
   subnets         = module.vpc.private_subnets
   ingress_cidrs   = module.vpc.private_subnets_cidr_blocks
-  iam_authentication = false
+  iam_authentication = true
   enable_data_api = true
 
   min_capacity = 0
