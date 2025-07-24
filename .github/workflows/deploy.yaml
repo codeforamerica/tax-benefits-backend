@@ -20,6 +20,7 @@ on:
           - ctc.demo.getyourrefund.org
           - ctc.staging.getyourrefund.org
           - datadog
+          - demo.efilerapi.org
           - demo.fileyourstatetaxes.org
           - demo.getyourrefund.org
           - demo.mireembolso.org
