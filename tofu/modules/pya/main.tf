@@ -37,7 +37,7 @@ module "secrets" {
         key = ""
       })
     },
-      "twilio_account_sid" = {
+    "twilio_account_sid" = {
       description = "account sid for twilio"
       start_value = jsonencode({
         key = ""
@@ -47,10 +47,34 @@ module "secrets" {
       description = "auth token for twilio"
       start_value = jsonencode({
         key = ""
-       })
-     },
+      })
+    },
     "twilio_messaging_service_sid" = {
-      description = "auth token for twilio"
+      description = "messaging service sid for twilio"
+      start_value = jsonencode({
+        key = ""
+      })
+    },
+    "mailgun_api_key" = {
+      description = "API key for Mailgun"
+      start_value = jsonencode({
+        key = ""
+      })
+    },
+    "mailgun_domain" = {
+      description = "Domain used with Mailgun"
+      start_value = jsonencode({
+        key = ""
+      })
+    },
+    "mailgun_basic_auth_name" = {
+      description = "Basic auth username for Mailgun"
+      start_value = jsonencode({
+        key = ""
+      })
+    },
+    "mailgun_basic_auth_password" = {
+      description = "Basic auth password for Mailgun"
       start_value = jsonencode({
         key = ""
       })
@@ -109,6 +133,10 @@ module "web" {
     TWILIO_ACCOUNT_SID     = "${module.secrets.secrets["twilio_account_sid"].secret_arn}:key"
     TWILIO_AUTH_TOKEN      = "${module.secrets.secrets["twilio_auth_token"].secret_arn}:key"
     TWILIO_MESSAGING_SERVICE = "${module.secrets.secrets["twilio_messaging_service_sid"].secret_arn}:key"
+    MAILGUN_API_KEY = "${module.secrets.secrets["mailgun_api_key"].secret_arn}:key"
+    MAILGUN_DOMAIN = "${module.secrets.secrets["mailgun_domain"].secret_arn}:key"
+    MAILGUN_BASIC_AUTH_NAME = "${module.secrets.secrets["mailgun_basic_auth_name"].secret_arn}:key"
+    MAILGUN_BASIC_AUTH_PASSWORD = "${module.secrets.secrets["mailgun_basic_auth_password"].secret_arn}:key"
   }
 }
 
@@ -148,6 +176,10 @@ module "workers" {
     TWILIO_ACCOUNT_SID     = "${module.secrets.secrets["twilio_account_sid"].secret_arn}:key"
     TWILIO_AUTH_TOKEN      = "${module.secrets.secrets["twilio_auth_token"].secret_arn}:key"
     TWILIO_MESSAGING_SERVICE = "${module.secrets.secrets["twilio_messaging_service_sid"].secret_arn}:key"
+    MAILGUN_API_KEY = "${module.secrets.secrets["mailgun_api_key"].secret_arn}:key"
+    MAILGUN_DOMAIN = "${module.secrets.secrets["mailgun_domain"].secret_arn}:key"
+    MAILGUN_BASIC_AUTH_NAME = "${module.secrets.secrets["mailgun_basic_auth_name"].secret_arn}:key"
+    MAILGUN_BASIC_AUTH_PASSWORD = "${module.secrets.secrets["mailgun_basic_auth_password"].secret_arn}:key"
   }
 }
 
