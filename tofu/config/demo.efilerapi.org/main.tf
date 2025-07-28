@@ -32,3 +32,24 @@ module "vpc" {
   private_subnets = ["10.0.50.0/26", "10.0.50.64/26", "10.0.50.128/26"]
   public_subnets  = ["10.0.48.0/26", "10.0.48.64/26", "10.0.48.128/26"]
 }
+
+module "fargate_service" {
+  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.4.0"
+
+  project       = "efiler-api"
+  project_short = "efiler-api"
+  environment   = "dev"
+  service       = "fargate_service"
+  service_short = "fargate_service"
+
+  domain          = "demo.efiler.org"
+  vpc_id          = module.vpc.vpc_id
+  private_subnets = module.vpc.private_subnets
+  public_subnets  = module.vpc.public_subnets
+  logging_key_id  = module.logging.kms_key_arn
+  container_port  = 3000
+
+  environment_variables = {
+    RACK_ENV = "development"
+  }
+}
