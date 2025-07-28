@@ -18,14 +18,14 @@ module "logging" {
   source = "github.com/codeforamerica/tofu-modules-aws-logging?ref=2.1.0"
 
   project     = "efiler-api"
-  environment = "dev"
+  environment = "demo"
 }
 
 module "vpc" {
   source = "github.com/codeforamerica/tofu-modules-aws-vpc?ref=1.1.1"
 
   project        = "efiler-api"
-  environment    = "dev"
+  environment    = "demo"
   cidr           = "10.0.48.0/22"
   logging_key_id = module.logging.kms_key_arn
 
