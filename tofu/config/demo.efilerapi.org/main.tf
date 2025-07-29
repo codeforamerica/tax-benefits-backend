@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     bucket         = "efiler-api-demo-tfstate"
-    key            = "demo.efilerapi.org"
+    key            = "demo.efiler-api.fileyourstatetaxes.org"
     region         = "us-east-1"
     dynamodb_table = "demo.tfstate"
   }
@@ -42,14 +42,10 @@ module "web" {
   service       = "web"
   service_short = "web"
 
-  domain          = "demo.efilerapi.org"
+  domain          = "demo.efiler-api.fileyourstatetaxes.org"
   vpc_id          = module.vpc.vpc_id
   private_subnets = module.vpc.private_subnets
   public_subnets  = module.vpc.public_subnets
   logging_key_id  = module.logging.kms_key_arn
-  container_port  = 3000
-
-  environment_variables = {
-    RACK_ENV = "development"
-  }
+  container_port  = 4567
 }
