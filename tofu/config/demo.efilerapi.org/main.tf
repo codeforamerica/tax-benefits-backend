@@ -34,7 +34,7 @@ module "vpc" {
 }
 
 module "web" {
-  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.4.0"
+  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.2.0"
 
   project       = "efiler-api"
   project_short = "efiler-api"
