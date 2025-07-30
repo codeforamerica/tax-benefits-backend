@@ -64,6 +64,7 @@ module "secrets" {
   secrets = {
     "efiler-api-client-mef-credentials/efiler_api_test_client" = {
       description = "mef credentials for api_test_client"
+      name = "efiler-api-client-mef-credentials/efiler_api_test_client"
       start_value = jsonencode({
         app_sys_id = ""
         etin = ""
@@ -74,6 +75,7 @@ module "secrets" {
     },
     "efiler-api-client-mef-credentials/efiler_api_test_client_two" = {
       description = "mef credentials for api_test_client_two"
+      name = "efiler-api-client-mef-credentials/efiler_api_test_client_two"
       start_value = jsonencode({
         app_sys_id = ""
         etin = ""
