@@ -54,35 +54,3 @@ module "web" {
   public = false
   enable_execute_command = true
 }
-
-module "secrets" {
-  source = "github.com/codeforamerica/tofu-modules-aws-secrets?ref=1.0.0"
-
-  project     = "efiler-api"
-  environment = "demo"
-
-  secrets = {
-    "efiler-api-client-mef-credentials/efiler_api_test_client" = {
-      description = "mef credentials for api_test_client"
-      name = "efiler-api-client-mef-credentials/efiler_api_test_client"
-      start_value = jsonencode({
-        app_sys_id = ""
-        etin = ""
-        cert_base64 = ""
-        mef_env = ""
-        efiler_api_public_key = ""
-      })
-    },
-    "efiler-api-client-mef-credentials/efiler_api_test_client_two" = {
-      description = "mef credentials for api_test_client_two"
-      name = "efiler-api-client-mef-credentials/efiler_api_test_client_two"
-      start_value = jsonencode({
-        app_sys_id = ""
-        etin = ""
-        cert_base64 = ""
-        mef_env = ""
-        efiler_api_public_key = ""
-      })
-    }
-  }
-}
