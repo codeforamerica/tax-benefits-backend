@@ -34,7 +34,7 @@ module "vpc" {
 }
 
 module "web" {
-  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.4.0"
+  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.2.0"
 
   project       = "efiler-api"
   project_short = "efiler-api"
@@ -48,4 +48,9 @@ module "web" {
   public_subnets  = module.vpc.public_subnets
   logging_key_id  = module.logging.kms_key_arn
   container_port  = 4567
+  create_endpoint = true
+  create_repository   = true
+  create_version_parameter = true
+  public = false
+  enable_execute_command = true
 }
