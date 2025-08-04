@@ -181,6 +181,9 @@ module "workers" {
     MAILGUN_BASIC_AUTH_NAME = "${module.secrets.secrets["mailgun_basic_auth_name"].secret_arn}:key"
     MAILGUN_BASIC_AUTH_PASSWORD = "${module.secrets.secrets["mailgun_basic_auth_password"].secret_arn}:key"
   }
+
+  container_command = ["bundle", "exec", "rake", "jobs:work"]
+  repository_arn = module.web.repository_arn
 }
 
 module "database" {
