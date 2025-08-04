@@ -183,6 +183,7 @@ module "workers" {
   }
 
   container_command = ["bundle", "exec", "rake", "jobs:work"]
+  repository_arn = module.web.repository_arn
 }
 
 module "database" {
