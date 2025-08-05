@@ -54,3 +54,13 @@ module "web" {
   public = false
   enable_execute_command = true
 }
+
+module "bastion" {
+  source = "github.com/codeforamerica/tofu-modules-aws-ssm-bastion?ref=1.0.0"
+
+  project            = "efiler-api"
+  environment        = "demo"
+  key_pair_name      = "efiler-api-demo-bastion"
+  private_subnet_ids = module.vpc.private_subnets
+  vpc_id             = module.vpc.vpc_id
+}
