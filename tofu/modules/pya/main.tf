@@ -104,7 +104,7 @@ module "vpc" {
 }
 
 module "web" {
-  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.2.0"
+  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.2.1"
 
   project       = "pya"
   project_short = "pya"
@@ -150,7 +150,7 @@ module "web" {
 }
 
 module "workers" {
-  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.2.0"
+  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.2.1"
 
   project       = "pya"
   project_short = "pya"
@@ -166,6 +166,7 @@ module "workers" {
   version_parameter = module.web.version_parameter
   image_url = module.web.repository_url
   create_endpoint = false
+  create_repository = false
   enable_execute_command = true
 
   execution_policies = [aws_iam_policy.ecs_s3_access.arn]
