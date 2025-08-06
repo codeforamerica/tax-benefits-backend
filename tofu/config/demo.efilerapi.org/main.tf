@@ -53,6 +53,10 @@ module "web" {
   create_version_parameter = true
   public = false
   enable_execute_command = true
+
+  environment_variables = {
+    AWS_REGION = "us-east-1"
+  }
 }
 
 module "bastion" {
