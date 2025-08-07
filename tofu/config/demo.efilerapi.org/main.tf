@@ -54,6 +54,8 @@ module "web" {
   public = false
   enable_execute_command = true
 
+  task_policies = ["arn:aws:iam::669097061340:policy/efiler-api-client-mef-credentials-access"]
+
   environment_variables = {
     AWS_REGION = "us-east-1"
   }
