@@ -56,6 +56,10 @@ module "web" {
 
   task_policies = ["arn:aws:iam::669097061340:policy/efiler-api-client-mef-credentials-access"]
   execution_policies = ["arn:aws:iam::669097061340:policy/efiler-api-client-mef-credentials-access"]
+
+  environment_variables = {
+    RACK_ENV = "demo"
+  }
 }
 
 module "bastion" {
