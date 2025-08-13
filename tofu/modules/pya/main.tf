@@ -78,6 +78,18 @@ module "secrets" {
       start_value = jsonencode({
         key = ""
       })
+    },
+    "aws_access_key_id" = {
+      description = "Amazon Access Key Id"
+      start_value = jsonencode({
+        key = ""
+      })
+    },
+    "aws_secret_access_key" = {
+      description = "Amazon Secret Access Key"
+      start_value = jsonencode({
+        key = ""
+      })
     }
   }
 }
@@ -145,7 +157,8 @@ module "web" {
     MAILGUN_API_KEY = "${module.secrets.secrets["mailgun_api_key"].secret_arn}:key"
     MAILGUN_DOMAIN = "${module.secrets.secrets["mailgun_domain"].secret_arn}:key"
     MAILGUN_BASIC_AUTH_NAME = "${module.secrets.secrets["mailgun_basic_auth_name"].secret_arn}:key"
-    MAILGUN_BASIC_AUTH_PASSWORD = "${module.secrets.secrets["mailgun_basic_auth_password"].secret_arn}:key"
+    AWS_ACCESS_KEY_ID = "${module.secrets.secrets["aws_access_key_id"].secret_arn}:key"
+    AWS_SECRET_ACCESS_KEY = "${module.secrets.secrets["aws_secret_access_key"].secret_arn}:key"
   }
 }
 
@@ -190,6 +203,8 @@ module "workers" {
     MAILGUN_DOMAIN = "${module.secrets.secrets["mailgun_domain"].secret_arn}:key"
     MAILGUN_BASIC_AUTH_NAME = "${module.secrets.secrets["mailgun_basic_auth_name"].secret_arn}:key"
     MAILGUN_BASIC_AUTH_PASSWORD = "${module.secrets.secrets["mailgun_basic_auth_password"].secret_arn}:key"
+    AWS_ACCESS_KEY_ID = "${module.secrets.secrets["aws_access_key_id"].secret_arn}:key"
+    AWS_SECRET_ACCESS_KEY = "${module.secrets.secrets["aws_secret_access_key"].secret_arn}:key"
   }
 
   container_command = ["bundle", "exec", "rake", "jobs:work"]
