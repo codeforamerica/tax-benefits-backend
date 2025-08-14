@@ -47,7 +47,7 @@ module "web" {
   private_subnets = module.vpc.private_subnets
   public_subnets  = module.vpc.public_subnets
   logging_key_id  = module.logging.kms_key_arn
-  container_port  = 4567
+  container_port  = 80
   create_endpoint = true
   create_repository   = true
   create_version_parameter = true
