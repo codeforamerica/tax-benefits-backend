@@ -54,10 +54,16 @@ module "web" {
   public = false
   enable_execute_command = true
 
+  # This has an ARN specified manually until we decide to make the secrets module work without adding suffices to the secret names
   task_policies = ["arn:aws:iam::669097061340:policy/efiler-api-client-mef-credentials-access"]
 
   environment_variables = {
     RACK_ENV = "demo"
+  }
+
+  # This has an ARN specified manually until we start using the secrets module for MeF credential secrets (see above)
+  environment_secrets = {
+    SECRET_KEY_BASE = "arn:aws:secretsmanager:us-east-1:669097061340:secret:rails_secret_key_base-h1ygaE:key"
   }
 }
 
