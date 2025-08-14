@@ -47,17 +47,23 @@ module "web" {
   private_subnets = module.vpc.private_subnets
   public_subnets  = module.vpc.public_subnets
   logging_key_id  = module.logging.kms_key_arn
-  container_port  = 4567
+  container_port  = 80
   create_endpoint = true
   create_repository   = true
   create_version_parameter = true
   public = false
   enable_execute_command = true
 
+  # This has an ARN specified manually until we decide to make the secrets module work without adding suffices to the secret names
   task_policies = ["arn:aws:iam::669097061340:policy/efiler-api-client-mef-credentials-access"]
 
   environment_variables = {
     RACK_ENV = "demo"
+  }
+
+  # This has an ARN specified manually until we start using the secrets module for MeF credential secrets (see above)
+  environment_secrets = {
+    SECRET_KEY_BASE = "arn:aws:secretsmanager:us-east-1:669097061340:secret:rails_secret_key_base-h1ygaE:key"
   }
 }
 
