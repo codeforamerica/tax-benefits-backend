@@ -64,7 +64,7 @@ module "web" {
 
   # This has an ARN specified manually until we start using the secrets module for MeF credential secrets (see above)
   environment_secrets = {
-    SECRET_KEY_BASE = "arn:aws:secretsmanager:us-east-1:669097061340:secret:rails_secret_key_base-h1ygaE"
+    SECRET_KEY_BASE = "arn:aws:secretsmanager:us-east-1:669097061340:secret:rails_secret_key_base-h1ygaE:key"
   }
 }
 
