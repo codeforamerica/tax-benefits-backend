@@ -277,7 +277,7 @@ module "bastion" {
 }
 
 resource "aws_cloudwatch_log_subscription_filter" "datadog" {
-  for_each = length(local.datadog_lambda) > 0 ? toset(["web", "workers"]) : toset([])
+  for_each = length(local.datadog_lambda) > 0 ? toset(["web", "worker"]) : toset([])
 
   name            = "datadog"
   log_group_name  = "/aws/ecs/pya/${var.environment}/${each.key}"
