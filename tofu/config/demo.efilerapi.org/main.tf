@@ -34,7 +34,7 @@ module "vpc" {
 }
 
 module "web" {
-  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.2.0"
+  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.6.0"
 
   project       = "efiler-api"
   project_short = "efiler-api"
@@ -53,6 +53,7 @@ module "web" {
   create_version_parameter = true
   public = false
   enable_execute_command = true
+  use_target_group_port_suffix = true
 
   # This has an ARN specified manually until we decide to make the secrets module work without adding suffices to the secret names
   task_policies = ["arn:aws:iam::669097061340:policy/efiler-api-client-mef-credentials-access"]
