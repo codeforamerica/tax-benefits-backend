@@ -275,3 +275,12 @@ module "bastion" {
   private_subnet_ids = module.vpc.private_subnets
   vpc_id             = module.vpc.vpc_id
 }
+
+resource "aws_cloudwatch_log_subscription_filter" "datadog" {
+  for_each = length(local.datadog_lambda) > 0 ? toset(["web", "workers"]) : toset([])
+
+  name            = "datadog"
+  log_group_name  = "/aws/ecs/pya/${var.environment}/${each.key}"
+  filter_pattern  = ""
+  destination_arn = data.aws_lambda_function.datadog["this"].arn
+}
