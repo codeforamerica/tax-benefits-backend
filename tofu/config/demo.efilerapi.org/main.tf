@@ -21,6 +21,16 @@ module "logging" {
   environment = "demo"
 }
 
+module "secrets" {
+  source = "github.com/codeforamerica/tofu-modules-aws-secrets?ref=1.0.0"
+
+  project     = "efiler-api"
+  environment = "demo"
+
+  secrets = {
+  }
+}
+
 module "vpc" {
   source = "github.com/codeforamerica/tofu-modules-aws-vpc?ref=1.1.1"
 
@@ -60,12 +70,35 @@ module "web" {
 
   environment_variables = {
     RACK_ENV = "demo"
+    DATABASE_HOST = module.database.cluster_endpoint
   }
 
-  # This has an ARN specified manually until we start using the secrets module for MeF credential secrets (see above)
   environment_secrets = {
+    DATABASE_PASSWORD      = "${module.database.secret_arn}:password"
+    DATABASE_USER          = "${module.database.secret_arn}:username"
+
+    # This has an ARN specified manually until we start using the secrets module for MeF credential secrets (see above)
     SECRET_KEY_BASE = "arn:aws:secretsmanager:us-east-1:669097061340:secret:rails_secret_key_base-h1ygaE:key"
   }
+}
+
+module "database" {
+  source = "github.com/codeforamerica/tofu-modules-aws-serverless-database?ref=1.3.1"
+
+  project     = "efiler-api"
+  environment = "demo"
+  service     = "web"
+  skip_final_snapshot	= true
+
+  logging_key_arn = module.logging.kms_key_arn
+  secrets_key_arn = module.secrets.kms_key_arn
+  vpc_id          = module.vpc.vpc_id
+  subnets         = module.vpc.private_subnets
+  ingress_cidrs   = module.vpc.private_subnets_cidr_blocks
+
+  min_capacity = 0
+  max_capacity = 10
+  cluster_parameters = []
 }
 
 module "bastion" {
