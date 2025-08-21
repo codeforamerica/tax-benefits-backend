@@ -14,8 +14,8 @@ module "backend" {
   environment = "demo"
 }
 
-module "efiler-api" {
-  source = "../../modules/efiler-api"
+module "efiler_api" {
+  source = "../../modules/efiler_api"
 
   environment         = "demo"
   domain              = "demo.efiler-api.fileyourstatetaxes.org"
