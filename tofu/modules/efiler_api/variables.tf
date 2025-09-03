@@ -1,19 +1,24 @@
+variable "domain" {
+  description = "Efiler API domain"
+  type        = string
+}
+
 variable "environment" {
   description = "The environment in which the e-filer api infrastructure is being deployed."
   type        = string
 }
 
 variable "cidr" {
-  type        = string
   description = "CIDR for vpc"
+  type        = string
 }
 
 variable "private_subnets" {
-  type        = list(string)
   description = "CIDRs for private_subnets"
+  type        = list(string)
 }
 
 variable "public_subnets" {
-  type        = list(string)
   description = "CIDRs for public_subnets"
+  type        = list(string)
 }

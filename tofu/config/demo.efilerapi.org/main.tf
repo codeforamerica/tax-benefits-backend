@@ -7,18 +7,19 @@ terraform {
   }
 }
 
-module "efiler_api" {
-  source = "../../modules/efiler_api"
-
-  environment = "demo"
-  cidr           = "10.0.48.0/22"
-  private_subnets = ["10.0.50.0/26", "10.0.50.64/26", "10.0.50.128/26"]
-  public_subnets  = ["10.0.48.0/26", "10.0.48.64/26", "10.0.48.128/26"]
-}
-
 module "backend" {
   source = "github.com/codeforamerica/tofu-modules-aws-backend?ref=1.1.1"
 
   project     = "efiler-api"
   environment = "demo"
+}
+
+module "efiler_api" {
+  source = "../../modules/efiler_api"
+
+  environment     = "demo"
+  domain          = "demo.efiler-api.fileyourstatetaxes.org"
+  cidr            = "10.0.48.0/22"
+  private_subnets = ["10.0.50.0/26", "10.0.50.64/26", "10.0.50.128/26"]
+  public_subnets  = ["10.0.48.0/26", "10.0.48.64/26", "10.0.48.128/26"]
 }
