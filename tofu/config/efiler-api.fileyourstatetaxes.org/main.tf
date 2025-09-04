@@ -14,12 +14,12 @@ module "backend" {
   environment = "production"
 }
 
-module "efiler_api" {
-  source = "../../modules/efiler_api"
-
-  environment         = "production"
-  domain              = "production.efiler-api.fileyourstatetaxes.org"
-  cidr                = "10.0.60.0/22"
-  private_subnets     = ["10.0.62.0/26", "10.0.62.64/26", "10.0.62.128/2"]
-  public_subnets      = ["10.0.60.0/26", "10.0.60.64/26", "10.0.60.128/26"]
-}
+# module "efiler_api" {
+#   source = "../../modules/efiler_api"
+#
+#   environment         = "production"
+#   domain              = "production.efiler-api.fileyourstatetaxes.org"
+#   cidr                = "10.0.60.0/22"
+#   private_subnets     = ["10.0.62.0/26", "10.0.62.64/26", "10.0.62.128/2"]
+#   public_subnets      = ["10.0.60.0/26", "10.0.60.64/26", "10.0.60.128/26"]
+# }
