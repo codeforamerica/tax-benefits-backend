@@ -38,6 +38,7 @@ on:
           - ctc.staging.getyourrefund.org
           - datadog
           - demo.efiler-api.fileyourstatetaxes.org
+          - efiler-api.fileyourstatetaxes.org
           - demo.fileyourstatetaxes.org
           - demo.getyourrefund.org
           - demo.mireembolso.org
