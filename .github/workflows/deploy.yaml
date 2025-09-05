@@ -24,6 +24,7 @@ on:
           - demo.fileyourstatetaxes.org
           - demo.getyourrefund.org
           - demo.mireembolso.org
+          - efiler-api.fileyourstatetaxes.org
           - heroku.pya.fileyourstatetaxes.org
           - staging.fileyourstatetaxes.org
           - staging.getyourrefund.org
