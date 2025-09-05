@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     bucket         = "efiler-api-production-tfstate"
-    key            = "production.efiler-api.fileyourstatetaxes.org"
+    key            = "efiler-api.fileyourstatetaxes.org"
     region         = "us-east-1"
     dynamodb_table = "production.tfstate"
   }
