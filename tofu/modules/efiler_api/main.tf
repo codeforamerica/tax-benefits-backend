@@ -18,12 +18,34 @@ module "vpc" {
 }
 
 module "secrets" {
-  source = "github.com/codeforamerica/tofu-modules-aws-secrets?ref=1.0.0"
+  source = "github.com/codeforamerica/tofu-modules-aws-secrets?ref=2.0.0"
 
   project     = "efiler-api"
   environment = var.environment
 
   secrets = {
+    "efiler-api-client-credentials/efiler_api_test_client" = {
+      description = "credentials for api_test_client"
+      add_suffix = false
+      start_value = jsonencode({
+        app_sys_id = ""
+        etin = ""
+        cert_base64 = ""
+        mef_env = ""
+        efiler_api_public_key = ""
+      })
+    },
+    "efiler-api-client-credentials/efiler_api_test_client_two" = {
+      description = "credentials for api_test_client_two"
+      add_suffix = false
+      start_value = jsonencode({
+        app_sys_id = ""
+        etin = ""
+        cert_base64 = ""
+        mef_env = ""
+        efiler_api_public_key = ""
+      })
+    }
   }
 }
 
