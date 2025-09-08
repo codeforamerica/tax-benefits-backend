@@ -24,6 +24,12 @@ module "secrets" {
   environment = var.environment
 
   secrets = {
+    "rails_secret_key_base" = {
+      description = "secret_key_base for Rails app"
+      start_value = jsonencode({
+        key = ""
+      })
+    },
     "efiler-api-client-credentials/efiler_api_test_client" = {
       description = "credentials for api_test_client"
       add_suffix = false
@@ -71,9 +77,6 @@ module "web" {
   enable_execute_command = true
   use_target_group_port_suffix = true
 
-  # This has an ARN specified manually until we decide to make the secrets module work without adding suffices to the secret names
-  task_policies = ["arn:aws:iam::669097061340:policy/efiler-api-client-mef-credentials-access"]
-
   environment_variables = {
     RACK_ENV = var.environment
     DATABASE_HOST = module.database.cluster_endpoint
@@ -82,9 +85,7 @@ module "web" {
   environment_secrets = {
     DATABASE_PASSWORD      = "${module.database.secret_arn}:password"
     DATABASE_USER          = "${module.database.secret_arn}:username"
-
-    # This has an ARN specified manually until we start using the secrets module for MeF credential secrets (see above)
-    SECRET_KEY_BASE = "arn:aws:secretsmanager:us-east-1:669097061340:secret:rails_secret_key_base-h1ygaE:key"
+    SECRET_KEY_BASE        = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}:key"
   }
 }
 
