@@ -42,6 +42,10 @@ locals {
       constraint = "STARTS_WITH"
       path       = "/en/hub/faq/"
     },
+    {
+      constraint = "ENDS_WITH"
+      path       = "/hub/bulk_message_csvs"
+    },
   ]
 
   webhooks = {
