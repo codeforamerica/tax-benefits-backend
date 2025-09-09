@@ -1,6 +1,7 @@
 locals {
   subdomain           = var.subdomain != "" ? var.subdomain : var.environment
-  gyr_upload_capacity = 108
+  # This capacity may need to increase in the future if we add many more rules
+  gyr_upload_capacity = 200
   gyr_upload_paths = [
     {
       constraint = "ENDS_WITH"
