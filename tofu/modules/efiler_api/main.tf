@@ -82,7 +82,7 @@ module "web" {
     SECRET_KEY_BASE        = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}:key"
   }
 
-  api_client_secrets = = {
+  api_client_secrets = {
     for api_client_name in var.api_client_names :
       api_client_name => "efiler-api-client-credentials/${api_client_name}"
   }
