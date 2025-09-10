@@ -23,3 +23,10 @@ variable "public_subnets" {
   type        = list(string)
   description = "CIDRs for public_subnets"
 }
+
+variable "api_client_names" {
+  type        = list(string)
+  description = "Names of known API clients, to be used in secret creation"
+  default     = []
+}
+
