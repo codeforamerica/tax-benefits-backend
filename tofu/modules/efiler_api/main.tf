@@ -23,26 +23,18 @@ module "secrets" {
   project     = "efiler-api"
   environment = var.environment
 
-  secrets = {
+  static_secrets = {
     "rails_secret_key_base" = {
       description = "secret_key_base for Rails app"
       start_value = jsonencode({
         key = ""
       })
-    },
-    "efiler-api-client-credentials/efiler_api_test_client" = {
-      description = "credentials for api_test_client"
-      add_suffix = false
-      start_value = jsonencode({
-        app_sys_id = ""
-        etin = ""
-        cert_base64 = ""
-        mef_env = ""
-        efiler_api_public_key = ""
-      })
-    },
-    "efiler-api-client-credentials/efiler_api_test_client_two" = {
-      description = "credentials for api_test_client_two"
+    }
+  }
+
+  api_client_secrets = {
+    for api_client_name in var.api_client_names : "efiler-api-client-credentials/${api_client_name}" => {
+      description = "credentials for ${api_client_name}"
       add_suffix = false
       start_value = jsonencode({
         app_sys_id = ""
@@ -53,6 +45,8 @@ module "secrets" {
       })
     }
   }
+
+  secrets = merge(static_secrets, api_client_secrets)
 }
 
 module "web" {
@@ -82,11 +76,18 @@ module "web" {
     DATABASE_HOST = module.database.cluster_endpoint
   }
 
-  environment_secrets = {
+  static_secrets = {
     DATABASE_PASSWORD      = "${module.database.secret_arn}:password"
     DATABASE_USER          = "${module.database.secret_arn}:username"
     SECRET_KEY_BASE        = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}:key"
   }
+
+  api_client_secrets = {
+    for api_client_name in var.api_client_names :
+      api_client_name => "efiler-api-client-credentials/${api_client_name}"
+  }
+
+  environment_secrets = merge(static_secrets, api_client_secrets)
 }
 
 module "database" {
