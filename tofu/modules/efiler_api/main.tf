@@ -1,3 +1,42 @@
+locals {
+  static_secrets = {
+    "rails_secret_key_base" = {
+      description = "secret_key_base for Rails app"
+      start_value = jsonencode({
+        key = ""
+      })
+    }
+  }
+
+  api_client_secrets = {
+    for api_client_name in var.api_client_names : "efiler-api-client-credentials/${api_client_name}" => {
+      description = "credentials for ${api_client_name}"
+      add_suffix = false
+      start_value = jsonencode({
+        app_sys_id = ""
+        etin = ""
+        cert_base64 = ""
+        mef_env = ""
+        efiler_api_public_key = ""
+      })
+    }
+  }
+
+  static_secret_names = {
+    DATABASE_PASSWORD      = "${module.database.secret_arn}:password"
+    DATABASE_USER          = "${module.database.secret_arn}:username"
+    SECRET_KEY_BASE        = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}:key"
+  }
+
+  api_client_secret_names = {
+    for api_client_name in var.api_client_names :
+      # The key passed here ("etin") is necessary for the policy created to have access to the correct secrets,
+      # and we ignore the env variables that it creates. Ideally, there'd be a way to pass a secret ARN without a key
+      # and have it only used in policy creation and ignored for environment variables
+      api_client_name => "${module.secrets.secrets["efiler-api-client-credentials/${api_client_name}"].secret_arn}:etin"
+  }
+}
+
 module "logging" {
   source = "github.com/codeforamerica/tofu-modules-aws-logging?ref=2.1.0"
 
@@ -23,30 +62,7 @@ module "secrets" {
   project     = "efiler-api"
   environment = var.environment
 
-  static_secrets = {
-    "rails_secret_key_base" = {
-      description = "secret_key_base for Rails app"
-      start_value = jsonencode({
-        key = ""
-      })
-    }
-  }
-
-  api_client_secrets = {
-    for api_client_name in var.api_client_names : "efiler-api-client-credentials/${api_client_name}" => {
-      description = "credentials for ${api_client_name}"
-      add_suffix = false
-      start_value = jsonencode({
-        app_sys_id = ""
-        etin = ""
-        cert_base64 = ""
-        mef_env = ""
-        efiler_api_public_key = ""
-      })
-    }
-  }
-
-  secrets = merge(static_secrets, api_client_secrets)
+  secrets = merge(local.static_secrets, local.api_client_secrets)
 }
 
 module "web" {
@@ -76,18 +92,7 @@ module "web" {
     DATABASE_HOST = module.database.cluster_endpoint
   }
 
-  static_secrets = {
-    DATABASE_PASSWORD      = "${module.database.secret_arn}:password"
-    DATABASE_USER          = "${module.database.secret_arn}:username"
-    SECRET_KEY_BASE        = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}:key"
-  }
-
-  api_client_secrets = {
-    for api_client_name in var.api_client_names :
-      api_client_name => "efiler-api-client-credentials/${api_client_name}"
-  }
-
-  environment_secrets = merge(static_secrets, api_client_secrets)
+  environment_secrets = merge(local.static_secret_names, local.api_client_secret_names)
 }
 
 module "database" {
