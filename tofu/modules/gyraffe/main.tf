@@ -95,16 +95,16 @@ module "web" {
     REVIEW_APP = var.review_app
   }
   environment_secrets = {
-    DATABASE_PASSWORD      = "${module.database.secret_arn}:password"
-    DATABASE_USER          = "${module.database.secret_arn}:username"
-    SECRET_KEY_BASE        = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}"
-    TWILIO_ACCOUNT_SID     = "${module.secrets.secrets["twilio_account_sid"].secret_arn}"
-    TWILIO_AUTH_TOKEN      = "${module.secrets.secrets["twilio_auth_token"].secret_arn}"
-    TWILIO_MESSAGING_SERVICE = "${module.secrets.secrets["twilio_messaging_service_sid"].secret_arn}"
-    MAILGUN_API_KEY = "${module.secrets.secrets["mailgun_api_key"].secret_arn}"
-    MAILGUN_DOMAIN = "${module.secrets.secrets["mailgun_domain"].secret_arn}"
-    MAILGUN_BASIC_AUTH_NAME = "${module.secrets.secrets["mailgun_basic_auth_name"].secret_arn}"
-    MAILGUN_BASIC_AUTH_PASSWORD = "${module.secrets.secrets["mailgun_basic_auth_password"].secret_arn}"
+    DATABASE_PASSWORD           = "${module.database.secret_arn}:password"
+    DATABASE_USER               = "${module.database.secret_arn}:username"
+    SECRET_KEY_BASE             = module.secrets.secrets["rails_secret_key_base"].secret_arn
+    TWILIO_ACCOUNT_SID          = module.secrets.secrets["twilio_account_sid"].secret_arn
+    TWILIO_AUTH_TOKEN           = module.secrets.secrets["twilio_auth_token"].secret_arn
+    TWILIO_MESSAGING_SERVICE    = module.secrets.secrets["twilio_messaging_service_sid"].secret_arn
+    MAILGUN_API_KEY             = module.secrets.secrets["mailgun_api_key"].secret_arn
+    MAILGUN_DOMAIN              = module.secrets.secrets["mailgun_domain"].secret_arn
+    MAILGUN_BASIC_AUTH_NAME     = module.secrets.secrets["mailgun_basic_auth_name"].secret_arn
+    MAILGUN_BASIC_AUTH_PASSWORD = module.secrets.secrets["mailgun_basic_auth_password"].secret_arn
   }
 }
 
@@ -137,16 +137,16 @@ module "web" {
 #     REVIEW_APP = var.review_app
 #   }
 #   environment_secrets = {
-#     DATABASE_PASSWORD      = "${module.database.secret_arn}:password"
-#     DATABASE_USER          = "${module.database.secret_arn}:username"
-#     SECRET_KEY_BASE        = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}"
-#     TWILIO_ACCOUNT_SID     = "${module.secrets.secrets["twilio_account_sid"].secret_arn}"
-#     TWILIO_AUTH_TOKEN      = "${module.secrets.secrets["twilio_auth_token"].secret_arn}"
-#     TWILIO_MESSAGING_SERVICE = "${module.secrets.secrets["twilio_messaging_service_sid"].secret_arn}"
-#     MAILGUN_API_KEY = "${module.secrets.secrets["mailgun_api_key"].secret_arn}"
-#     MAILGUN_DOMAIN = "${module.secrets.secrets["mailgun_domain"].secret_arn}"
-#     MAILGUN_BASIC_AUTH_NAME = "${module.secrets.secrets["mailgun_basic_auth_name"].secret_arn}"
-#     MAILGUN_BASIC_AUTH_PASSWORD = "${module.secrets.secrets["mailgun_basic_auth_password"].secret_arn}"
+#     DATABASE_PASSWORD           = "${module.database.secret_arn}:password"
+#     DATABASE_USER               = "${module.database.secret_arn}:username"
+#     SECRET_KEY_BASE             = module.secrets.secrets["rails_secret_key_base"].secret_arn
+#     TWILIO_ACCOUNT_SID          = module.secrets.secrets["twilio_account_sid"].secret_arn
+#     TWILIO_AUTH_TOKEN           = module.secrets.secrets["twilio_auth_token"].secret_arn
+#     TWILIO_MESSAGING_SERVICE    = module.secrets.secrets["twilio_messaging_service_sid"].secret_arn
+#     MAILGUN_API_KEY             = module.secrets.secrets["mailgun_api_key"].secret_arn
+#     MAILGUN_DOMAIN              = module.secrets.secrets["mailgun_domain"].secret_arn
+#     MAILGUN_BASIC_AUTH_NAME     = module.secrets.secrets["mailgun_basic_auth_name"].secret_arn
+#     MAILGUN_BASIC_AUTH_PASSWORD = module.secrets.secrets["mailgun_basic_auth_password"].secret_arn
 #   }
 #
 #   container_command = ["bundle", "exec", "rake", "jobs:work"]
