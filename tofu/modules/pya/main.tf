@@ -46,6 +46,66 @@ module "vpc" {
   public_subnets  = var.public_subnets
 }
 
+resource "aws_cloudwatch_log_group" "vpc_flow_logs" {
+  name              = "/aws/vpc/pya-${var.environment}-flowlogs"
+  retention_in_days = 90
+  kms_key_id        = module.logging.kms_key_arn
+
+  tags = {
+    project     = "pya"
+    environment = var.environment
+  }
+}
+
+resource "aws_iam_role" "vpc_flow_logs_role" {
+  name = "pya-${var.environment}-vpc-flow-logs-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [{
+      Effect    = "Allow",
+      Action    = "sts:AssumeRole",
+      Principal = { Service = "vpc-flow-logs.amazonaws.com" }
+    }]
+  })
+}
+
+resource "aws_iam_role_policy" "vpc_flow_logs_policy" {
+  name = "pya-${var.environment}-vpc-flow-logs-policy"
+  role = aws_iam_role.vpc_flow_logs_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [{
+      Effect   = "Allow",
+      Action   = [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "logs:DescribeLogGroups",
+        "logs:DescribeLogStreams"
+      ],
+      Resource = "*"
+    }]
+  })
+}
+
+resource "aws_flow_log" "pya_vpc" {
+  vpc_id                 = module.vpc.vpc_id
+  log_destination        = aws_cloudwatch_log_group.vpc_flow_logs.arn
+  iam_role_arn           = aws_iam_role.vpc_flow_logs_role.arn
+  traffic_type           = "ALL"
+  max_aggregation_interval = 600
+
+  tags = {
+    project     = "pya"
+    environment = var.environment
+  }
+
+  depends_on = [aws_iam_role_policy.vpc_flow_logs_policy]
+}
+
+
 module "web" {
   source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.2.0"
 
