@@ -17,3 +17,8 @@ output "repository_url" {
   description = "AWS Repository URL for ECR"
   value = module.pya.repository_url
 }
+
+output "submission_pdf_bucket_name" {
+  description = "S3 bucket where submission PDFs are stored"
+  value = module.pya.submission_pdf_bucket_name
+}

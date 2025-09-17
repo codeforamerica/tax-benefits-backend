@@ -30,6 +30,54 @@ module "secrets" {
       start_value = jsonencode({
         key = ""
       })
+    },
+    "ssn_hashing_key" = {
+      description = "Key for encrypting SSN for archived intakes"
+      start_value = jsonencode({
+        key = ""
+      })
+    },
+    "twilio_account_sid" = {
+      description = "account sid for twilio"
+      start_value = jsonencode({
+        key = ""
+      })
+    },
+    "twilio_auth_token" = {
+      description = "auth token for twilio"
+      start_value = jsonencode({
+        key = ""
+      })
+    },
+    "twilio_messaging_service_sid" = {
+      description = "messaging service sid for twilio"
+      start_value = jsonencode({
+        key = ""
+      })
+    },
+    "mailgun_api_key" = {
+      description = "API key for Mailgun"
+      start_value = jsonencode({
+        key = ""
+      })
+    },
+    "mailgun_domain" = {
+      description = "Domain used with Mailgun"
+      start_value = jsonencode({
+        key = ""
+      })
+    },
+    "mailgun_basic_auth_name" = {
+      description = "Basic auth username for Mailgun"
+      start_value = jsonencode({
+        key = ""
+      })
+    },
+    "mailgun_basic_auth_password" = {
+      description = "Basic auth password for Mailgun"
+      start_value = jsonencode({
+        key = ""
+      })
     }
   }
 }
@@ -44,6 +92,15 @@ module "vpc" {
 
   private_subnets = var.private_subnets
   public_subnets  = var.public_subnets
+
+  peers = {
+    aptible = {
+      account_id = "916150859591",
+      vpc_id     = "vpc-08bd7f3e997318d6b",
+      region     = "us-east-1",
+      cidr       = "10.210.0.0/16"
+    }
+  }
 }
 
 resource "aws_cloudwatch_log_group" "vpc_flow_logs" {
@@ -107,7 +164,7 @@ resource "aws_flow_log" "pya_vpc" {
 
 
 module "web" {
-  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.2.0"
+  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.5.1"
 
   project       = "pya"
   project_short = "pya"
@@ -126,20 +183,34 @@ module "web" {
   create_version_parameter = true
   public = true
   health_check_path = "/up"
+  enable_execute_command = true
+
+  execution_policies = [aws_iam_policy.ecs_s3_access.arn]
+  task_policies = [aws_iam_policy.ecs_s3_access.arn]
 
   environment_variables = {
     RACK_ENV = var.environment
-    DATABASE_URL = module.database.cluster_endpoint
+    DATABASE_HOST = module.database.cluster_endpoint
+    S3_BUCKET = aws_s3_bucket.submission_pdfs.bucket
+    REVIEW_APP = var.review_app
   }
   environment_secrets = {
     DATABASE_PASSWORD      = "${module.database.secret_arn}:password"
     DATABASE_USER          = "${module.database.secret_arn}:username"
-    SECRET_KEY_BASE = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}:key"
+    SECRET_KEY_BASE        = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}:key"
+    SSN_HASHING_KEY        = "${module.secrets.secrets["ssn_hashing_key"].secret_arn}:key"
+    TWILIO_ACCOUNT_SID     = "${module.secrets.secrets["twilio_account_sid"].secret_arn}:key"
+    TWILIO_AUTH_TOKEN      = "${module.secrets.secrets["twilio_auth_token"].secret_arn}:key"
+    TWILIO_MESSAGING_SERVICE = "${module.secrets.secrets["twilio_messaging_service_sid"].secret_arn}:key"
+    MAILGUN_API_KEY = "${module.secrets.secrets["mailgun_api_key"].secret_arn}:key"
+    MAILGUN_DOMAIN = "${module.secrets.secrets["mailgun_domain"].secret_arn}:key"
+    MAILGUN_BASIC_AUTH_NAME = "${module.secrets.secrets["mailgun_basic_auth_name"].secret_arn}:key"
+    MAILGUN_BASIC_AUTH_PASSWORD = "${module.secrets.secrets["mailgun_basic_auth_password"].secret_arn}:key"
   }
 }
 
 module "workers" {
-  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.2.0"
+  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.5.1"
 
   project       = "pya"
   project_short = "pya"
@@ -155,19 +226,38 @@ module "workers" {
   version_parameter = module.web.version_parameter
   image_url = module.web.repository_url
   create_endpoint = false
+  create_repository = false
+  enable_execute_command = true
+
+  execution_policies = [aws_iam_policy.ecs_s3_access.arn]
+  task_policies = [aws_iam_policy.ecs_s3_access.arn]
 
   environment_variables = {
     RACK_ENV = var.environment
-    DATABASE_URL = module.database.cluster_endpoint
+    DATABASE_HOST = module.database.cluster_endpoint
+    S3_BUCKET = aws_s3_bucket.submission_pdfs.bucket
+    REVIEW_APP = var.review_app
   }
   environment_secrets = {
     DATABASE_PASSWORD      = "${module.database.secret_arn}:password"
     DATABASE_USER          = "${module.database.secret_arn}:username"
+    SECRET_KEY_BASE        = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}:key"
+    SSN_HASHING_KEY        = "${module.secrets.secrets["ssn_hashing_key"].secret_arn}:key"
+    TWILIO_ACCOUNT_SID     = "${module.secrets.secrets["twilio_account_sid"].secret_arn}:key"
+    TWILIO_AUTH_TOKEN      = "${module.secrets.secrets["twilio_auth_token"].secret_arn}:key"
+    TWILIO_MESSAGING_SERVICE = "${module.secrets.secrets["twilio_messaging_service_sid"].secret_arn}:key"
+    MAILGUN_API_KEY = "${module.secrets.secrets["mailgun_api_key"].secret_arn}:key"
+    MAILGUN_DOMAIN = "${module.secrets.secrets["mailgun_domain"].secret_arn}:key"
+    MAILGUN_BASIC_AUTH_NAME = "${module.secrets.secrets["mailgun_basic_auth_name"].secret_arn}:key"
+    MAILGUN_BASIC_AUTH_PASSWORD = "${module.secrets.secrets["mailgun_basic_auth_password"].secret_arn}:key"
   }
+
+  container_command = ["bundle", "exec", "rake", "jobs:work"]
+  repository_arn = module.web.repository_arn
 }
 
 module "database" {
-  source = "github.com/codeforamerica/tofu-modules-aws-serverless-database?ref=log-exports"
+  source = "github.com/codeforamerica/tofu-modules-aws-serverless-database?ref=1.3.1"
 
   project     = "pya"
   environment = var.environment
@@ -179,9 +269,78 @@ module "database" {
   vpc_id          = module.vpc.vpc_id
   subnets         = module.vpc.private_subnets
   ingress_cidrs   = module.vpc.private_subnets_cidr_blocks
-  iam_authentication = false
+  iam_authentication = true
+  enable_data_api = true
 
-  min_capacity = 2
-  max_capacity = 32
+  min_capacity = 0
+  max_capacity = 10
   cluster_parameters = []
+}
+
+locals {
+  aws_logs_path = "/AWSLogs/${data.aws_caller_identity.identity.account_id}"
+}
+
+data "aws_caller_identity" "identity" {}
+
+data "aws_partition" "current" {}
+
+resource "aws_kms_key" "submission_pdfs" {
+  description             = "OpenTofu submission_pdfs S3 encryption key for pya ${var.environment}"
+  deletion_window_in_days = 30
+  enable_key_rotation     = true
+  policy = templatefile("${path.module}/templates/key-policy.json.tftpl", {
+    account_id : data.aws_caller_identity.identity.account_id,
+    partition : data.aws_partition.current.partition,
+    bucket_arn : aws_s3_bucket.submission_pdfs.bucket,
+    environment: var.environment
+  })
+}
+
+# IAM policy for ECS tasks to access S3
+resource "aws_iam_policy" "ecs_s3_access" {
+  name = "pya-${var.environment}-ecs-s3-access"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "s3:GetObject",
+          "s3:PutObject",
+          "s3:ListBucket",
+          "s3:DeleteObject",
+          "kms:Decrypt",
+          "kms:Encrypt",
+          "kms:GenerateDataKey",
+          "kms:DescribeKey",
+        ]
+        Resource = [
+          aws_s3_bucket.submission_pdfs.arn,
+          "${aws_s3_bucket.submission_pdfs.arn}/*",
+          aws_kms_key.submission_pdfs.arn
+        ]
+      }
+    ]
+  })
+}
+
+module "bastion" {
+  source = "github.com/codeforamerica/tofu-modules-aws-ssm-bastion?ref=1.0.0"
+
+  project            = "pya"
+  environment        = var.environment
+  key_pair_name      = "pya-${var.environment}-bastion"
+  private_subnet_ids = module.vpc.private_subnets
+  vpc_id             = module.vpc.vpc_id
+}
+
+resource "aws_cloudwatch_log_subscription_filter" "datadog" {
+  for_each = length(local.datadog_lambda) > 0 ? toset(["web", "worker"]) : toset([])
+
+  name            = "datadog"
+  log_group_name  = "/aws/ecs/pya/${var.environment}/${each.key}"
+  filter_pattern  = ""
+  destination_arn = data.aws_lambda_function.datadog["this"].arn
 }
