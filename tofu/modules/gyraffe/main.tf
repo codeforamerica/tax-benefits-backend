@@ -231,6 +231,7 @@ module "bastion" {
   key_pair_name      = "gyraffe-${var.environment}-bastion"
   private_subnet_ids = module.vpc.private_subnets
   vpc_id             = module.vpc.vpc_id
+  instance_profile   = null
 }
 
 resource "aws_cloudwatch_log_subscription_filter" "datadog" {
