@@ -39,7 +39,8 @@
       "Effect": "Allow",
       "Principal": {
         "AWS": [
-          "arn:aws:iam::${account_id}:role/gyraffe-${environment}-web-task"
+          "arn:aws:iam::${account_id}:role/gyraffe-${environment}-web-task",
+          "arn:aws:iam::${account_id}:role/gyraffe-${environment}-worker-task"
         ]
       },
       "Action": [

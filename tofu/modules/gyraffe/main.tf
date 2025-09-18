@@ -108,50 +108,50 @@ module "web" {
   }
 }
 
-# module "workers" {
-#   source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.6.1"
-#
-#   project       = "gyraffe"
-#   project_short = "gyraffe"
-#   environment   = var.environment
-#   service       = "worker"
-#   service_short = "worker"
-#
-#   vpc_id          = module.vpc.vpc_id
-#   private_subnets = module.vpc.private_subnets
-#   public_subnets  = module.vpc.public_subnets
-#   logging_key_id  = module.logging.kms_key_arn
-#   container_port  = 8080
-#   version_parameter = module.web.version_parameter
-#   image_url = module.web.repository_url
-#   create_endpoint = false
-#   create_repository = false
-#   enable_execute_command = true
-#
-#   execution_policies = [aws_iam_policy.ecs_s3_access.arn]
-#   task_policies = [aws_iam_policy.ecs_s3_access.arn]
-#
-#   environment_variables = {
-#     RACK_ENV = var.environment
-#     DATABASE_HOST = module.database.cluster_endpoint
-#     REVIEW_APP = var.review_app
-#   }
-#   environment_secrets = {
-#     DATABASE_PASSWORD           = "${module.database.secret_arn}:password"
-#     DATABASE_USER               = "${module.database.secret_arn}:username"
-#     SECRET_KEY_BASE             = module.secrets.secrets["rails_secret_key_base"].secret_arn
-#     TWILIO_ACCOUNT_SID          = module.secrets.secrets["twilio_account_sid"].secret_arn
-#     TWILIO_AUTH_TOKEN           = module.secrets.secrets["twilio_auth_token"].secret_arn
-#     TWILIO_MESSAGING_SERVICE    = module.secrets.secrets["twilio_messaging_service_sid"].secret_arn
-#     MAILGUN_API_KEY             = module.secrets.secrets["mailgun_api_key"].secret_arn
-#     MAILGUN_DOMAIN              = module.secrets.secrets["mailgun_domain"].secret_arn
-#     MAILGUN_BASIC_AUTH_NAME     = module.secrets.secrets["mailgun_basic_auth_name"].secret_arn
-#     MAILGUN_BASIC_AUTH_PASSWORD = module.secrets.secrets["mailgun_basic_auth_password"].secret_arn
-#   }
-#
-#   container_command = ["bundle", "exec", "rake", "jobs:work"]
-#   repository_arn = module.web.repository_arn
-# }
+module "workers" {
+  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.6.1"
+
+  project       = "gyraffe"
+  project_short = "gyraffe"
+  environment   = var.environment
+  service       = "worker"
+  service_short = "worker"
+
+  vpc_id          = module.vpc.vpc_id
+  private_subnets = module.vpc.private_subnets
+  public_subnets  = module.vpc.public_subnets
+  logging_key_id  = module.logging.kms_key_arn
+  container_port  = 8080
+  version_parameter = module.web.version_parameter
+  image_url = module.web.repository_url
+  create_endpoint = false
+  create_repository = false
+  enable_execute_command = true
+
+  execution_policies = [aws_iam_policy.ecs_s3_access.arn]
+  task_policies = [aws_iam_policy.ecs_s3_access.arn]
+
+  environment_variables = {
+    RACK_ENV = var.environment
+    DATABASE_HOST = module.database.cluster_endpoint
+    REVIEW_APP = var.review_app
+  }
+  environment_secrets = {
+    DATABASE_PASSWORD           = "${module.database.secret_arn}:password"
+    DATABASE_USER               = "${module.database.secret_arn}:username"
+    SECRET_KEY_BASE             = module.secrets.secrets["rails_secret_key_base"].secret_arn
+    TWILIO_ACCOUNT_SID          = module.secrets.secrets["twilio_account_sid"].secret_arn
+    TWILIO_AUTH_TOKEN           = module.secrets.secrets["twilio_auth_token"].secret_arn
+    TWILIO_MESSAGING_SERVICE    = module.secrets.secrets["twilio_messaging_service_sid"].secret_arn
+    MAILGUN_API_KEY             = module.secrets.secrets["mailgun_api_key"].secret_arn
+    MAILGUN_DOMAIN              = module.secrets.secrets["mailgun_domain"].secret_arn
+    MAILGUN_BASIC_AUTH_NAME     = module.secrets.secrets["mailgun_basic_auth_name"].secret_arn
+    MAILGUN_BASIC_AUTH_PASSWORD = module.secrets.secrets["mailgun_basic_auth_password"].secret_arn
+  }
+
+  container_command = ["bin/jobs"]
+  repository_arn = module.web.repository_arn
+}
 
 module "database" {
   source = "github.com/codeforamerica/tofu-modules-aws-serverless-database?ref=1.3.1"
