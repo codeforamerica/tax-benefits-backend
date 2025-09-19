@@ -14,17 +14,6 @@ module "backend" {
   environment = "staging"
 }
 
-# module "cloudfront_waf" {
-#   source = "github.com/codeforamerica/tofu-modules-aws-cloudfront-waf?ref=1.9.0"
-#
-#   project     = "pya"
-#   environment = "staging"
-#   domain      = "staging.pya.fileyourstatetaxes.org"
-#   log_bucket  = module.logging.bucket
-#   /*  The argument "log_group" is required, but no definition was found. What should this be? */
-# }
-#
-
 module "pya" {
   source = "../../modules/pya"
 

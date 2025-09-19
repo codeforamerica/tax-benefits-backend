@@ -284,3 +284,13 @@ resource "aws_cloudwatch_log_subscription_filter" "datadog" {
   filter_pattern  = ""
   destination_arn = data.aws_lambda_function.datadog["this"].arn
 }
+
+module "cloudfront_waf" {
+  source = "github.com/codeforamerica/tofu-modules-aws-cloudfront-waf?ref=1.9.0"
+
+  project     = "pya"
+  environment = var.environment
+  domain      = var.domain
+  log_bucket  = module.logging.bucket
+  log_group   = module.logging.log_groups["waf"]
+}
