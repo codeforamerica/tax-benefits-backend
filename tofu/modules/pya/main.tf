@@ -112,39 +112,39 @@ module "web" {
   service       = "web"
   service_short = "web"
 
-  domain          = var.domain
-  vpc_id          = module.vpc.vpc_id
-  private_subnets = module.vpc.private_subnets
-  public_subnets  = module.vpc.public_subnets
-  logging_key_id  = module.logging.kms_key_arn
-  container_port  = 3000
-  create_endpoint	= true
-  create_repository	= true
+  domain                   = var.domain
+  vpc_id                   = module.vpc.vpc_id
+  private_subnets          = module.vpc.private_subnets
+  public_subnets           = module.vpc.public_subnets
+  logging_key_id           = module.logging.kms_key_arn
+  container_port           = 3000
+  create_endpoint          = true
+  create_repository        = true
   create_version_parameter = true
-  public = true
-  health_check_path = "/up"
-  enable_execute_command = true
+  public                   = true
+  health_check_path        = "/up"
+  enable_execute_command   = true
 
   execution_policies = [aws_iam_policy.ecs_s3_access.arn]
-  task_policies = [aws_iam_policy.ecs_s3_access.arn]
+  task_policies      = [aws_iam_policy.ecs_s3_access.arn]
 
   environment_variables = {
-    RACK_ENV = var.environment
+    RACK_ENV      = var.environment
     DATABASE_HOST = module.database.cluster_endpoint
-    S3_BUCKET = aws_s3_bucket.submission_pdfs.bucket
-    REVIEW_APP = var.review_app
+    S3_BUCKET     = aws_s3_bucket.submission_pdfs.bucket
+    REVIEW_APP    = var.review_app
   }
   environment_secrets = {
-    DATABASE_PASSWORD      = "${module.database.secret_arn}:password"
-    DATABASE_USER          = "${module.database.secret_arn}:username"
-    SECRET_KEY_BASE        = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}:key"
-    SSN_HASHING_KEY        = "${module.secrets.secrets["ssn_hashing_key"].secret_arn}:key"
-    TWILIO_ACCOUNT_SID     = "${module.secrets.secrets["twilio_account_sid"].secret_arn}:key"
-    TWILIO_AUTH_TOKEN      = "${module.secrets.secrets["twilio_auth_token"].secret_arn}:key"
-    TWILIO_MESSAGING_SERVICE = "${module.secrets.secrets["twilio_messaging_service_sid"].secret_arn}:key"
-    MAILGUN_API_KEY = "${module.secrets.secrets["mailgun_api_key"].secret_arn}:key"
-    MAILGUN_DOMAIN = "${module.secrets.secrets["mailgun_domain"].secret_arn}:key"
-    MAILGUN_BASIC_AUTH_NAME = "${module.secrets.secrets["mailgun_basic_auth_name"].secret_arn}:key"
+    DATABASE_PASSWORD           = "${module.database.secret_arn}:password"
+    DATABASE_USER               = "${module.database.secret_arn}:username"
+    SECRET_KEY_BASE             = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}:key"
+    SSN_HASHING_KEY             = "${module.secrets.secrets["ssn_hashing_key"].secret_arn}:key"
+    TWILIO_ACCOUNT_SID          = "${module.secrets.secrets["twilio_account_sid"].secret_arn}:key"
+    TWILIO_AUTH_TOKEN           = "${module.secrets.secrets["twilio_auth_token"].secret_arn}:key"
+    TWILIO_MESSAGING_SERVICE    = "${module.secrets.secrets["twilio_messaging_service_sid"].secret_arn}:key"
+    MAILGUN_API_KEY             = "${module.secrets.secrets["mailgun_api_key"].secret_arn}:key"
+    MAILGUN_DOMAIN              = "${module.secrets.secrets["mailgun_domain"].secret_arn}:key"
+    MAILGUN_BASIC_AUTH_NAME     = "${module.secrets.secrets["mailgun_basic_auth_name"].secret_arn}:key"
     MAILGUN_BASIC_AUTH_PASSWORD = "${module.secrets.secrets["mailgun_basic_auth_password"].secret_arn}:key"
   }
 }
@@ -158,62 +158,62 @@ module "workers" {
   service       = "worker"
   service_short = "wrk"
 
-  vpc_id          = module.vpc.vpc_id
-  private_subnets = module.vpc.private_subnets
-  public_subnets  = module.vpc.public_subnets
-  logging_key_id  = module.logging.kms_key_arn
-  container_port  = 3000
-  version_parameter = module.web.version_parameter
-  image_url = module.web.repository_url
-  create_endpoint = false
-  create_repository = false
+  vpc_id                 = module.vpc.vpc_id
+  private_subnets        = module.vpc.private_subnets
+  public_subnets         = module.vpc.public_subnets
+  logging_key_id         = module.logging.kms_key_arn
+  container_port         = 3000
+  version_parameter      = module.web.version_parameter
+  image_url              = module.web.repository_url
+  create_endpoint        = false
+  create_repository      = false
   enable_execute_command = true
 
   execution_policies = [aws_iam_policy.ecs_s3_access.arn]
-  task_policies = [aws_iam_policy.ecs_s3_access.arn]
+  task_policies      = [aws_iam_policy.ecs_s3_access.arn]
 
   environment_variables = {
-    RACK_ENV = var.environment
+    RACK_ENV      = var.environment
     DATABASE_HOST = module.database.cluster_endpoint
-    S3_BUCKET = aws_s3_bucket.submission_pdfs.bucket
-    REVIEW_APP = var.review_app
+    S3_BUCKET     = aws_s3_bucket.submission_pdfs.bucket
+    REVIEW_APP    = var.review_app
   }
   environment_secrets = {
-    DATABASE_PASSWORD      = "${module.database.secret_arn}:password"
-    DATABASE_USER          = "${module.database.secret_arn}:username"
-    SECRET_KEY_BASE        = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}:key"
-    SSN_HASHING_KEY        = "${module.secrets.secrets["ssn_hashing_key"].secret_arn}:key"
-    TWILIO_ACCOUNT_SID     = "${module.secrets.secrets["twilio_account_sid"].secret_arn}:key"
-    TWILIO_AUTH_TOKEN      = "${module.secrets.secrets["twilio_auth_token"].secret_arn}:key"
-    TWILIO_MESSAGING_SERVICE = "${module.secrets.secrets["twilio_messaging_service_sid"].secret_arn}:key"
-    MAILGUN_API_KEY = "${module.secrets.secrets["mailgun_api_key"].secret_arn}:key"
-    MAILGUN_DOMAIN = "${module.secrets.secrets["mailgun_domain"].secret_arn}:key"
-    MAILGUN_BASIC_AUTH_NAME = "${module.secrets.secrets["mailgun_basic_auth_name"].secret_arn}:key"
+    DATABASE_PASSWORD           = "${module.database.secret_arn}:password"
+    DATABASE_USER               = "${module.database.secret_arn}:username"
+    SECRET_KEY_BASE             = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}:key"
+    SSN_HASHING_KEY             = "${module.secrets.secrets["ssn_hashing_key"].secret_arn}:key"
+    TWILIO_ACCOUNT_SID          = "${module.secrets.secrets["twilio_account_sid"].secret_arn}:key"
+    TWILIO_AUTH_TOKEN           = "${module.secrets.secrets["twilio_auth_token"].secret_arn}:key"
+    TWILIO_MESSAGING_SERVICE    = "${module.secrets.secrets["twilio_messaging_service_sid"].secret_arn}:key"
+    MAILGUN_API_KEY             = "${module.secrets.secrets["mailgun_api_key"].secret_arn}:key"
+    MAILGUN_DOMAIN              = "${module.secrets.secrets["mailgun_domain"].secret_arn}:key"
+    MAILGUN_BASIC_AUTH_NAME     = "${module.secrets.secrets["mailgun_basic_auth_name"].secret_arn}:key"
     MAILGUN_BASIC_AUTH_PASSWORD = "${module.secrets.secrets["mailgun_basic_auth_password"].secret_arn}:key"
   }
 
   container_command = ["bundle", "exec", "rake", "jobs:work"]
-  repository_arn = module.web.repository_arn
+  repository_arn    = module.web.repository_arn
 }
 
 module "database" {
   source = "github.com/codeforamerica/tofu-modules-aws-serverless-database?ref=1.3.1"
 
-  project     = "pya"
-  environment = var.environment
-  service     = "web"
-  skip_final_snapshot	= true
+  project             = "pya"
+  environment         = var.environment
+  service             = "web"
+  skip_final_snapshot = true
 
-  logging_key_arn = module.logging.kms_key_arn
-  secrets_key_arn = module.secrets.kms_key_arn
-  vpc_id          = module.vpc.vpc_id
-  subnets         = module.vpc.private_subnets
-  ingress_cidrs   = module.vpc.private_subnets_cidr_blocks
+  logging_key_arn    = module.logging.kms_key_arn
+  secrets_key_arn    = module.secrets.kms_key_arn
+  vpc_id             = module.vpc.vpc_id
+  subnets            = module.vpc.private_subnets
+  ingress_cidrs      = module.vpc.private_subnets_cidr_blocks
   iam_authentication = true
-  enable_data_api = true
+  enable_data_api    = true
 
-  min_capacity = 0
-  max_capacity = 10
+  min_capacity       = 0
+  max_capacity       = 10
   cluster_parameters = []
 }
 
@@ -233,7 +233,7 @@ resource "aws_kms_key" "submission_pdfs" {
     account_id : data.aws_caller_identity.identity.account_id,
     partition : data.aws_partition.current.partition,
     bucket_arn : aws_s3_bucket.submission_pdfs.bucket,
-    environment: var.environment
+    environment : var.environment
   })
 }
 
@@ -288,9 +288,11 @@ resource "aws_cloudwatch_log_subscription_filter" "datadog" {
 module "cloudfront_waf" {
   source = "github.com/codeforamerica/tofu-modules-aws-cloudfront-waf?ref=1.9.0"
 
-  project     = "pya"
-  environment = var.environment
-  domain      = var.domain
-  log_bucket  = module.logging.bucket
-  log_group   = module.logging.log_groups["waf"]
+  project       = "pya"
+  environment   = var.environment
+  domain        = var.domain
+  subdomain     = "cf"
+  origin_domain = var.domain
+  log_bucket    = module.logging.bucket_domain_name
+  log_group     = module.logging.log_groups["waf"]
 }

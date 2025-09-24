@@ -73,26 +73,26 @@ module "web" {
   service       = "web"
   service_short = "web"
 
-  domain          = var.domain
-  vpc_id          = module.vpc.vpc_id
-  private_subnets = module.vpc.private_subnets
-  public_subnets  = module.vpc.public_subnets
-  logging_key_id  = module.logging.kms_key_arn
-  container_port  = 8080
-  create_endpoint	= true
-  create_repository	= true
+  domain                   = var.domain
+  vpc_id                   = module.vpc.vpc_id
+  private_subnets          = module.vpc.private_subnets
+  public_subnets           = module.vpc.public_subnets
+  logging_key_id           = module.logging.kms_key_arn
+  container_port           = 8080
+  create_endpoint          = true
+  create_repository        = true
   create_version_parameter = true
-  public = true
-  health_check_path = "/up"
-  enable_execute_command = true
+  public                   = true
+  health_check_path        = "/up"
+  enable_execute_command   = true
 
   execution_policies = [aws_iam_policy.ecs_s3_access.arn]
-  task_policies = [aws_iam_policy.ecs_s3_access.arn]
+  task_policies      = [aws_iam_policy.ecs_s3_access.arn]
 
   environment_variables = {
-    RACK_ENV = var.environment
+    RACK_ENV      = var.environment
     DATABASE_HOST = module.database.cluster_endpoint
-    REVIEW_APP = var.review_app
+    REVIEW_APP    = var.review_app
   }
   environment_secrets = {
     DATABASE_PASSWORD           = "${module.database.secret_arn}:password"
@@ -117,24 +117,24 @@ module "workers" {
   service       = "worker"
   service_short = "worker"
 
-  vpc_id          = module.vpc.vpc_id
-  private_subnets = module.vpc.private_subnets
-  public_subnets  = module.vpc.public_subnets
-  logging_key_id  = module.logging.kms_key_arn
-  container_port  = 8080
-  version_parameter = module.web.version_parameter
-  image_url = module.web.repository_url
-  create_endpoint = false
-  create_repository = false
+  vpc_id                 = module.vpc.vpc_id
+  private_subnets        = module.vpc.private_subnets
+  public_subnets         = module.vpc.public_subnets
+  logging_key_id         = module.logging.kms_key_arn
+  container_port         = 8080
+  version_parameter      = module.web.version_parameter
+  image_url              = module.web.repository_url
+  create_endpoint        = false
+  create_repository      = false
   enable_execute_command = true
 
   execution_policies = [aws_iam_policy.ecs_s3_access.arn]
-  task_policies = [aws_iam_policy.ecs_s3_access.arn]
+  task_policies      = [aws_iam_policy.ecs_s3_access.arn]
 
   environment_variables = {
-    RACK_ENV = var.environment
+    RACK_ENV      = var.environment
     DATABASE_HOST = module.database.cluster_endpoint
-    REVIEW_APP = var.review_app
+    REVIEW_APP    = var.review_app
   }
   environment_secrets = {
     DATABASE_PASSWORD           = "${module.database.secret_arn}:password"
@@ -150,27 +150,27 @@ module "workers" {
   }
 
   container_command = ["bin/jobs"]
-  repository_arn = module.web.repository_arn
+  repository_arn    = module.web.repository_arn
 }
 
 module "database" {
   source = "github.com/codeforamerica/tofu-modules-aws-serverless-database?ref=1.3.1"
 
-  project     = "gyraffe"
-  environment = var.environment
-  service     = "web"
-  skip_final_snapshot	= true
+  project             = "gyraffe"
+  environment         = var.environment
+  service             = "web"
+  skip_final_snapshot = true
 
-  logging_key_arn = module.logging.kms_key_arn
-  secrets_key_arn = module.secrets.kms_key_arn
-  vpc_id          = module.vpc.vpc_id
-  subnets         = module.vpc.private_subnets
-  ingress_cidrs   = module.vpc.private_subnets_cidr_blocks
+  logging_key_arn    = module.logging.kms_key_arn
+  secrets_key_arn    = module.secrets.kms_key_arn
+  vpc_id             = module.vpc.vpc_id
+  subnets            = module.vpc.private_subnets
+  ingress_cidrs      = module.vpc.private_subnets_cidr_blocks
   iam_authentication = true
-  enable_data_api = true
+  enable_data_api    = true
 
-  min_capacity = 0
-  max_capacity = 10
+  min_capacity       = 0
+  max_capacity       = 10
   cluster_parameters = []
 }
 
@@ -190,7 +190,7 @@ resource "aws_kms_key" "submission_bundles" {
     account_id : data.aws_caller_identity.identity.account_id,
     partition : data.aws_partition.current.partition,
     bucket_arn : aws_s3_bucket.submission_bundles.bucket,
-    environment: var.environment
+    environment : var.environment
   })
 }
 
