@@ -17,10 +17,10 @@ module "backend" {
 module "gyraffe" {
   source = "../../modules/gyraffe"
 
-  environment         = "staging"
-  domain              = "staging.gyraffe.getyourrefund.org"
-  cidr                = "10.0.68.0/22"
-  private_subnets     = ["10.0.70.0/26", "10.0.70.64/26", "10.0.70.128/26"]
-  public_subnets      = ["10.0.68.0/26", "10.0.68.64/26", "10.0.68.128/26"]
-  review_app          = "true"
+  environment     = "staging"
+  domain          = "staging.gyraffe.getyourrefund.org"
+  cidr            = "10.0.68.0/22"
+  private_subnets = ["10.0.70.0/26", "10.0.70.64/26", "10.0.70.128/26"]
+  public_subnets  = ["10.0.68.0/26", "10.0.68.64/26", "10.0.68.128/26"]
+  review_app      = "true"
 }

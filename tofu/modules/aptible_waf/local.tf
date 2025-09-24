@@ -1,5 +1,5 @@
 locals {
-  subdomain           = var.subdomain != "" ? var.subdomain : var.environment
+  subdomain = var.subdomain != "" ? var.subdomain : var.environment
   # This capacity may need to increase in the future if we add many more rules
   gyr_upload_capacity = 200
   gyr_upload_paths = [

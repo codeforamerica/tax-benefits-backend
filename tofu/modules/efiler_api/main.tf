@@ -11,29 +11,29 @@ locals {
   api_client_secrets = {
     for api_client_name in var.api_client_names : "efiler-api-client-credentials/${api_client_name}" => {
       description = "credentials for ${api_client_name}"
-      add_suffix = false
+      add_suffix  = false
       start_value = jsonencode({
-        app_sys_id = ""
-        etin = ""
-        cert_base64 = ""
-        mef_env = ""
+        app_sys_id            = ""
+        etin                  = ""
+        cert_base64           = ""
+        mef_env               = ""
         efiler_api_public_key = ""
       })
     }
   }
 
   static_secret_names = {
-    DATABASE_PASSWORD      = "${module.database.secret_arn}:password"
-    DATABASE_USER          = "${module.database.secret_arn}:username"
-    SECRET_KEY_BASE        = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}:key"
+    DATABASE_PASSWORD = "${module.database.secret_arn}:password"
+    DATABASE_USER     = "${module.database.secret_arn}:username"
+    SECRET_KEY_BASE   = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}:key"
   }
 
   api_client_secret_names = {
     for api_client_name in var.api_client_names :
-      # The key passed here ("etin") is necessary for the policy created to have access to the correct secrets,
-      # and we ignore the env variables that it creates. Ideally, there'd be a way to pass a secret ARN without a key
-      # and have it only used in policy creation and ignored for environment variables
-      api_client_name => "${module.secrets.secrets["efiler-api-client-credentials/${api_client_name}"].secret_arn}:etin"
+    # The key passed here ("etin") is necessary for the policy created to have access to the correct secrets,
+    # and we ignore the env variables that it creates. Ideally, there'd be a way to pass a secret ARN without a key
+    # and have it only used in policy creation and ignored for environment variables
+    api_client_name => "${module.secrets.secrets["efiler-api-client-credentials/${api_client_name}"].secret_arn}:etin"
   }
 }
 
@@ -74,21 +74,21 @@ module "web" {
   service       = "web"
   service_short = "web"
 
-  domain          = var.domain
-  vpc_id          = module.vpc.vpc_id
-  private_subnets = module.vpc.private_subnets
-  public_subnets  = module.vpc.public_subnets
-  logging_key_id  = module.logging.kms_key_arn
-  container_port  = 8080
-  create_endpoint = true
-  create_repository   = true
-  create_version_parameter = true
-  public = false
-  enable_execute_command = true
+  domain                       = var.domain
+  vpc_id                       = module.vpc.vpc_id
+  private_subnets              = module.vpc.private_subnets
+  public_subnets               = module.vpc.public_subnets
+  logging_key_id               = module.logging.kms_key_arn
+  container_port               = 8080
+  create_endpoint              = true
+  create_repository            = true
+  create_version_parameter     = true
+  public                       = false
+  enable_execute_command       = true
   use_target_group_port_suffix = true
 
   environment_variables = {
-    RACK_ENV = var.environment
+    RACK_ENV      = var.environment
     DATABASE_HOST = module.database.cluster_endpoint
   }
 
@@ -98,10 +98,10 @@ module "web" {
 module "database" {
   source = "github.com/codeforamerica/tofu-modules-aws-serverless-database?ref=1.3.1"
 
-  project     = "efiler-api"
-  environment = var.environment
-  service     = "web"
-  skip_final_snapshot	= true
+  project             = "efiler-api"
+  environment         = var.environment
+  service             = "web"
+  skip_final_snapshot = true
 
   logging_key_arn = module.logging.kms_key_arn
   secrets_key_arn = module.secrets.kms_key_arn
@@ -109,8 +109,8 @@ module "database" {
   subnets         = module.vpc.private_subnets
   ingress_cidrs   = module.vpc.private_subnets_cidr_blocks
 
-  min_capacity = 0
-  max_capacity = 10
+  min_capacity       = 0
+  max_capacity       = 10
   cluster_parameters = []
 }
 
