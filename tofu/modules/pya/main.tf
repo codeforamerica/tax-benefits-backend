@@ -215,6 +215,12 @@ module "database" {
   min_capacity       = 0
   max_capacity       = 10
   cluster_parameters = []
+
+    tags = {
+      project     = "pya"
+      environment = var.environment
+      backup_tier = "daily"
+    }
 }
 
 locals {
@@ -224,6 +230,38 @@ locals {
 data "aws_caller_identity" "identity" {}
 
 data "aws_partition" "current" {}
+
+resource "aws_kms_key" "backup_east_key" {
+  description             = "KMS for Backup Vault (us-east-1)"
+  deletion_window_in_days = 30
+  enable_key_rotation     = true
+}
+
+resource "aws_kms_key" "backup_west_key" {
+  provider                = aws.west2
+  description             = "KMS for Backup Vault (us-west-2)"
+  deletion_window_in_days = 30
+  enable_key_rotation     = true
+}
+
+resource "aws_backup_vault" "east_vault" {
+  name        = "pya-${var.environment}-backup-vault-east"
+  kms_key_arn = aws_kms_key.backup_east_key.arn
+  tags = {
+    project     = "pya"
+    environment = var.environment
+  }
+}
+
+resource "aws_backup_vault" "west_vault" {
+  provider    = aws.west2
+  name        = "pya-${var.environment}-backup-vault-west"
+  kms_key_arn = aws_kms_key.backup_west_key.arn
+  tags = {
+    project     = "pya"
+    environment = var.environment
+  }
+}
 
 resource "aws_kms_key" "submission_pdfs" {
   description             = "OpenTofu submission_pdfs S3 encryption key for pya ${var.environment}"
@@ -264,6 +302,72 @@ resource "aws_iam_policy" "ecs_s3_access" {
       }
     ]
   })
+}
+
+data "aws_iam_policy_document" "backup_assume" {
+  statement {
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "Service"
+      identifiers = ["backup.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_role" "backup_role" {
+  name               = "pya-${var.environment}-backup-service-role"
+  assume_role_policy = data.aws_iam_policy_document.backup_assume.json
+}
+
+resource "aws_iam_role_policy_attachment" "backup_role_attach_backup" {
+  role       = aws_iam_role.backup_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSBackupServiceRolePolicyForBackup"
+}
+
+resource "aws_iam_role_policy_attachment" "backup_role_attach_restore" {
+  role       = aws_iam_role.backup_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSBackupServiceRolePolicyForRestores"
+}
+
+resource "aws_backup_plan" "rds_daily" {
+  name = "pya-${var.environment}-rds-daily"
+
+  rule {
+    rule_name         = "daily-snapshots"
+    target_vault_name = aws_backup_vault.east_vault.name
+
+    schedule          = "cron(0 6 * * ? *)"
+    start_window      = 60
+    completion_window = 240
+
+    lifecycle {
+      delete_after = 35
+    }
+
+    copy_action {
+      destination_vault_arn = aws_backup_vault.west_vault.arn
+      lifecycle {
+        delete_after = 14
+      }
+    }
+  }
+
+  tags = {
+    project     = "pya"
+    environment = var.environment
+  }
+}
+
+resource "aws_backup_selection" "rds_selection_by_tag" {
+  name         = "pya-${var.environment}-rds-selection"
+  iam_role_arn = aws_iam_role.backup_role.arn
+  plan_id      = aws_backup_plan.rds_daily.id
+
+  selection_tag {
+    type  = "STRINGEQUALS"
+    key   = "backup_tier"
+    value = "daily"
+  }
 }
 
 module "bastion" {
