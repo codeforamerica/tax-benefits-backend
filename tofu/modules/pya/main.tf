@@ -104,7 +104,7 @@ module "vpc" {
 }
 
 module "web" {
-  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.5.1"
+  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.6.2"
 
   project       = "pya"
   project_short = "pya"
@@ -150,7 +150,7 @@ module "web" {
 }
 
 module "workers" {
-  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.5.1"
+  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.6.2"
 
   project       = "pya"
   project_short = "pya"
@@ -286,13 +286,13 @@ resource "aws_cloudwatch_log_subscription_filter" "datadog" {
 }
 
 module "cloudfront_waf" {
-  source = "github.com/codeforamerica/tofu-modules-aws-cloudfront-waf?ref=1.9.0"
+  source = "github.com/codeforamerica/tofu-modules-aws-cloudfront-waf?ref=1.10.0"
 
   project       = "pya"
   environment   = var.environment
   domain        = var.domain
   subdomain     = "cf"
-  origin_domain = var.domain
+  origin_alb_arn = module.web.load_balancer_arn
   log_bucket    = module.logging.bucket_domain_name
   log_group     = module.logging.log_groups["waf"]
 }
