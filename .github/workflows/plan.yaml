@@ -45,6 +45,7 @@ on:
           - heroku.pya.fileyourstatetaxes.org
           - staging.fileyourstatetaxes.org
           - staging.getyourrefund.org
+          - staging.gyraffe.getyourrefund.org
           - staging.mireembolso.org
           - staging.pya.fileyourstatetaxes.org
           - pya.fileyourstatetaxes.org
