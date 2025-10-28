@@ -26,6 +26,13 @@ module "submission_pdfs" {
       noncurrent_version_expiration = [{
         noncurrent_days = var.state_version_expiration
       }]
+
+      transition = [
+        {
+          days = 30
+          storage_class = "STANDARD_IA"
+        }
+      ]
     }
   ]
 
@@ -69,6 +76,13 @@ module "docs" {
       noncurrent_version_expiration = [{
         noncurrent_days = var.state_version_expiration
       }]
+
+      transition = [
+        {
+          days = 30
+          storage_class = "STANDARD_IA"
+        }
+      ]
     }
   ]
 
