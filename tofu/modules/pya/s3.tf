@@ -2,7 +2,7 @@ module "submission_pdfs" {
   source = "boldlink/s3/aws"
   version = "2.6.0"
 
-  bucket = "${local.project}-${var.environment}-submission-pdfs"
+  bucket = "${var.project}-${var.environment}-submission-pdfs"
 
   force_destroy = false
 
@@ -52,7 +52,7 @@ module "docs" {
   source = "boldlink/s3/aws"
   version = "2.6.0"
 
-  bucket = "${local.project}-${var.environment}-docs"
+  bucket = "${var.project}-${var.environment}-docs"
 
   force_destroy = false
 
