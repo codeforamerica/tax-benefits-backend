@@ -20,5 +20,5 @@ output "repository_url" {
 
 output "submission_pdf_bucket_name" {
   description = "S3 bucket where submission PDFs are stored"
-  value       = aws_s3_bucket.submission_pdfs.bucket
+  value       = module.submission_pdfs.bucket
 }
