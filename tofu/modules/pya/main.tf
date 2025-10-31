@@ -309,7 +309,7 @@ resource "aws_cloudwatch_log_subscription_filter" "datadog" {
 }
 
 module "cloudfront_waf" {
-  source = "github.com/codeforamerica/tofu-modules-aws-cloudfront-waf?ref=1.10.0"
+  source = "github.com/codeforamerica/tofu-modules-aws-cloudfront-waf?ref=1.11.1"
 
   project       = "pya"
   environment   = var.environment
