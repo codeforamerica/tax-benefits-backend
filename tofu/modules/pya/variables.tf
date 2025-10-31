@@ -19,6 +19,12 @@ variable "private_subnets" {
   description = "CIDRs for private_subnets"
 }
 
+variable "project" {
+  type = string
+  description = "The name of the project"
+  default = "pya"
+}
+
 variable "public_subnets" {
   type        = list(string)
   description = "CIDRs for public_subnets"

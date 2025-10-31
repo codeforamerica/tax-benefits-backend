@@ -119,6 +119,7 @@ module "web" {
   service_short = "web"
 
   domain                   = var.domain
+  subdomain                = "origin"
   vpc_id                   = module.vpc.vpc_id
   private_subnets          = module.vpc.private_subnets
   public_subnets           = module.vpc.public_subnets
@@ -127,7 +128,7 @@ module "web" {
   create_endpoint          = true
   create_repository        = true
   create_version_parameter = true
-  public                   = true
+  public                   = false
   health_check_path        = "/up"
   enable_execute_command   = true
 
@@ -137,7 +138,7 @@ module "web" {
   environment_variables = {
     RACK_ENV      = var.environment
     DATABASE_HOST = module.database.cluster_endpoint
-    S3_BUCKET     = aws_s3_bucket.submission_pdfs.bucket
+    S3_BUCKET     = module.submission_pdfs.bucket
     REVIEW_APP    = var.review_app
   }
   environment_secrets = {
@@ -182,7 +183,7 @@ module "workers" {
   environment_variables = {
     RACK_ENV      = var.environment
     DATABASE_HOST = module.database.cluster_endpoint
-    S3_BUCKET     = aws_s3_bucket.submission_pdfs.bucket
+    S3_BUCKET     = module.submission_pdfs.bucket
     REVIEW_APP    = var.review_app
   }
   environment_secrets = {
@@ -240,7 +241,19 @@ resource "aws_kms_key" "submission_pdfs" {
   policy = templatefile("${path.module}/templates/key-policy.json.tftpl", {
     account_id : data.aws_caller_identity.identity.account_id,
     partition : data.aws_partition.current.partition,
-    bucket_arn : aws_s3_bucket.submission_pdfs.bucket,
+    bucket_arn : module.submission_pdfs.bucket,
+    environment : var.environment
+  })
+}
+
+resource "aws_kms_key" "docs" {
+  description             = "OpenTofu docs S3 encryption key for pya ${var.environment}"
+  deletion_window_in_days = 30
+  enable_key_rotation     = true
+  policy = templatefile("${path.module}/templates/key-policy.json.tftpl", {
+    account_id : data.aws_caller_identity.identity.account_id,
+    partition : data.aws_partition.current.partition,
+    bucket_arn : module.docs.bucket,
     environment : var.environment
   })
 }
@@ -265,9 +278,12 @@ resource "aws_iam_policy" "ecs_s3_access" {
           "kms:DescribeKey",
         ]
         Resource = [
-          aws_s3_bucket.submission_pdfs.arn,
-          "${aws_s3_bucket.submission_pdfs.arn}/*",
-          aws_kms_key.submission_pdfs.arn
+          module.submission_pdfs.arn,
+          "${module.submission_pdfs.arn}/*",
+          aws_kms_key.submission_pdfs.arn,
+          module.docs.arn,
+          "${module.docs.arn}/*",
+          aws_kms_key.docs.arn
         ]
       }
     ]
@@ -294,12 +310,12 @@ resource "aws_cloudwatch_log_subscription_filter" "datadog" {
 }
 
 module "cloudfront_waf" {
-  source = "github.com/codeforamerica/tofu-modules-aws-cloudfront-waf?ref=1.11.1"
+  source = "github.com/codeforamerica/tofu-modules-aws-cloudfront-waf?ref=optional-subdomain"
 
   project       = "pya"
   environment   = var.environment
   domain        = var.domain
-  subdomain     = "cf"
+  subdomain     = ""
   origin_alb_arn = module.web.load_balancer_arn
   log_bucket    = module.logging.bucket_domain_name
   log_group     = module.logging.log_groups["waf"]
