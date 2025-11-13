@@ -20,5 +20,5 @@ output "repository_url" {
 
 output "submission_bundles_bucket_name" {
   description = "S3 bucket where submission bundles are stored"
-  value       = aws_s3_bucket.submission_bundles.bucket
+  value       = module.submission_bundles.bucket
 }

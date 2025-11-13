@@ -90,9 +90,10 @@ module "web" {
   task_policies      = [aws_iam_policy.ecs_s3_access.arn]
 
   environment_variables = {
-    RACK_ENV      = var.environment
-    DATABASE_HOST = module.database.cluster_endpoint
-    REVIEW_APP    = var.review_app
+    RACK_ENV          = var.environment
+    DATABASE_HOST     = module.database.cluster_endpoint
+    REVIEW_APP        = var.review_app
+    SCHEMA_S3_BUCKET  = module.schemas.bucket
   }
   environment_secrets = {
     DATABASE_PASSWORD           = "${module.database.secret_arn}:password"
@@ -132,9 +133,10 @@ module "workers" {
   task_policies      = [aws_iam_policy.ecs_s3_access.arn]
 
   environment_variables = {
-    RACK_ENV      = var.environment
-    DATABASE_HOST = module.database.cluster_endpoint
-    REVIEW_APP    = var.review_app
+    RACK_ENV          = var.environment
+    DATABASE_HOST     = module.database.cluster_endpoint
+    REVIEW_APP        = var.review_app
+    SCHEMA_S3_BUCKET  = module.schemas.bucket
   }
   environment_secrets = {
     DATABASE_PASSWORD           = "${module.database.secret_arn}:password"
@@ -189,7 +191,31 @@ resource "aws_kms_key" "submission_bundles" {
   policy = templatefile("${path.module}/templates/key-policy.json.tftpl", {
     account_id : data.aws_caller_identity.identity.account_id,
     partition : data.aws_partition.current.partition,
-    bucket_arn : aws_s3_bucket.submission_bundles.bucket,
+    bucket_arn : module.submission_bundles.bucket,
+    environment : var.environment
+  })
+}
+
+resource "aws_kms_key" "docs" {
+  description             = "OpenTofu docs S3 encryption key for gyraffe ${var.environment}"
+  deletion_window_in_days = 30
+  enable_key_rotation     = true
+  policy = templatefile("${path.module}/templates/key-policy.json.tftpl", {
+    account_id : data.aws_caller_identity.identity.account_id,
+    partition : data.aws_partition.current.partition,
+    bucket_arn : module.docs.bucket,
+    environment : var.environment
+  })
+}
+
+resource "aws_kms_key" "schemas" {
+  description             = "OpenTofu docs S3 encryption key for gyraffe ${var.environment}"
+  deletion_window_in_days = 30
+  enable_key_rotation     = true
+  policy = templatefile("${path.module}/templates/key-policy.json.tftpl", {
+    account_id : data.aws_caller_identity.identity.account_id,
+    partition : data.aws_partition.current.partition,
+    bucket_arn : module.schemas.bucket,
     environment : var.environment
   })
 }
@@ -214,9 +240,15 @@ resource "aws_iam_policy" "ecs_s3_access" {
           "kms:DescribeKey",
         ]
         Resource = [
-          aws_s3_bucket.submission_bundles.arn,
-          "${aws_s3_bucket.submission_bundles.arn}/*",
-          aws_kms_key.submission_bundles.arn
+          module.submission_bundles.arn,
+          "${module.submission_bundles.arn}/*",
+          aws_kms_key.submission_bundles.arn,
+          module.docs.arn,
+          "${module.docs.arn}/*",
+          aws_kms_key.docs.arn,
+          module.schemas.arn,
+          "${module.schemas.arn}/*",
+          aws_kms_key.schemas.arn,
         ]
       }
     ]
