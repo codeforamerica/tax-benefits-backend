@@ -110,7 +110,7 @@ module "vpc" {
 }
 
 module "web" {
-  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.6.2"
+  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.7.0"
 
   project       = "pya"
   project_short = "pya"
@@ -119,15 +119,17 @@ module "web" {
   service_short = "web"
 
   domain                   = var.domain
+  subdomain                = "origin"
   vpc_id                   = module.vpc.vpc_id
   private_subnets          = module.vpc.private_subnets
   public_subnets           = module.vpc.public_subnets
   logging_key_id           = module.logging.kms_key_arn
+  ingress_prefix_list_ids  = [data.aws_ec2_managed_prefix_list.cloudfront.id]
   container_port           = 3000
   create_endpoint          = true
   create_repository        = true
   create_version_parameter = true
-  public                   = true
+  public                   = false
   health_check_path        = "/up"
   enable_execute_command   = true
 
@@ -157,7 +159,7 @@ module "web" {
 }
 
 module "workers" {
-  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.6.2"
+  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.7.0"
 
   project       = "pya"
   project_short = "pya"
@@ -309,12 +311,12 @@ resource "aws_cloudwatch_log_subscription_filter" "datadog" {
 }
 
 module "cloudfront_waf" {
-  source = "github.com/codeforamerica/tofu-modules-aws-cloudfront-waf?ref=1.11.1"
+  source = "github.com/codeforamerica/tofu-modules-aws-cloudfront-waf?ref=1.12.0"
 
   project       = "pya"
   environment   = var.environment
   domain        = var.domain
-  subdomain     = "cf"
+  subdomain     = ""
   origin_alb_arn = module.web.load_balancer_arn
   log_bucket    = module.logging.bucket_domain_name
   log_group     = module.logging.log_groups["waf"]
