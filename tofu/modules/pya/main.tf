@@ -310,14 +310,43 @@ resource "aws_cloudwatch_log_subscription_filter" "datadog" {
   destination_arn = data.aws_lambda_function.datadog["this"].arn
 }
 
+resource "aws_wafv2_ip_set" "scanners" {
+  for_each = var.allow_security_scans ? toset(["this"]) : []
+
+  name               = "${var.project}-${var.environment}-security-scanners"
+  description        = "Security scanners that are allowed to access the site."
+  scope              = "CLOUDFRONT"
+  ip_address_version = "IPV4"
+  addresses          = var.security_scan_cidrs
+}
+
 module "cloudfront_waf" {
   source = "github.com/codeforamerica/tofu-modules-aws-cloudfront-waf?ref=1.12.0"
 
-  project       = "pya"
-  environment   = var.environment
-  domain        = var.domain
-  subdomain     = ""
+  project        = "pya"
+  environment    = var.environment
+  domain         = var.domain
+  subdomain      = ""
   origin_alb_arn = module.web.load_balancer_arn
-  log_bucket    = module.logging.bucket_domain_name
-  log_group     = module.logging.log_groups["waf"]
+  log_bucket     = module.logging.bucket_domain_name
+  log_group      = module.logging.log_groups["waf"]
+  passive        = var.passive_waf
+
+  ip_set_rules = var.allow_security_scans ? {
+    tenable_one = {
+      name     = "${var.project}-${var.environment}-security-scanners"
+      priority = 0
+      action   = "allow"
+      arn      = aws_wafv2_ip_set.scanners["this"].arn
+    }
+  } : {}
+
+  rate_limit_rules = var.rate_limit_requests > 0 ? {
+    base = {
+      action   = var.passive_waf ? "count" : "block"
+      priority = 100
+      limit    = var.rate_limit_requests
+      window   = var.rate_limit_window
+    }
+  } : {}
 }
