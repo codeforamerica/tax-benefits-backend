@@ -17,10 +17,11 @@ module "backend" {
 module "pya" {
   source = "../../modules/pya"
 
-  environment         = "staging"
-  domain              = "staging.pya.fileyourstatetaxes.org"
-  cidr                = "10.0.36.0/22"
-  private_subnets     = ["10.0.38.0/26", "10.0.38.64/26", "10.0.38.128/26"]
-  public_subnets      = ["10.0.36.0/26", "10.0.36.64/26", "10.0.36.128/26"]
-  review_app          = "true"
+  environment     = "staging"
+  domain          = "staging.pya.fileyourstatetaxes.org"
+  cidr            = "10.0.36.0/22"
+  private_subnets = ["10.0.38.0/26", "10.0.38.64/26", "10.0.38.128/26"]
+  public_subnets  = ["10.0.36.0/26", "10.0.36.64/26", "10.0.36.128/26"]
+  review_app      = "true"
+  allow_security_scans = true
 }

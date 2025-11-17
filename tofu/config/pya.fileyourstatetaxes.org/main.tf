@@ -14,7 +14,6 @@ module "backend" {
   environment = "production"
 }
 
-
 module "pya" {
   source = "../../modules/pya"
 
