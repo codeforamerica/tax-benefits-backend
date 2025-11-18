@@ -24,6 +24,9 @@ module "secrets" {
   project     = "pya"
   environment = var.environment
 
+  memory = var.memory
+  cpu = var.cpu
+
   secrets = {
     "rails_secret_key_base" = {
       description = "secret_key_base for Rails app"

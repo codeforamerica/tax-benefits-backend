@@ -41,3 +41,15 @@ variable "review_app" {
   description = "whether this is a application for reviewing code changes (staging/heroku/demo)"
   default     = "true"
 }
+
+variable "memory" {
+  type        = number
+  description = "Memory for this task."
+  default     = 1024
+}
+
+variable "cpu" {
+  type        = number
+  description = "CPU unit for this task."
+  default     = 512
+}
