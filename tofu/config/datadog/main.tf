@@ -15,6 +15,7 @@ module "datadog" {
     "ctc-production",
     "gyr-production",
     "gyr-es-production",
-    "fyst-production"
+    "fyst-production",
+    "pya-production"
   ]
 }
