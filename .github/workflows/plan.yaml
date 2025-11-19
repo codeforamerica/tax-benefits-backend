@@ -21,6 +21,10 @@ on:
         required: true
       AWS_SECRET_ACCESS_KEY:
         required: true
+      DD_API_KEY:
+        required: true
+      DD_APP_KEY:
+        required: true
   workflow_dispatch:
     inputs:
       environment:
@@ -65,6 +69,8 @@ jobs:
     env:
       APTIBLE_USERNAME: ${{ secrets.APTIBLE_USERNAME }}
       APTIBLE_PASSWORD: ${{ secrets.APTIBLE_PASSWORD }}
+      DD_API_KEY: ${{ secrets.DD_API_KEY }}
+      DD_APP_KEY: ${{ secrets.DD_APP_KEY }}
     outputs:
       plan: ${{ steps.plan.outputs.stdout }}
     steps:
