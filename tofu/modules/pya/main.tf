@@ -118,6 +118,9 @@ module "web" {
   service       = "web"
   service_short = "web"
 
+  memory = var.web_memory
+  cpu = var.web_cpu
+
   domain                   = var.domain
   subdomain                = "origin"
   vpc_id                   = module.vpc.vpc_id

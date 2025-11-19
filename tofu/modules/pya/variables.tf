@@ -42,6 +42,18 @@ variable "review_app" {
   default     = "true"
 }
 
+variable "web_memory" {
+  type        = number
+  description = "Memory for the web task."
+  default     = 1024
+}
+
+variable "web_cpu" {
+  type        = number
+  description = "CPU unit for the web task."
+  default     = 512
+}
+
 variable "allow_security_scans" {
   type        = bool
   description = "Allow security scanners to bypass the WAF."
