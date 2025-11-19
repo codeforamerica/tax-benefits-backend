@@ -24,6 +24,6 @@ module "pya" {
   public_subnets  = ["10.0.44.0/26", "10.0.44.64/26", "10.0.44.128/26"]
   review_app      = "false"
 
-  cpu = 1024
-  memory = 8192
+  web_cpu = 1024
+  web_memory = 8192
 }

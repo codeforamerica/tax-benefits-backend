@@ -42,15 +42,15 @@ variable "review_app" {
   default     = "true"
 }
 
-variable "memory" {
+variable "web_memory" {
   type        = number
-  description = "Memory for this task."
+  description = "Memory for the web task."
   default     = 1024
 }
 
-variable "cpu" {
+variable "web_cpu" {
   type        = number
-  description = "CPU unit for this task."
+  description = "CPU unit for the web task."
   default     = 512
 }
 

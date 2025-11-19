@@ -24,9 +24,6 @@ module "secrets" {
   project     = "pya"
   environment = var.environment
 
-  memory = var.memory
-  cpu = var.cpu
-
   secrets = {
     "rails_secret_key_base" = {
       description = "secret_key_base for Rails app"
@@ -120,6 +117,9 @@ module "web" {
   environment   = var.environment
   service       = "web"
   service_short = "web"
+
+  memory = var.web_memory
+  cpu = var.web_cpu
 
   domain                   = var.domain
   subdomain                = "origin"
