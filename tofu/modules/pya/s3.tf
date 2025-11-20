@@ -1,5 +1,5 @@
 module "submission_pdfs" {
-  source = "boldlink/s3/aws"
+  source  = "boldlink/s3/aws"
   version = "2.6.0"
 
   bucket = "${var.project}-${var.environment}-submission-pdfs"
@@ -29,7 +29,7 @@ module "submission_pdfs" {
 
       transition = [
         {
-          days = 30
+          days          = 30
           storage_class = "STANDARD_IA"
         }
       ]
@@ -38,7 +38,7 @@ module "submission_pdfs" {
 
   sse_bucket_key_enabled = true
   sse_kms_master_key_arn = aws_kms_key.submission_pdfs.arn
-  sse_sse_algorithm = "aws:kms"
+  sse_sse_algorithm      = "aws:kms"
 
   versioning_status = "Enabled"
 
@@ -49,7 +49,7 @@ module "submission_pdfs" {
 }
 
 module "docs" {
-  source = "boldlink/s3/aws"
+  source  = "boldlink/s3/aws"
   version = "2.6.0"
 
   bucket = "${var.project}-${var.environment}-docs"
@@ -64,7 +64,7 @@ module "docs" {
 
   lifecycle_configuration = [
     {
-      id = "state"
+      id     = "state"
       status = "Enabled"
 
       filter = {
@@ -79,7 +79,7 @@ module "docs" {
 
       transition = [
         {
-          days = 30
+          days          = 30
           storage_class = "STANDARD_IA"
         }
       ]
@@ -88,7 +88,7 @@ module "docs" {
 
   sse_bucket_key_enabled = true
   sse_kms_master_key_arn = aws_kms_key.docs.arn
-  sse_sse_algorithm = "aws:kms"
+  sse_sse_algorithm      = "aws:kms"
 
   versioning_status = "Enabled"
 
