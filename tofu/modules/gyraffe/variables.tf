@@ -1,3 +1,9 @@
+variable "project" {
+  type = string
+  description = "The name of the project"
+  default = "gyraffe"
+}
+
 variable "domain" {
   description = "Gyraffe domain"
   type        = string
