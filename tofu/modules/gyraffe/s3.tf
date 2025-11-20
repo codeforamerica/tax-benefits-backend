@@ -109,7 +109,7 @@ module "schemas" {
   bucket_policy = templatefile("${path.module}/templates/bucket-policy.json.tftpl", {
     account : data.aws_caller_identity.identity.account_id
     partition : data.aws_partition.current.partition
-    bucket : module.docs.id
+    bucket : module.schemas.id
   })
 
   lifecycle_configuration = [
