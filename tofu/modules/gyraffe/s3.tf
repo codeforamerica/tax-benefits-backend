@@ -2,7 +2,7 @@ module "submission_bundles" {
   source = "boldlink/s3/aws"
   version = "2.6.0"
 
-  bucket = "${locals.prefix}-submission-bundles"
+  bucket = "${local.prefix}-submission-bundles"
 
   force_destroy = false
 
@@ -52,7 +52,7 @@ module "docs" {
   source = "boldlink/s3/aws"
   version = "2.6.0"
 
-  bucket = "${locals.prefix}-docs"
+  bucket = "${local.prefix}-docs"
 
   force_destroy = false
 
@@ -102,7 +102,7 @@ module "schemas" {
   source = "boldlink/s3/aws"
   version = "2.6.0"
 
-  bucket = "${locals.prefix}-schemas"
+  bucket = "${local.prefix}-schemas"
 
   force_destroy = false
 
