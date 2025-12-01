@@ -73,11 +73,11 @@ module "secrets" {
         key = ""
       })
     },
-   "mailgun_basic_auth_password" = {
-        description = "Basic auth password for Mailgun"
-        start_value = jsonencode({
-          key = ""
-        })
+    "mailgun_basic_auth_password" = {
+      description = "Basic auth password for Mailgun"
+      start_value = jsonencode({
+        key = ""
+      })
     },
     "intercom_app_id" = {
       description = "Application id for intercom"
