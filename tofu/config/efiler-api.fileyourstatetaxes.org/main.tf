@@ -17,9 +17,9 @@ module "backend" {
 module "efiler_api" {
   source = "../../modules/efiler_api"
 
-  environment         = "production"
-  domain              = "efiler-api.fileyourstatetaxes.org"
-  cidr                = "10.0.60.0/22"
-  private_subnets     = ["10.0.62.0/26", "10.0.62.64/26", "10.0.62.128/26"]
-  public_subnets      = ["10.0.60.0/26", "10.0.60.64/26", "10.0.60.128/26"]
+  environment     = "production"
+  domain          = "efiler-api.fileyourstatetaxes.org"
+  cidr            = "10.0.60.0/22"
+  private_subnets = ["10.0.62.0/26", "10.0.62.64/26", "10.0.62.128/26"]
+  public_subnets  = ["10.0.60.0/26", "10.0.60.64/26", "10.0.60.128/26"]
 }

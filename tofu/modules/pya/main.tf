@@ -31,6 +31,12 @@ module "secrets" {
         key = ""
       })
     },
+    "sentry_dsn" = {
+      description = "dsn for sentry integration"
+      start_value = jsonencode({
+        key = ""
+      })
+    },
     "ssn_hashing_key" = {
       description = "Key for encrypting SSN for archived intakes"
       start_value = jsonencode({
@@ -122,7 +128,7 @@ module "vpc" {
 }
 
 module "web" {
-  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.5.1"
+  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.7.0"
 
   project       = "pya"
   project_short = "pya"
@@ -130,45 +136,51 @@ module "web" {
   service       = "web"
   service_short = "web"
 
-  domain          = var.domain
-  vpc_id          = module.vpc.vpc_id
-  private_subnets = module.vpc.private_subnets
-  public_subnets  = module.vpc.public_subnets
-  logging_key_id  = module.logging.kms_key_arn
-  container_port  = 3000
-  create_endpoint	= true
-  create_repository	= true
+  memory = var.web_memory
+  cpu = var.web_cpu
+
+  domain                   = var.domain
+  subdomain                = "origin"
+  vpc_id                   = module.vpc.vpc_id
+  private_subnets          = module.vpc.private_subnets
+  public_subnets           = module.vpc.public_subnets
+  logging_key_id           = module.logging.kms_key_arn
+  ingress_prefix_list_ids  = [data.aws_ec2_managed_prefix_list.cloudfront.id]
+  container_port           = 3000
+  create_endpoint          = true
+  create_repository        = true
   create_version_parameter = true
-  public = true
-  health_check_path = "/up"
-  enable_execute_command = true
+  public                   = false
+  health_check_path        = "/up"
+  enable_execute_command   = true
 
   execution_policies = [aws_iam_policy.ecs_s3_access.arn]
-  task_policies = [aws_iam_policy.ecs_s3_access.arn]
+  task_policies      = [aws_iam_policy.ecs_s3_access.arn]
 
   environment_variables = {
-    RACK_ENV = var.environment
+    RACK_ENV      = var.environment
     DATABASE_HOST = module.database.cluster_endpoint
-    S3_BUCKET = aws_s3_bucket.submission_pdfs.bucket
-    REVIEW_APP = var.review_app
+    S3_BUCKET     = module.submission_pdfs.bucket
+    REVIEW_APP    = var.review_app
   }
   environment_secrets = {
-    DATABASE_PASSWORD      = "${module.database.secret_arn}:password"
-    DATABASE_USER          = "${module.database.secret_arn}:username"
-    SECRET_KEY_BASE        = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}:key"
-    SSN_HASHING_KEY        = "${module.secrets.secrets["ssn_hashing_key"].secret_arn}:key"
-    TWILIO_ACCOUNT_SID     = "${module.secrets.secrets["twilio_account_sid"].secret_arn}:key"
-    TWILIO_AUTH_TOKEN      = "${module.secrets.secrets["twilio_auth_token"].secret_arn}:key"
-    TWILIO_MESSAGING_SERVICE = "${module.secrets.secrets["twilio_messaging_service_sid"].secret_arn}:key"
-    MAILGUN_API_KEY = "${module.secrets.secrets["mailgun_api_key"].secret_arn}:key"
-    MAILGUN_DOMAIN = "${module.secrets.secrets["mailgun_domain"].secret_arn}:key"
-    MAILGUN_BASIC_AUTH_NAME = "${module.secrets.secrets["mailgun_basic_auth_name"].secret_arn}:key"
+    DATABASE_PASSWORD           = "${module.database.secret_arn}:password"
+    DATABASE_USER               = "${module.database.secret_arn}:username"
+    SECRET_KEY_BASE             = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}:key"
+    SENTRY_DSN                  = "${module.secrets.secrets["sentry_dsn"].secret_arn}:key"
+    SSN_HASHING_KEY             = "${module.secrets.secrets["ssn_hashing_key"].secret_arn}:key"
+    TWILIO_ACCOUNT_SID          = "${module.secrets.secrets["twilio_account_sid"].secret_arn}:key"
+    TWILIO_AUTH_TOKEN           = "${module.secrets.secrets["twilio_auth_token"].secret_arn}:key"
+    TWILIO_MESSAGING_SERVICE    = "${module.secrets.secrets["twilio_messaging_service_sid"].secret_arn}:key"
+    MAILGUN_API_KEY             = "${module.secrets.secrets["mailgun_api_key"].secret_arn}:key"
+    MAILGUN_DOMAIN              = "${module.secrets.secrets["mailgun_domain"].secret_arn}:key"
+    MAILGUN_BASIC_AUTH_NAME     = "${module.secrets.secrets["mailgun_basic_auth_name"].secret_arn}:key"
     MAILGUN_BASIC_AUTH_PASSWORD = "${module.secrets.secrets["mailgun_basic_auth_password"].secret_arn}:key"
   }
 }
 
 module "workers" {
-  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.5.1"
+  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.7.0"
 
   project       = "pya"
   project_short = "pya"
@@ -176,62 +188,63 @@ module "workers" {
   service       = "worker"
   service_short = "wrk"
 
-  vpc_id          = module.vpc.vpc_id
-  private_subnets = module.vpc.private_subnets
-  public_subnets  = module.vpc.public_subnets
-  logging_key_id  = module.logging.kms_key_arn
-  container_port  = 3000
-  version_parameter = module.web.version_parameter
-  image_url = module.web.repository_url
-  create_endpoint = false
-  create_repository = false
+  vpc_id                 = module.vpc.vpc_id
+  private_subnets        = module.vpc.private_subnets
+  public_subnets         = module.vpc.public_subnets
+  logging_key_id         = module.logging.kms_key_arn
+  container_port         = 3000
+  version_parameter      = module.web.version_parameter
+  image_url              = module.web.repository_url
+  create_endpoint        = false
+  create_repository      = false
   enable_execute_command = true
 
   execution_policies = [aws_iam_policy.ecs_s3_access.arn]
-  task_policies = [aws_iam_policy.ecs_s3_access.arn]
+  task_policies      = [aws_iam_policy.ecs_s3_access.arn]
 
   environment_variables = {
-    RACK_ENV = var.environment
+    RACK_ENV      = var.environment
     DATABASE_HOST = module.database.cluster_endpoint
-    S3_BUCKET = aws_s3_bucket.submission_pdfs.bucket
-    REVIEW_APP = var.review_app
+    S3_BUCKET     = module.submission_pdfs.bucket
+    REVIEW_APP    = var.review_app
   }
   environment_secrets = {
-    DATABASE_PASSWORD      = "${module.database.secret_arn}:password"
-    DATABASE_USER          = "${module.database.secret_arn}:username"
-    SECRET_KEY_BASE        = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}:key"
-    SSN_HASHING_KEY        = "${module.secrets.secrets["ssn_hashing_key"].secret_arn}:key"
-    TWILIO_ACCOUNT_SID     = "${module.secrets.secrets["twilio_account_sid"].secret_arn}:key"
-    TWILIO_AUTH_TOKEN      = "${module.secrets.secrets["twilio_auth_token"].secret_arn}:key"
-    TWILIO_MESSAGING_SERVICE = "${module.secrets.secrets["twilio_messaging_service_sid"].secret_arn}:key"
-    MAILGUN_API_KEY = "${module.secrets.secrets["mailgun_api_key"].secret_arn}:key"
-    MAILGUN_DOMAIN = "${module.secrets.secrets["mailgun_domain"].secret_arn}:key"
-    MAILGUN_BASIC_AUTH_NAME = "${module.secrets.secrets["mailgun_basic_auth_name"].secret_arn}:key"
+    DATABASE_PASSWORD           = "${module.database.secret_arn}:password"
+    DATABASE_USER               = "${module.database.secret_arn}:username"
+    SECRET_KEY_BASE             = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}:key"
+    SENTRY_DSN                  = "${module.secrets.secrets["sentry_dsn"].secret_arn}:key"
+    SSN_HASHING_KEY             = "${module.secrets.secrets["ssn_hashing_key"].secret_arn}:key"
+    TWILIO_ACCOUNT_SID          = "${module.secrets.secrets["twilio_account_sid"].secret_arn}:key"
+    TWILIO_AUTH_TOKEN           = "${module.secrets.secrets["twilio_auth_token"].secret_arn}:key"
+    TWILIO_MESSAGING_SERVICE    = "${module.secrets.secrets["twilio_messaging_service_sid"].secret_arn}:key"
+    MAILGUN_API_KEY             = "${module.secrets.secrets["mailgun_api_key"].secret_arn}:key"
+    MAILGUN_DOMAIN              = "${module.secrets.secrets["mailgun_domain"].secret_arn}:key"
+    MAILGUN_BASIC_AUTH_NAME     = "${module.secrets.secrets["mailgun_basic_auth_name"].secret_arn}:key"
     MAILGUN_BASIC_AUTH_PASSWORD = "${module.secrets.secrets["mailgun_basic_auth_password"].secret_arn}:key"
   }
 
   container_command = ["bundle", "exec", "rake", "jobs:work"]
-  repository_arn = module.web.repository_arn
+  repository_arn    = module.web.repository_arn
 }
 
 module "database" {
   source = "github.com/codeforamerica/tofu-modules-aws-serverless-database?ref=1.3.1"
 
-  project     = "pya"
-  environment = var.environment
-  service     = "web"
-  skip_final_snapshot	= true
+  project             = "pya"
+  environment         = var.environment
+  service             = "web"
+  skip_final_snapshot = true
 
-  logging_key_arn = module.logging.kms_key_arn
-  secrets_key_arn = module.secrets.kms_key_arn
-  vpc_id          = module.vpc.vpc_id
-  subnets         = module.vpc.private_subnets
-  ingress_cidrs   = module.vpc.private_subnets_cidr_blocks
+  logging_key_arn    = module.logging.kms_key_arn
+  secrets_key_arn    = module.secrets.kms_key_arn
+  vpc_id             = module.vpc.vpc_id
+  subnets            = module.vpc.private_subnets
+  ingress_cidrs      = module.vpc.private_subnets_cidr_blocks
   iam_authentication = true
-  enable_data_api = true
+  enable_data_api    = true
 
-  min_capacity = 0
-  max_capacity = 10
+  min_capacity       = 0
+  max_capacity       = 10
   cluster_parameters = []
 }
 
@@ -250,8 +263,20 @@ resource "aws_kms_key" "submission_pdfs" {
   policy = templatefile("${path.module}/templates/key-policy.json.tftpl", {
     account_id : data.aws_caller_identity.identity.account_id,
     partition : data.aws_partition.current.partition,
-    bucket_arn : aws_s3_bucket.submission_pdfs.bucket,
-    environment: var.environment
+    bucket_arn : module.submission_pdfs.bucket,
+    environment : var.environment
+  })
+}
+
+resource "aws_kms_key" "docs" {
+  description             = "OpenTofu docs S3 encryption key for pya ${var.environment}"
+  deletion_window_in_days = 30
+  enable_key_rotation     = true
+  policy = templatefile("${path.module}/templates/key-policy.json.tftpl", {
+    account_id : data.aws_caller_identity.identity.account_id,
+    partition : data.aws_partition.current.partition,
+    bucket_arn : module.docs.bucket,
+    environment : var.environment
   })
 }
 
@@ -275,9 +300,12 @@ resource "aws_iam_policy" "ecs_s3_access" {
           "kms:DescribeKey",
         ]
         Resource = [
-          aws_s3_bucket.submission_pdfs.arn,
-          "${aws_s3_bucket.submission_pdfs.arn}/*",
-          aws_kms_key.submission_pdfs.arn
+          module.submission_pdfs.arn,
+          "${module.submission_pdfs.arn}/*",
+          aws_kms_key.submission_pdfs.arn,
+          module.docs.arn,
+          "${module.docs.arn}/*",
+          aws_kms_key.docs.arn
         ]
       }
     ]
@@ -301,4 +329,45 @@ resource "aws_cloudwatch_log_subscription_filter" "datadog" {
   log_group_name  = "/aws/ecs/pya/${var.environment}/${each.key}"
   filter_pattern  = ""
   destination_arn = data.aws_lambda_function.datadog["this"].arn
+}
+
+resource "aws_wafv2_ip_set" "scanners" {
+  for_each = var.allow_security_scans ? toset(["this"]) : []
+
+  name               = "${var.project}-${var.environment}-security-scanners"
+  description        = "Security scanners that are allowed to access the site."
+  scope              = "CLOUDFRONT"
+  ip_address_version = "IPV4"
+  addresses          = var.security_scan_cidrs
+}
+
+module "cloudfront_waf" {
+  source = "github.com/codeforamerica/tofu-modules-aws-cloudfront-waf?ref=1.12.0"
+
+  project        = "pya"
+  environment    = var.environment
+  domain         = var.domain
+  subdomain      = ""
+  origin_alb_arn = module.web.load_balancer_arn
+  log_bucket     = module.logging.bucket_domain_name
+  log_group      = module.logging.log_groups["waf"]
+  passive        = var.passive_waf
+
+  ip_set_rules = var.allow_security_scans ? {
+    tenable_one = {
+      name     = "${var.project}-${var.environment}-security-scanners"
+      priority = 0
+      action   = "allow"
+      arn      = aws_wafv2_ip_set.scanners["this"].arn
+    }
+  } : {}
+
+  rate_limit_rules = var.rate_limit_requests > 0 ? {
+    base = {
+      action   = var.passive_waf ? "count" : "block"
+      priority = 100
+      limit    = var.rate_limit_requests
+      window   = var.rate_limit_window
+    }
+  } : {}
 }

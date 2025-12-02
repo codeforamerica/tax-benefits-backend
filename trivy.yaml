@@ -1,6 +1,9 @@
 exit-code: 1
 ignorefile: .trivyignore.yaml
 misconfiguration:
+  # Pin to 1.11 until https://github.com/aquasecurity/trivy-checks/pull/494 is
+  # resolved and a new version is released.
+  checks-bundle-repository: mirror.gcr.io/aquasec/trivy-checks:1.11
   ignore-unfixed: true
   terraform:
     exclude-downloaded-modules: true

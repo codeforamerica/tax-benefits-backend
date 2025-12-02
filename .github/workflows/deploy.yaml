@@ -28,6 +28,7 @@ on:
           - heroku.pya.fileyourstatetaxes.org
           - staging.fileyourstatetaxes.org
           - staging.getyourrefund.org
+          - staging.gyraffe.getyourrefund.org
           - staging.mireembolso.org
           - staging.pya.fileyourstatetaxes.org
           - pya.fileyourstatetaxes.org
@@ -53,6 +54,8 @@ jobs:
     env:
       APTIBLE_USERNAME: ${{ secrets.APTIBLE_USERNAME }}
       APTIBLE_PASSWORD: ${{ secrets.APTIBLE_PASSWORD }}
+      DD_API_KEY: ${{ secrets.DD_API_KEY }}
+      DD_APP_KEY: ${{ secrets.DD_APP_KEY }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
