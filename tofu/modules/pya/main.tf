@@ -84,7 +84,25 @@ module "secrets" {
       start_value = jsonencode({
         key = ""
       })
-    }
+    },
+    "intercom_app_id" = {
+      description = "Application id for intercom"
+      start_value = jsonencode({
+        key = ""
+      })
+    },
+    "intercom_access_token" = {
+      description = "access token  for intercom"
+      start_value = jsonencode({
+        key = ""
+      })
+    },
+    "intercom_secure_mode_secret_key" = {
+      description = "secret key for intercom secure mode"
+      start_value = jsonencode({
+        key = ""
+      })
+   }
   }
 }
 
