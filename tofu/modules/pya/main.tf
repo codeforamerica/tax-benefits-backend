@@ -84,19 +84,7 @@ module "secrets" {
       start_value = jsonencode({
         key = ""
       })
-    },
-    "intercom_app_id" = {
-      description = "Application id for intercom"
-      start_value = jsonencode({
-        key = ""
-      })
-    },
-    "intercom_secure_mode_secret_key" = {
-      description = "secret key for intercom secure mode"
-      start_value = jsonencode({
-        key = ""
-      })
-   }
+    }
   }
 }
 
@@ -170,8 +158,6 @@ module "web" {
     MAILGUN_DOMAIN              = "${module.secrets.secrets["mailgun_domain"].secret_arn}:key"
     MAILGUN_BASIC_AUTH_NAME     = "${module.secrets.secrets["mailgun_basic_auth_name"].secret_arn}:key"
     MAILGUN_BASIC_AUTH_PASSWORD = "${module.secrets.secrets["mailgun_basic_auth_password"].secret_arn}:key"
-    INTERCOM_APP_ID             = "${module.secrets.secrets["intercom_app_id"].secret_arn}:key"
-    INTERCOM_SECURE_MODE_SECRET_KEY = "${module.secrets.secrets["intercom_secure_mode_secret_key"].secret_arn}:key"
   }
 }
 
