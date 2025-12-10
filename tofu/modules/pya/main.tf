@@ -242,6 +242,61 @@ module "database" {
   min_capacity       = 0
   max_capacity       = 10
   cluster_parameters = []
+
+  tags = {
+    "aws-backup/rds" = "daily"
+    Project          = "pya"
+    Environment      = var.environment
+  }
+}
+
+provider "aws" {
+  alias  = "west"
+  region = "us-west-1"
+}
+
+module "backup" {
+  source  = "cloudposse/backup/aws"
+  version = "1.1.1"
+
+  providers = {
+    aws = aws.west
+  }
+
+  namespace  = "cfa"
+  stage      = var.environment
+  name       = "pya"
+  attributes = ["rds"]
+  tags = {
+    Project     = "pya"
+    Environment = var.environment
+  }
+
+  plan_name_suffix = "aws-backup-daily"
+  vault_enabled    = true
+  iam_role_enabled = true
+  plan_enabled     = true
+
+  selection_tags = [
+    {
+      type  = "STRINGEQUALS"
+      key   = "aws-backup/rds"
+      value = "daily"
+    }
+  ]
+
+  rules = [
+    {
+      name              = "pya-${var.environment}-daily"
+      schedule          = "cron(0 18 ? * * *)"
+      start_window      = 320
+      completion_window = 1440
+      lifecycle = {
+        delete_after = 14
+      }
+    }
+  ]
+
 }
 
 locals {
