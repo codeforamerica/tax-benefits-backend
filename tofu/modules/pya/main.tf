@@ -242,6 +242,119 @@ module "database" {
   min_capacity       = 0
   max_capacity       = 10
   cluster_parameters = []
+
+  tags = {
+    "aws-backup/rds" = "daily"
+    Project          = "pya"
+    Environment      = var.environment
+  }
+}
+
+module "backup_vault" {
+  source  = "cloudposse/backup/aws"
+  version = "1.1.1"
+
+  providers = {
+    aws = aws.backup
+  }
+
+  namespace  = "cfa"
+  stage      = var.environment
+  name       = "pya"
+  attributes = ["database_backup_vault"]
+
+  tags = {
+    Project     = "pya"
+    Environment = var.environment
+    Attributes  = "rds-dr"
+    Namespace   = "cfa"
+  }
+
+  vault_enabled    = true
+  iam_role_enabled = true
+  plan_enabled     = false
+}
+
+module "backup" {
+  source  = "cloudposse/backup/aws"
+  version = "1.1.1"
+
+  namespace  = "cfa"
+  stage      = var.environment
+  name       = "pya"
+  attributes = ["database_back"]
+  tags = {
+    Project     = "pya"
+    Environment = var.environment
+  }
+
+  plan_name_suffix = "aws-backup-daily"
+  vault_enabled    = true
+  iam_role_enabled = true
+  plan_enabled     = true
+
+  selection_tags = [
+    {
+      type  = "STRINGEQUALS"
+      key   = "aws-backup/rds"
+      value = "daily"
+    }
+  ]
+
+  rules = [
+    {
+      name              = "pya-${var.environment}-daily"
+      schedule          = "cron(0 18 ? * * *)"
+      start_window      = 320
+      completion_window = 1440
+
+      lifecycle = {
+        delete_after = 31
+      }
+
+      copy_action = {
+        destination_vault_arn = module.backup_vault.backup_vault_arn
+        lifecycle = {
+          delete_after = 31
+        }
+      }
+    },
+    {
+      name              = "pya-${var.environment}-monthly"
+      schedule          = "cron(0 18 1 * ? *)"
+      start_window      = 320
+      completion_window = 1440
+
+      lifecycle = {
+        delete_after = 395
+      }
+
+      copy_action = {
+        destination_vault_arn = module.backup_vault.backup_vault_arn
+        lifecycle = {
+          delete_after = 395
+        }
+      }
+    },
+    {
+      name              = "pya-${var.environment}-yearly"
+      schedule          = "cron(0 18 1 1 ? *)"
+      start_window      = 320
+      completion_window = 1440
+
+      lifecycle = {
+        delete_after = 1095
+      }
+
+      copy_action = {
+        destination_vault_arn = module.backup_vault.backup_vault_arn
+        lifecycle = {
+          delete_after = 1095
+        }
+      }
+    }
+  ]
+
 }
 
 locals {

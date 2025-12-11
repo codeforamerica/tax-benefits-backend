@@ -8,3 +8,15 @@ provider "aws" {
     }
   }
 }
+
+provider "aws" {
+  alias  = "backup"
+  region = "us-west-2"
+
+  default_tags {
+    tags = {
+      project     = "pya"
+      environment = "production"
+    }
+  }
+}
