@@ -17,6 +17,9 @@ module "backend" {
 module "pya" {
   source = "../../modules/pya"
 
+  providers = {
+    aws.backup = aws.backup
+  }
   environment     = "staging"
   domain          = "staging.pya.fileyourstatetaxes.org"
   cidr            = "10.0.36.0/22"
