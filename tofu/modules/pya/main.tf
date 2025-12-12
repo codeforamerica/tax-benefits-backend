@@ -265,8 +265,6 @@ module "backup_vault" {
 
   labels_as_tags = []
   tags = {
-    Project     = "pya"
-    Environment = var.environment
     Attributes  = "rds-dr"
     Namespace   = "cfa"
   }
@@ -285,11 +283,6 @@ module "backup" {
   name       = "pya"
   attributes = ["database_back"]
   labels_as_tags = []
-
-  tags = {
-    Project     = "pya"
-    Environment = var.environment
-  }
 
   plan_name_suffix = "aws-backup-daily"
   vault_enabled    = true
