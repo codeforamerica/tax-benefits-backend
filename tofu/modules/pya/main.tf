@@ -263,6 +263,7 @@ module "backup_vault" {
   name       = "pya"
   attributes = ["database_backup_vault"]
 
+  labels_as_tags = []
   tags = {
     Project     = "pya"
     Environment = var.environment
@@ -283,6 +284,8 @@ module "backup" {
   stage      = var.environment
   name       = "pya"
   attributes = ["database_back"]
+  labels_as_tags = []
+
   tags = {
     Project     = "pya"
     Environment = var.environment
