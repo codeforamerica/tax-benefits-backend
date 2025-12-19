@@ -224,7 +224,7 @@ module "workers" {
 }
 
 module "database" {
-  source = "github.com/codeforamerica/tofu-modules-aws-serverless-database?ref=1.3.1"
+  source = "github.com/codeforamerica/tofu-modules-aws-serverless-database?ref=1.4.0"
 
   project             = "pya"
   environment         = var.environment
@@ -238,6 +238,7 @@ module "database" {
   ingress_cidrs      = module.vpc.private_subnets_cidr_blocks
   iam_authentication = true
   enable_data_api    = true
+  password_rotation_frequency = 0
 
   min_capacity       = 0
   max_capacity       = 10
