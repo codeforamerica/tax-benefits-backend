@@ -1,0 +1,60 @@
+name: Cron tasks
+on:
+  schedule:
+    cron: "0 0 7,15,22,28 * *" # Runs on the 7th, 15th, 22nd, and 28th of any given month
+  workflow_dispatch:
+
+jobs:
+  redeploy-bastion:
+    name: Redeploys bastion in a few different environments on a schedule
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      - name: Setup OpenTofu
+        uses: opentofu/setup-opentofu@v1
+
+      - name: Initialize OpenTofu for pya staging
+        working-directory: ./tofu/config/staging.pya.fileyourstatetaxes.org
+        run: tofu init
+      - name: Apply changes to pya staging
+        working-directory: ./tofu/config/staging.pya.fileyourstatetaxes.org
+        run: tofu apply --auto-approve -target module.pya.module.bastion
+      # - name: Initialize OpenTofu for pya
+      #   working-directory: ./tofu/config/pya.fileyourstatetaxes.org
+      #   run: tofu init
+      # - name: Apply changes to pya
+      #   working-directory: ./tofu/config/pya.fileyourstatetaxes.org
+      #   run: tofu apply --auto-approve -target module.pya.module.bastion
+
+      - name: Initialize OpenTofu for efiler api demo
+        working-directory: ./tofu/config/demo.efiler-api.fileyourstatetaxes.org
+        run: tofu init
+      - name: Apply changes to efiler api demo
+        working-directory: ./tofu/config/demo.efiler-api.fileyourstatetaxes.org
+        run: tofu apply --auto-approve -target module.efiler_api.module.bastion
+      # - name: Initialize OpenTofu for efiler api
+      #   working-directory: ./tofu/config/efiler-api.fileyourstatetaxes.org
+      #   run: tofu init
+      # - name: Apply changes to efiler api
+      #   working-directory: ./tofu/config/efiler-api.fileyourstatetaxes.org
+      #   run: tofu apply --auto-approve -target module.efiler_api.module.bastion
+
+      - name: Initialize OpenTofu for gyraffe demo
+        working-directory: ./tofu/config/demo.gyraffe.fileyourstatetaxes.org
+        run: tofu init
+      - name: Apply changes to gyraffe demo
+        working-directory: ./tofu/config/demo.gyraffe.fileyourstatetaxes.org
+        run: tofu apply --auto-approve -target module.gyraffe.module.bastion
+      # - name: Initialize OpenTofu for gyraffe
+      #   working-directory: ./tofu/config/gyraffe.fileyourstatetaxes.org
+      #   run: tofu init
+      # - name: Apply changes to gyraffe
+      #   working-directory: ./tofu/config/gyraffe.fileyourstatetaxes.org
+      #   run: tofu apply --auto-approve -target module.gyraffe.module.bastion
