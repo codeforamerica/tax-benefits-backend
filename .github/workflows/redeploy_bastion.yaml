@@ -8,7 +8,7 @@ on:
 
 jobs:
   redeploy-pya-bastion:
-    name: Redeploys bastion in a pya-staging
+    name: Redeploys bastion in pya staging
     runs-on: ubuntu-latest
     environment: pya-nonprod
     steps:
@@ -33,7 +33,7 @@ jobs:
         run: tofu apply --auto-approve -target module.pya.module.bastion
 
   redeploy-demo-efiler-api-bastion:
-    name: Redeploys bastion in a pya-staging
+    name: Redeploys bastion in efiler-api demo
     runs-on: ubuntu-latest
     environment: efiler-api-demo
     steps:
@@ -45,6 +45,10 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
+
+      - name: Initialize OpenTofu for pya staging
+        working-directory: ./tofu/config/staging.pya.fileyourstatetaxes.org
+        run: tofu init
 
       - name: Initialize OpenTofu for efiler api demo
         working-directory: ./tofu/config/demo.efiler-api.fileyourstatetaxes.org
