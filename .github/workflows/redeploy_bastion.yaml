@@ -83,8 +83,8 @@ jobs:
         working-directory: ./tofu/config/staging.gyraffe.getyourrefund.org
         run: tofu apply --auto-approve -target module.gyraffe.module.bastion
 
-  redeploy-pya-staging-bastion:
-    name: Redeploys bastion in pya staging
+  redeploy-pya-bastion:
+    name: Redeploys bastion in pya
     runs-on: ubuntu-latest
     environment: pya-prod
     steps:
