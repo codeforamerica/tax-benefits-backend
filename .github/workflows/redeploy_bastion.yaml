@@ -48,7 +48,7 @@ jobs:
   #     - name: Setup OpenTofu
   #       uses: opentofu/setup-opentofu@v1
 
-  #     - name: Initialize OpenTofu for pya staging
+  #     - name: Initialize OpenTofu for efiler-api demo
   #       working-directory: ./tofu/config/staging.pya.fileyourstatetaxes.org
   #       run: tofu init
 
@@ -76,10 +76,10 @@ jobs:
       - name: Setup OpenTofu
         uses: opentofu/setup-opentofu@v1
 
-      - name: Initialize OpenTofu for gyraffe demo
+      - name: Initialize OpenTofu for gyraffe staging
         working-directory: ./tofu/config/staging.gyraffe.getyourrefund.org
         run: tofu init
-      - name: Apply changes to gyraffe demo
+      - name: Apply changes to gyraffe staging
         working-directory: ./tofu/config/staging.gyraffe.getyourrefund.org
         run: tofu apply --auto-approve -target module.gyraffe.module.bastion
 
