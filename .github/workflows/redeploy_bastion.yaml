@@ -78,10 +78,10 @@ jobs:
         uses: opentofu/setup-opentofu@v1
 
       - name: Initialize OpenTofu for gyraffe demo
-        working-directory: ./tofu/config/demo.gyraffe.fileyourstatetaxes.org
+        working-directory: ./tofu/config/staging.gyraffe.getyourrefund.org
         run: tofu init
       - name: Apply changes to gyraffe demo
-        working-directory: ./tofu/config/demo.gyraffe.fileyourstatetaxes.org
+        working-directory: ./tofu/config/staging.gyraffe.getyourrefund.org
         run: tofu apply --auto-approve -target module.gyraffe.module.bastion
 
       # name: Initialize OpenTofu for pya
