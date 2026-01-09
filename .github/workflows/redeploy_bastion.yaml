@@ -10,7 +10,6 @@ jobs:
   redeploy-bastion:
     name: Redeploys bastion in a few different environments on a schedule
     runs-on: ubuntu-latest
-    environment: pya-nonprod
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -20,6 +19,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
+          environment: pya-nonprod
 
       - name: Setup OpenTofu
         uses: opentofu/setup-opentofu@v1
