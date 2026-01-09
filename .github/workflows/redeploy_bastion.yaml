@@ -108,8 +108,8 @@ jobs:
         run: tofu apply --auto-approve -target module.pya.module.bastion
 
       # - name: Initialize OpenTofu for gyraffe
-      #   working-directory: ./tofu/config/gyraffe.fileyourstatetaxes.org
+      #   working-directory: ./tofu/config/gyraffe.getyourrefund.org
       #   run: tofu init
       # - name: Apply changes to gyraffe
-      #   working-directory: ./tofu/config/gyraffe.fileyourstatetaxes.org
+      #   working-directory: ./tofu/config/gyraffe.getyourrefund.org
       #   run: tofu apply --auto-approve -target module.gyraffe.module.bastion
