@@ -60,12 +60,29 @@ jobs:
         working-directory: ./tofu/config/demo.efiler-api.fileyourstatetaxes.org
         run: tofu apply --auto-approve -target module.efiler_api.module.bastion
 
-      # - name: Initialize OpenTofu for gyraffe demo
-      #   working-directory: ./tofu/config/demo.gyraffe.fileyourstatetaxes.org
-      #   run: tofu init
-      # - name: Apply changes to gyraffe demo
-      #   working-directory: ./tofu/config/demo.gyraffe.fileyourstatetaxes.org
-      #   run: tofu apply --auto-approve -target module.gyraffe.module.bastion
+  redeploy-gyraffe-staging-bastion:
+    name: Redeploys bastion in gyraffe staging
+    runs-on: ubuntu-latest
+    environment: gyraffe-nonprod
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Setup OpenTofu
+        uses: opentofu/setup-opentofu@v1
+
+      - name: Initialize OpenTofu for gyraffe demo
+        working-directory: ./tofu/config/demo.gyraffe.fileyourstatetaxes.org
+        run: tofu init
+      - name: Apply changes to gyraffe demo
+        working-directory: ./tofu/config/demo.gyraffe.fileyourstatetaxes.org
+        run: tofu apply --auto-approve -target module.gyraffe.module.bastion
 
       # name: Initialize OpenTofu for pya
       #   working-directory: ./tofu/config/pya.fileyourstatetaxes.org
