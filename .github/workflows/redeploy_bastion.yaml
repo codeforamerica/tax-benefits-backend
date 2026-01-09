@@ -1,8 +1,7 @@
-name: Cron tasks
+name: Redeploy bastion
 on:
   schedule:
     cron: "0 0 7,15,22,28 * *" # Runs on the 7th, 15th, 22nd, and 28th of any given month
-  workflow_dispatch:
 
 jobs:
   redeploy-bastion:
