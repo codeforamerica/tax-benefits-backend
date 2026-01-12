@@ -8,6 +8,10 @@ on:
     - cron: "0 0 7,15,22,28 * *" # Runs on the 7th, 15th, 22nd, and 28th of any given month
   workflow_dispatch:
 
+# NOTE: This is intended to periodically rotate bastion & its credentials.
+# It's kind of a side effect of deploying, which we expect to happen roughly every three weeks.
+# When we attempt to provision bastion, if its underlying AMI has changed, it will
+# provision a new bastion and retire the old one.
 jobs:
   redeploy-pya-staging-bastion:
     name: Redeploys bastion in pya staging
