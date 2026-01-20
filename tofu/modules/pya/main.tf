@@ -419,7 +419,7 @@ resource "aws_iam_policy" "rds_db_access" {
           "rds-db:connect"
         ]
         Resource = [
-          module.database.secret_arn
+          "arn:${data.aws_partition.current.partition}:rds-db:${data.aws_region.current.name}:${data.aws_caller_identity.identity.account_id}:dbuser:cluster-AJMB35SKW2IAA7OSYSQOUJYAQU/pya-${var.environment}-rds"
         ]
       }
     ]
