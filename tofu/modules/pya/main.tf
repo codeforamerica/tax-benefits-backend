@@ -147,10 +147,9 @@ module "web" {
     DATABASE_HOST = module.database.cluster_endpoint
     S3_BUCKET     = module.submission_pdfs.bucket
     REVIEW_APP    = var.review_app
+    DATABASE_USER = var.database_user
   }
   environment_secrets = {
-    DATABASE_PASSWORD           = "${module.database.secret_arn}:password"
-    DATABASE_USER               = "${module.database.secret_arn}:username"
     SECRET_KEY_BASE             = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}:key"
     SENTRY_DSN                  = "${module.secrets.secrets["sentry_dsn"].secret_arn}:key"
     SSN_HASHING_KEY             = "${module.secrets.secrets["ssn_hashing_key"].secret_arn}:key"
@@ -194,10 +193,9 @@ module "workers" {
     DATABASE_HOST = module.database.cluster_endpoint
     S3_BUCKET     = module.submission_pdfs.bucket
     REVIEW_APP    = var.review_app
+    DATABASE_USER = "pya-staging-rds"
   }
   environment_secrets = {
-    DATABASE_PASSWORD           = "${module.database.secret_arn}:password"
-    DATABASE_USER               = "${module.database.secret_arn}:username"
     SECRET_KEY_BASE             = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}:key"
     SENTRY_DSN                  = "${module.secrets.secrets["sentry_dsn"].secret_arn}:key"
     SSN_HASHING_KEY             = "${module.secrets.secrets["ssn_hashing_key"].secret_arn}:key"

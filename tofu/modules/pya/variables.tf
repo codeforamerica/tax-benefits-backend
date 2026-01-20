@@ -92,3 +92,8 @@ variable "passive_waf" {
   description = "Enable passive mode for the WAF, counting all requests rather than blocking."
   default     = false
 }
+
+variable "database_user" {
+  type = string
+  description = "The user to use in place of the provisioned database user (for IAM authentication)"
+}
