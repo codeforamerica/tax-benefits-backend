@@ -110,15 +110,6 @@ module "vpc" {
 
   private_subnets = var.private_subnets
   public_subnets  = var.public_subnets
-
-  peers = {
-    aptible = {
-      account_id = "916150859591",
-      vpc_id     = "vpc-08bd7f3e997318d6b",
-      region     = "us-east-1",
-      cidr       = "10.210.0.0/16"
-    }
-  }
 }
 
 module "web" {
