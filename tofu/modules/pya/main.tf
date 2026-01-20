@@ -185,8 +185,8 @@ module "workers" {
   create_repository      = false
   enable_execute_command = true
 
-  execution_policies = [aws_iam_policy.ecs_s3_access.arn]
-  task_policies      = [aws_iam_policy.ecs_s3_access.arn]
+  execution_policies = [aws_iam_policy.ecs_s3_access.arn, aws_iam_policy.rds_db_access.arn]
+  task_policies      = [aws_iam_policy.ecs_s3_access.arn, aws_iam_policy.rds_db_access.arn]
 
   environment_variables = {
     RACK_ENV      = var.environment
@@ -213,7 +213,7 @@ module "workers" {
 }
 
 module "database" {
-  source = "github.com/codeforamerica/tofu-modules-aws-serverless-database?ref=1.4.0"
+  source = "github.com/codeforamerica/tofu-modules-aws-serverless-database?ref=1.5.1"
 
   project             = "pya"
   environment         = var.environment
@@ -419,7 +419,7 @@ resource "aws_iam_policy" "rds_db_access" {
           "rds-db:connect"
         ]
         Resource = [
-          module.database.secret_arn
+          "arn:${data.aws_partition.current.partition}:rds-db:${data.aws_region.current.name}:${data.aws_caller_identity.identity.account_id}:dbuser:${module.database.cluster_resource_id}/pya-${var.environment}-rds"
         ]
       }
     ]

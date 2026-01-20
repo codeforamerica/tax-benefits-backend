@@ -7,6 +7,8 @@ data "aws_ec2_managed_prefix_list" "cloudfront" {
   name = "com.amazonaws.global.cloudfront.origin-facing"
 }
 
+data "aws_region" "current" {}
+
 # Find the lambda function for the Datadog forwarder so that we can use it as a
 # destination for CloudWatch log subscriptions.
 data "aws_lambda_functions" "all" {}
