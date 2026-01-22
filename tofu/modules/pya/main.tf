@@ -147,7 +147,7 @@ module "web" {
     DATABASE_HOST = module.database.cluster_endpoint
     S3_BUCKET     = module.submission_pdfs.bucket
     REVIEW_APP    = var.review_app
-    DATABASE_USER = var.database_user
+    DATABASE_USER = local.database_user
   }
   environment_secrets = {
     SECRET_KEY_BASE             = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}:key"
@@ -227,7 +227,7 @@ module "database" {
   ingress_cidrs      = module.vpc.private_subnets_cidr_blocks
   iam_authentication = true
   enable_data_api    = true
-  password_rotation_frequency = 0
+  password_rotation_frequency = 30
 
   min_capacity       = 0
   max_capacity       = 10
