@@ -193,7 +193,7 @@ module "workers" {
     DATABASE_HOST = module.database.cluster_endpoint
     S3_BUCKET     = module.submission_pdfs.bucket
     REVIEW_APP    = var.review_app
-    DATABASE_USER = "pya-staging-rds"
+    DATABASE_USER = local.database_user
   }
   environment_secrets = {
     SECRET_KEY_BASE             = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}:key"
