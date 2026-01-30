@@ -36,6 +36,11 @@ on:
           - www.getctc.org
           - www.getyourrefund.org
           - www.mireembolso.org
+      force_new_deployment:
+        description: Force new ECS deployment?
+        default: false
+        required: false
+        type: boolean
 
 permissions:
   contents: read
@@ -43,6 +48,7 @@ permissions:
 env:
   CONFIG: ${{ inputs.config || github.event.client_payload.config }}
   ENVIRONMENT: ${{ inputs.environment || github.event.client_payload.environment }}
+  TF_VAR_force_new_deployment: ${{ inputs.force_new_deployment || false }}
 
 jobs:
   deploy:

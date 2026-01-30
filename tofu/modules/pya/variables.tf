@@ -98,3 +98,9 @@ variable "database_user" {
   description = "The user to use in place of the provisioned database user (for IAM authentication)"
   default = null
 }
+
+variable "force_new_deployment" {
+  type        = bool
+  description = "Force new ECS service deployment, regardless of changed container status."
+  default     = false
+}
