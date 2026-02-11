@@ -19,8 +19,8 @@ module "gyraffe" {
 
   environment     = "production"
   domain          = "gyraffe.getyourrefund.org"
-  cidr            = "10.0.68.0/22"
-  private_subnets = ["10.0.70.0/26", "10.0.70.64/26", "10.0.70.128/26"]
-  public_subnets  = ["10.0.68.0/26", "10.0.68.64/26", "10.0.68.128/26"]
+  cidr            = "10.0.92.0/22"
+  private_subnets = ["10.0.94.0/26", "10.0.94.64/26", "10.0.94.128/26"]
+  public_subnets  = ["10.0.92.0/26", "10.0.92.0/26", "10.0.92.0/26"]
   review_app      = "false"
 }
