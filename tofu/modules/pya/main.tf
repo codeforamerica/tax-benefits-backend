@@ -139,6 +139,7 @@ module "web" {
   health_check_path        = "/up"
   enable_execute_command   = true
   force_new_deployment     = true
+  manage_performance_log_group = true
 
   execution_policies = [aws_iam_policy.ecs_s3_access.arn, aws_iam_policy.rds_db_access.arn]
   task_policies      = [aws_iam_policy.ecs_s3_access.arn, aws_iam_policy.rds_db_access.arn]
@@ -186,6 +187,7 @@ module "workers" {
   create_repository      = false
   enable_execute_command = true
   force_new_deployment   = true
+  manage_performance_log_group = true
 
   execution_policies = [aws_iam_policy.ecs_s3_access.arn, aws_iam_policy.rds_db_access.arn]
   task_policies      = [aws_iam_policy.ecs_s3_access.arn, aws_iam_policy.rds_db_access.arn]
