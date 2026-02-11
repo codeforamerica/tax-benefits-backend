@@ -21,6 +21,6 @@ module "gyraffe" {
   domain          = "gyraffe.getyourrefund.org"
   cidr            = "10.0.92.0/22"
   private_subnets = ["10.0.94.0/26", "10.0.94.64/26", "10.0.94.128/26"]
-  public_subnets  = ["10.0.92.0/26", "10.0.92.0/26", "10.0.92.0/26"]
+  public_subnets  = ["10.0.92.0/26", "10.0.92.64/26", "10.0.92.128/26"]
   review_app      = "false"
 }
