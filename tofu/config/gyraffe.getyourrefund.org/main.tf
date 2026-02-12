@@ -24,3 +24,14 @@ module "gyraffe" {
   public_subnets  = ["10.0.92.0/26", "10.0.92.64/26", "10.0.92.128/26"]
   review_app      = "false"
 }
+
+module "bastion" {
+  source = "github.com/codeforamerica/tofu-modules-aws-ssm-bastion?ref=1.0.0"
+
+  project            = "gyraffe"
+  environment        = "production"
+  key_pair_name      = "gyraffe-production-bastion"
+  private_subnet_ids = module.vpc.private_subnets
+  vpc_id             = module.vpc.vpc_id
+  instance_profile   = null
+}
