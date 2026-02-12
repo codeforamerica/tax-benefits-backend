@@ -113,7 +113,7 @@ module "vpc" {
 }
 
 module "web" {
-  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.8.0"
+  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.9.0"
 
   project       = "pya"
   project_short = "pya"
@@ -138,6 +138,7 @@ module "web" {
   public                   = false
   health_check_path        = "/up"
   enable_execute_command   = true
+  force_new_deployment     = true
   manage_performance_log_group = true
 
   execution_policies = [aws_iam_policy.ecs_s3_access.arn, aws_iam_policy.rds_db_access.arn]
@@ -167,7 +168,7 @@ module "web" {
 }
 
 module "workers" {
-  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.8.0"
+  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.9.0"
 
   project       = "pya"
   project_short = "pya"
@@ -185,6 +186,7 @@ module "workers" {
   create_endpoint        = false
   create_repository      = false
   enable_execute_command = true
+  force_new_deployment   = true
   manage_performance_log_group = true
 
   execution_policies = [aws_iam_policy.ecs_s3_access.arn, aws_iam_policy.rds_db_access.arn]
