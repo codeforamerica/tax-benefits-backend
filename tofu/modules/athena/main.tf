@@ -9,7 +9,8 @@ resource "aws_athena_workgroup" "this" {
       output_location = "s3://${aws_s3_bucket.athena_results.bucket}/athena-results/"
 
       encryption_configuration {
-        encryption_option = "SSE_S3"
+        encryption_option = "SSE_KMS"
+        kms_key_arn       = aws_kms_key.athena.arn
       }
     }
   }
@@ -18,6 +19,11 @@ resource "aws_athena_workgroup" "this" {
 resource "aws_athena_database" "this" {
   name   = var.database_name
   bucket = aws_s3_bucket.athena_results.id
+
+  encryption_configuration {
+    encryption_option = "SSE_KMS"
+    kms_key           = aws_kms_key.athena.arn
+  }
 }
 
 resource "aws_s3_bucket" "athena_results" {
@@ -38,9 +44,16 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "athena_results" {
 
   rule {
     apply_server_side_encryption_by_default {
-      sse_algorithm = "AES256"
+      kms_master_key_id = aws_kms_key.athena.arn
+      sse_algorithm     = "aws:kms"
     }
   }
+}
+
+resource "aws_kms_key" "athena" {
+  description             = "KMS key for Athena workgroup ${var.workgroup_name} and results bucket"
+  deletion_window_in_days = 30
+  enable_key_rotation     = true
 }
 
 resource "aws_s3_bucket_lifecycle_configuration" "athena_results" {
@@ -83,6 +96,15 @@ resource "aws_iam_policy" "athena_access" {
           [for arn in var.source_bucket_arns : arn],
           [for arn in var.source_bucket_arns : "${arn}/*"]
         ])
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "kms:Decrypt",
+          "kms:GenerateDataKey",
+          "kms:DescribeKey"
+        ]
+        Resource = [aws_kms_key.athena.arn]
       },
       {
         Effect = "Allow"
