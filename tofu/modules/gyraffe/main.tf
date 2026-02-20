@@ -170,6 +170,7 @@ module "database" {
   ingress_cidrs      = module.vpc.private_subnets_cidr_blocks
   iam_authentication = true
   enable_data_api    = true
+  password_rotation_frequency = 90
 
   min_capacity       = 0
   max_capacity       = 10
