@@ -113,7 +113,7 @@ module "vpc" {
 }
 
 module "web" {
-  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.9.0"
+  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.11.0"
 
   project       = "pya"
   project_short = "pya"
@@ -168,7 +168,7 @@ module "web" {
 }
 
 module "workers" {
-  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.9.0"
+  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.11.0"
 
   project       = "pya"
   project_short = "pya"
