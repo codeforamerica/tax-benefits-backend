@@ -60,3 +60,17 @@ module "this" {
 
   tags = local.tags
 }
+
+resource "aws_iam_policy" "datadog" {
+  name        = "${var.bucket_name}-datadog-policy"
+  description = "IAM policy for Datadog to access log archive bucket ${var.bucket_name}"
+  policy      = jsonencode(yamldecode(templatefile("${path.module}/templates/iam-policy.yaml.tftpl", {
+    partition : data.aws_partition.current.partition
+    bucket : var.bucket_name
+  })))
+}
+
+resource "aws_iam_role_policy_attachment" "datadog" {
+  role       = var.datadog_role_name
+  policy_arn = aws_iam_policy.datadog.arn
+}
