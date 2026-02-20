@@ -52,6 +52,13 @@ module "waf" {
   passive              = false
 }
 
+module "sensitive_log_archive" {
+  source = "../../modules/log_archive"
+
+  bucket_name    = "gyr-datadog-sensitive-log-archive"
+  logging_bucket = module.logging.bucket_domain_name
+}
+
 module "athena" {
   source = "../../modules/athena"
 
