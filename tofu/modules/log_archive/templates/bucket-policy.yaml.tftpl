@@ -1,0 +1,25 @@
+Version: "2012-10-17"
+Statement:
+  - Sid: AllowSSLRequestsOnly
+    Effect: Deny
+    Principal: "*"
+    Action:
+      - s3:*
+    Resource:
+      - arn:${partition}:s3:::${bucket}
+      - arn:${partition}:s3:::${bucket}/*
+    Condition:
+      Bool:
+        aws:SecureTransport: false
+  - Sid: DatadogUploadAndRehydrateLogArchives
+    Effect: Allow
+    Action:
+      - s3:PutObject
+      - s3:GetObject
+    Resource:
+      - arn:${partition}:s3:::${bucket}/*
+  - Sid: DatadogRehydrateLogArchivesListBucket
+    Effect: Allow
+    Action: s3:ListBucket
+    Resource:
+      - arn:${partition}:s3:::${bucket}

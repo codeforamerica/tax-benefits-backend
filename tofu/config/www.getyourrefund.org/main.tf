@@ -51,3 +51,11 @@ module "waf" {
   secrets_key_arn      = module.secrets.kms_key_arn
   passive              = false
 }
+
+module "sensitive_log_archive" {
+  source = "../../modules/log_archive"
+
+
+  bucket_name    = "gyr-datadog-log-archive"
+  logging_bucket = module.logging.bucket_domain_name
+}
