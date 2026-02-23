@@ -24,3 +24,8 @@ variable "source_bucket_arns" {
   type        = list(string)
   default     = []
 }
+
+variable "log_bucket" {
+  description = "The name of the S3 bucket to store S3 access logs."
+  type        = string
+}

@@ -30,6 +30,19 @@ resource "aws_s3_bucket" "athena_results" {
   bucket = var.result_bucket_name
 }
 
+resource "aws_s3_bucket_versioning" "athena_results" {
+  bucket = aws_s3_bucket.athena_results.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+resource "aws_s3_bucket_logging" "athena_results" {
+  bucket        = aws_s3_bucket.athena_results.id
+  target_bucket = var.log_bucket
+  target_prefix = "s3accesslogs/${aws_s3_bucket.athena_results.id}/"
+}
+
 resource "aws_s3_bucket_public_access_block" "athena_results" {
   bucket = aws_s3_bucket.athena_results.id
 

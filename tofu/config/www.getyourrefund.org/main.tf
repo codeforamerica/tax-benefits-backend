@@ -66,4 +66,5 @@ module "athena" {
   database_name      = "gyr_datadog_logs"
   result_bucket_name = "tax-benefits-gyr-athena-results-prod"
   source_bucket_arns = ["arn:aws:s3:::gyr-datadog-log-archive"]
+  log_bucket         = module.logging.bucket
 }
