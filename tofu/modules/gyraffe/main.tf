@@ -65,7 +65,7 @@ module "vpc" {
 }
 
 module "web" {
-  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.6.1"
+  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.11.0"
 
   project       = "gyraffe"
   project_short = "gyraffe"
@@ -110,7 +110,7 @@ module "web" {
 }
 
 module "workers" {
-  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.6.1"
+  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.11.0"
 
   project       = "gyraffe"
   project_short = "gyraffe"
@@ -156,7 +156,7 @@ module "workers" {
 }
 
 module "database" {
-  source = "github.com/codeforamerica/tofu-modules-aws-serverless-database?ref=1.3.1"
+  source = "github.com/codeforamerica/tofu-modules-aws-serverless-database?ref=1.5.1"
 
   project             = "gyraffe"
   environment         = var.environment
