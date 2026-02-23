@@ -97,67 +97,16 @@ resource "aws_iam_policy" "athena_access" {
   name        = "${var.workgroup_name}-athena-access"
   description = "Provides access for Athena to query specific buckets and manage results."
 
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect = "Allow"
-        Action = [
-          "s3:GetBucketLocation",
-          "s3:GetObject",
-          "s3:ListBucket",
-          "s3:ListBucketMultipartUploads",
-          "s3:ListMultipartUploadParts",
-          "s3:AbortMultipartUpload",
-          "s3:CreateMultipartUpload",
-          "s3:PutObject"
-        ]
-        Resource = flatten([
-          [
-            module.athena_results.arn,
-            "${module.athena_results.arn}/*"
-          ],
-          [for arn in var.source_bucket_arns : arn],
-          [for arn in var.source_bucket_arns : "${arn}/*"]
-        ])
-      },
-      {
-        Effect = "Allow"
-        Action = [
-          "kms:Decrypt",
-          "kms:GenerateDataKey",
-          "kms:DescribeKey"
-        ]
-        Resource = [aws_kms_key.athena.arn]
-      },
-      {
-        Effect = "Allow"
-        Action = [
-          "athena:GetDataCatalog",
-          "athena:GetQueryExecution",
-          "athena:GetQueryResults",
-          "athena:GetWorkGroup",
-          "athena:StartQueryExecution",
-          "athena:StopQueryExecution"
-        ]
-        Resource = [aws_athena_workgroup.this.arn]
-      },
-      {
-        Effect = "Allow"
-        Action = [
-          "glue:GetDatabase",
-          "glue:GetDatabases",
-          "glue:GetTable",
-          "glue:GetTables",
-          "glue:CreateTable",
-          "glue:DeleteTable",
-          "glue:UpdateTable",
-          "glue:GetPartitions",
-          "glue:BatchGetPartition",
-          "glue:GetPartition",
-        ]
-        Resource = "*"
-      }
-    ]
-  })
+  policy = jsonencode(yamldecode(templatefile("${path.module}/templates/iam-policy.yaml.tftpl", {
+    s3_resources = flatten([
+      [
+        module.athena_results.arn,
+        "${module.athena_results.arn}/*"
+      ],
+      [for arn in var.source_bucket_arns : arn],
+      [for arn in var.source_bucket_arns : "${arn}/*"]
+    ])
+    athena_kms_key_arn   = aws_kms_key.athena.arn
+    athena_workgroup_arn = aws_athena_workgroup.this.arn
+  })))
 }
