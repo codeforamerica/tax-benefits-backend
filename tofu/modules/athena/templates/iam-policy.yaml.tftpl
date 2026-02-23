@@ -1,0 +1,46 @@
+Version: "2012-10-17"
+Statement:
+  - Effect: Allow
+    Action:
+      - s3:GetBucketLocation
+      - s3:GetObject
+      - s3:ListBucket
+      - s3:ListBucketMultipartUploads
+      - s3:ListMultipartUploadParts
+      - s3:AbortMultipartUpload
+      - s3:CreateMultipartUpload
+      - s3:PutObject
+    Resource:
+%{ for res in s3_resources ~}
+      - ${res}
+%{ endfor ~}
+  - Effect: Allow
+    Action:
+      - kms:Decrypt
+      - kms:GenerateDataKey
+      - kms:DescribeKey
+    Resource:
+      - ${athena_kms_key_arn}
+  - Effect: Allow
+    Action:
+      - athena:GetDataCatalog
+      - athena:GetQueryExecution
+      - athena:GetQueryResults
+      - athena:GetWorkGroup
+      - athena:StartQueryExecution
+      - athena:StopQueryExecution
+    Resource:
+      - ${athena_workgroup_arn}
+  - Effect: Allow
+    Action:
+      - glue:GetDatabase
+      - glue:GetDatabases
+      - glue:GetTable
+      - glue:GetTables
+      - glue:CreateTable
+      - glue:DeleteTable
+      - glue:UpdateTable
+      - glue:GetPartitions
+      - glue:BatchGetPartition
+      - glue:GetPartition
+    Resource: "*"
