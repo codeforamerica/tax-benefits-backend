@@ -10,7 +10,7 @@ output "database_name" {
 
 output "result_bucket" {
   description = "The name of the S3 bucket storing Athena results."
-  value       = aws_s3_bucket.athena_results.bucket
+  value       = module.athena_results.bucket
 }
 
 output "athena_policy_arn" {
