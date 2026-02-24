@@ -48,7 +48,10 @@ module "secrets" {
     },
     "mailgun_basic_auth_password" = {
       description = "Basic auth password for Mailgun"
-    }
+    },
+    "sentry_dsn" = {
+      description = "dsn for sentry integration"
+    },
   }
 }
 
