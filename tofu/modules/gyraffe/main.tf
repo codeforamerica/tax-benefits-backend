@@ -50,7 +50,7 @@ module "secrets" {
       description = "Basic auth password for Mailgun"
     },
     "sentry_dsn" = {
-      description = "dsn for sentry integration"
+      description = "Data Source Name (DSN) for sentry integration"
     },
   }
 }
