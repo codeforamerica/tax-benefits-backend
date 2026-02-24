@@ -23,6 +23,7 @@ module "secrets" {
 
   project     = "gyraffe"
   environment = var.environment
+  add_suffix  = false
 
   secrets = {
     "rails_secret_key_base" = {
