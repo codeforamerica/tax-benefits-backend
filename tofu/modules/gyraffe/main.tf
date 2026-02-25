@@ -52,7 +52,7 @@ module "secrets" {
     },
     "sentry_dsn" = {
       description = "Data Source Name (DSN) for sentry integration"
-    },
+    }
   }
 }
 
