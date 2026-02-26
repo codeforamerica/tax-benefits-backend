@@ -23,6 +23,7 @@ module "secrets" {
 
   project     = "gyraffe"
   environment = var.environment
+  add_suffix  = false
 
   secrets = {
     "rails_secret_key_base" = {
@@ -48,6 +49,9 @@ module "secrets" {
     },
     "mailgun_basic_auth_password" = {
       description = "Basic auth password for Mailgun"
+    },
+    "sentry_dsn" = {
+      description = "Data Source Name (DSN) for sentry integration"
     }
   }
 }
@@ -99,6 +103,7 @@ module "web" {
     DATABASE_PASSWORD           = "${module.database.secret_arn}:password"
     DATABASE_USER               = "${module.database.secret_arn}:username"
     SECRET_KEY_BASE             = module.secrets.secrets["rails_secret_key_base"].secret_arn
+    SENTRY_DSN                  = module.secrets.secrets["sentry_dsn"].secret_arn
     TWILIO_ACCOUNT_SID          = module.secrets.secrets["twilio_account_sid"].secret_arn
     TWILIO_AUTH_TOKEN           = module.secrets.secrets["twilio_auth_token"].secret_arn
     TWILIO_MESSAGING_SERVICE    = module.secrets.secrets["twilio_messaging_service_sid"].secret_arn
@@ -142,6 +147,7 @@ module "workers" {
     DATABASE_PASSWORD           = "${module.database.secret_arn}:password"
     DATABASE_USER               = "${module.database.secret_arn}:username"
     SECRET_KEY_BASE             = module.secrets.secrets["rails_secret_key_base"].secret_arn
+    SENTRY_DSN                  = module.secrets.secrets["sentry_dsn"].secret_arn
     TWILIO_ACCOUNT_SID          = module.secrets.secrets["twilio_account_sid"].secret_arn
     TWILIO_AUTH_TOKEN           = module.secrets.secrets["twilio_auth_token"].secret_arn
     TWILIO_MESSAGING_SERVICE    = module.secrets.secrets["twilio_messaging_service_sid"].secret_arn
