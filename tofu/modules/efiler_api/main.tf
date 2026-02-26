@@ -66,7 +66,7 @@ module "secrets" {
 }
 
 module "web" {
-  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.6.0"
+  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.11.1"
 
   project       = "efiler-api"
   project_short = "efiler-api"
