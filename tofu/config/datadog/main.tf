@@ -21,7 +21,7 @@ module "datadog" {
 }
 
 module "sensitive_data_scanner" {
-  source = "github.com/codeforamerica/tofu-modules-datadog-sensitive-data-scanner?ref=1.0.0"
+  source = "github.com/codeforamerica/tofu-modules-datadog-sensitive-data-scanner?ref=1.0.1"
 
   group_name   = "Production Environment Scanning"
   filter_query = "env:prod"
