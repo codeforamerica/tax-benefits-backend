@@ -19,3 +19,11 @@ module "datadog" {
     "pya-production"
   ]
 }
+
+module "sensitive_data_scanner" {
+  source = "github.com/codeforamerica/tofu-modules-datadog-sensitive-data-scanner?ref=1.0.0"
+
+  group_name   = "Production Environment Scanning"
+  filter_query = "env:prod"
+  product_list = ["logs", "apm"]
+}
