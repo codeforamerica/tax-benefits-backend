@@ -66,7 +66,7 @@ module "secrets" {
 }
 
 module "web" {
-  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.11.1"
+  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.11.2"
 
   project       = "efiler-api"
   project_short = "efiler-api"
@@ -86,6 +86,7 @@ module "web" {
   public                       = false
   enable_execute_command       = true
   use_target_group_port_suffix = true
+  force_new_deployment         = true
 
   environment_variables = {
     RACK_ENV      = var.environment
