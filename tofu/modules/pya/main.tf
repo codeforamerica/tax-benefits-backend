@@ -131,7 +131,7 @@ module "web" {
   public_subnets           = module.vpc.public_subnets
   logging_key_id           = module.logging.kms_key_arn
   ingress_prefix_list_ids  = [data.aws_ec2_managed_prefix_list.cloudfront.id]
-  container_port           = 3000
+  container_port           = 8080
   create_endpoint          = true
   create_repository        = true
   create_version_parameter = true
@@ -140,6 +140,7 @@ module "web" {
   enable_execute_command   = true
   force_new_deployment     = true
   manage_performance_log_group = true
+  use_target_group_port_suffix = true
 
   execution_policies = [aws_iam_policy.ecs_s3_access.arn, aws_iam_policy.rds_db_access.arn]
   task_policies      = [aws_iam_policy.ecs_s3_access.arn, aws_iam_policy.rds_db_access.arn]
@@ -180,7 +181,7 @@ module "workers" {
   private_subnets        = module.vpc.private_subnets
   public_subnets         = module.vpc.public_subnets
   logging_key_id         = module.logging.kms_key_arn
-  container_port         = 3000
+  container_port         = 8080
   version_parameter      = module.web.version_parameter
   image_url              = module.web.repository_url
   create_endpoint        = false
@@ -188,6 +189,7 @@ module "workers" {
   enable_execute_command = true
   force_new_deployment   = true
   manage_performance_log_group = true
+  use_target_group_port_suffix = true
 
   execution_policies = [aws_iam_policy.ecs_s3_access.arn, aws_iam_policy.rds_db_access.arn]
   task_policies      = [aws_iam_policy.ecs_s3_access.arn, aws_iam_policy.rds_db_access.arn]
