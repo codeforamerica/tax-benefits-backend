@@ -8,7 +8,7 @@ terraform {
 }
 
 locals {
-  slack_account_name = "cfastaff"
+  slack_account_name = "Code_for_America_Staff" # obtain this from Integration > Slack > Configure
 }
 
 module "datadog" {
@@ -24,6 +24,11 @@ module "datadog" {
   ]
 }
 
+#################################
+# Sensitive Data Scanner Config #
+#################################
+
+# NOTE: Datadog needs to be added to any target Slack channels via /invite @Datadog
 resource "datadog_integration_slack_channel" "security_alerts" {
   account_name = local.slack_account_name
   channel_name = "#security-alerts"
