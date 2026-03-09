@@ -23,13 +23,4 @@ module "gyraffe" {
   private_subnets = ["10.0.70.0/26", "10.0.70.64/26", "10.0.70.128/26"]
   public_subnets  = ["10.0.68.0/26", "10.0.68.64/26", "10.0.68.128/26"]
   review_app      = "true"
-
-  vpc_peers = {
-    data_science_aptible = {
-      account_id = "916150859591",
-      vpc_id     = "vpc-01b5eaea8a0322a4e",
-      region     = "us-east-1",
-      cidr       = "10.51.0.0/16"
-    }
-  }
 }
