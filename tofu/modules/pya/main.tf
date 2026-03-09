@@ -128,7 +128,6 @@ module "web" {
   # Always force a new deployment, even if nothing has changed.
   enable_circuit_breaker          = true
   enable_circuit_breaker_rollback = true
-  force_new_deployment            = true
   wait_for_steady_state           = true
 
   domain                   = var.domain
