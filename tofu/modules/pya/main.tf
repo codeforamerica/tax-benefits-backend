@@ -113,7 +113,7 @@ module "vpc" {
 }
 
 module "web" {
-  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.11.2"
+  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.12.0"
 
   project       = "pya"
   project_short = "pya"
@@ -123,6 +123,13 @@ module "web" {
 
   memory = var.web_memory
   cpu = var.web_cpu
+
+  # Wait for the deployment to be in a steady state, and rollback if it fails.
+  # Always force a new deployment, even if nothing has changed.
+  enable_circuit_breaker          = true
+  enable_circuit_breaker_rollback = true
+  force_new_deployment            = true
+  wait_for_steady_state           = true
 
   domain                   = var.domain
   subdomain                = "origin"
