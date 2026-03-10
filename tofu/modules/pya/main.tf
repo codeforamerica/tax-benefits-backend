@@ -137,7 +137,7 @@ module "web" {
   public_subnets           = module.vpc.public_subnets
   logging_key_id           = module.logging.kms_key_arn
   ingress_prefix_list_ids  = [data.aws_ec2_managed_prefix_list.cloudfront.id]
-  container_port           = 8080
+  container_port           = 3000
   create_endpoint          = true
   create_repository        = true
   create_version_parameter = true
@@ -193,7 +193,7 @@ module "workers" {
   private_subnets        = module.vpc.private_subnets
   public_subnets         = module.vpc.public_subnets
   logging_key_id         = module.logging.kms_key_arn
-  container_port         = 8080
+  container_port         = 3000
   version_parameter      = module.web.version_parameter
   image_url              = module.web.repository_url
   create_endpoint        = false
