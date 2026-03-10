@@ -34,3 +34,15 @@ variable "review_app" {
   description = "whether this is a application for reviewing code changes (staging/heroku/demo)"
   default     = "true"
 }
+
+variable "vpc_peers" {
+  type = map(object({
+    account_id = string
+    cidr       = string
+    region     = string
+    vpc_id     = string
+  }))
+
+  description = "List of VPC peering connections."
+  default     = {}
+}
