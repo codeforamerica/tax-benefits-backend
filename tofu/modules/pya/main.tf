@@ -183,6 +183,12 @@ module "workers" {
   service       = "worker"
   service_short = "wrk"
 
+    # Wait for the deployment to be in a steady state, and rollback if it fails.
+    # Always force a new deployment, even if nothing has changed.
+    enable_circuit_breaker          = true
+    enable_circuit_breaker_rollback = true
+    wait_for_steady_state           = true
+
   vpc_id                 = module.vpc.vpc_id
   private_subnets        = module.vpc.private_subnets
   public_subnets         = module.vpc.public_subnets
