@@ -175,7 +175,7 @@ module "web" {
 }
 
 module "workers" {
-  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.11.2"
+  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.12.0"
 
   project       = "pya"
   project_short = "pya"
