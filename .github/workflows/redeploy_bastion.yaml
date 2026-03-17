@@ -54,11 +54,7 @@ jobs:
 
       - name: Setup OpenTofu
         uses: opentofu/setup-opentofu@v1
-
-      - name: Initialize OpenTofu for efiler-api demo
-        working-directory: ./tofu/config/staging.pya.fileyourstatetaxes.org
-        run: tofu init
-
+        
       - name: Initialize OpenTofu for efiler api demo
         working-directory: ./tofu/config/demo.efiler-api.fileyourstatetaxes.org
         run: tofu init
