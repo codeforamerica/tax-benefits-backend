@@ -46,3 +46,24 @@ variable "vpc_peers" {
   description = "List of VPC peering connections."
   default     = {}
 }
+
+variable "allow_security_scans" {
+  type        = bool
+  description = "Allow security scanners to bypass the WAF."
+  default     = false
+}
+
+variable "security_scan_cidrs" {
+  type        = list(string)
+  description = "CIDRs for security scanners to allow through the WAF. Defaults to Tenable One CIDRs."
+  default = [
+    # Tenable One
+    "34.201.223.128/25",
+    "44.192.244.0/24",
+    "44.206.3.0/24",
+    "54.175.125.192/26",
+    "13.59.252.0/25",
+    "18.116.198.0/24",
+    "3.132.217.0/25"
+  ]
+}
