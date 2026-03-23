@@ -60,7 +60,7 @@ module "doppler" {
   source     = "github.com/codeforamerica/tofu-modules-aws-doppler?ref=1.1.0"
   depends_on = [module.secrets]
 
-  project              = var.project  # TODO: Replace all literal "gyraffe"s in this file with var.project
+  project              = "tax-gyraffe"
   environment          = var.environment
   kms_key_arns         = [module.secrets.kms_key_arn]
   doppler_workspace_id = "08430c37e2a2889dc220"
