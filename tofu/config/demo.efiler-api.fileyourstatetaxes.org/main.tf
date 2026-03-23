@@ -23,4 +23,5 @@ module "efiler_api" {
   private_subnets  = ["10.0.50.0/26", "10.0.50.64/26", "10.0.50.128/26"]
   public_subnets   = ["10.0.48.0/26", "10.0.48.64/26", "10.0.48.128/26"]
   api_client_names = ["efiler_api_test_client", "efiler_api_test_client_two"]
+  ingress_cidrs = ["10.0.68.0/22"]
 }

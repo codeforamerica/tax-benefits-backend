@@ -94,6 +94,7 @@ module "web" {
   }
 
   environment_secrets = merge(local.static_secret_names, local.api_client_secret_names)
+  ingress_cidrs = var.ingress_cidrs
 }
 
 module "database" {
