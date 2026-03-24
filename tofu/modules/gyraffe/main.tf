@@ -26,31 +26,31 @@ module "secrets" {
   add_suffix  = false
 
   secrets = {
-    "rails_secret_key_base" = {
+    "SECRET_KEY_BASE" = {
       description = "secret_key_base for Rails app"
     },
-    "twilio_account_sid" = {
+    "TWILIO_ACCOUNT_SID" = {
       description = "account sid for twilio"
     },
-    "twilio_auth_token" = {
+    "TWILIO_AUTH_TOKEN" = {
       description = "auth token for twilio"
     },
-    "twilio_messaging_service_sid" = {
+    "TWILIO_MESSAGING_SERVICE" = {
       description = "messaging service sid for twilio"
     },
-    "mailgun_api_key" = {
+    "MAILGUN_API_KEY" = {
       description = "API key for Mailgun"
     },
-    "mailgun_domain" = {
+    "MAILGUN_DOMAIN" = {
       description = "Domain used with Mailgun"
     },
-    "mailgun_basic_auth_name" = {
+    "MAILGUN_BASIC_AUTH_NAME" = {
       description = "Basic auth username for Mailgun"
     },
-    "mailgun_basic_auth_password" = {
+    "MAILGUN_BASIC_AUTH_PASSWORD" = {
       description = "Basic auth password for Mailgun"
     },
-    "sentry_dsn" = {
+    "SENTRY_DSN" = {
       description = "Data Source Name (DSN) for sentry integration"
     }
   }
@@ -60,7 +60,8 @@ module "doppler" {
   source     = "github.com/codeforamerica/tofu-modules-aws-doppler?ref=1.1.0"
   depends_on = [module.secrets]
 
-  project              = "tax-gyraffe"
+  project              = "gyraffe"
+  doppler_project      = "tax-gyraffe"
   environment          = var.environment
   kms_key_arns         = [module.secrets.kms_key_arn]
   doppler_workspace_id = "08430c37e2a2889dc220"
@@ -115,15 +116,15 @@ module "web" {
   environment_secrets = {
     DATABASE_PASSWORD           = "${module.database.secret_arn}:password"
     DATABASE_USER               = "${module.database.secret_arn}:username"
-    SECRET_KEY_BASE             = module.secrets.secrets["rails_secret_key_base"].secret_arn
-    SENTRY_DSN                  = module.secrets.secrets["sentry_dsn"].secret_arn
-    TWILIO_ACCOUNT_SID          = module.secrets.secrets["twilio_account_sid"].secret_arn
-    TWILIO_AUTH_TOKEN           = module.secrets.secrets["twilio_auth_token"].secret_arn
-    TWILIO_MESSAGING_SERVICE    = module.secrets.secrets["twilio_messaging_service_sid"].secret_arn
-    MAILGUN_API_KEY             = module.secrets.secrets["mailgun_api_key"].secret_arn
-    MAILGUN_DOMAIN              = module.secrets.secrets["mailgun_domain"].secret_arn
-    MAILGUN_BASIC_AUTH_NAME     = module.secrets.secrets["mailgun_basic_auth_name"].secret_arn
-    MAILGUN_BASIC_AUTH_PASSWORD = module.secrets.secrets["mailgun_basic_auth_password"].secret_arn
+    SECRET_KEY_BASE             = module.secrets.secrets["SECRET_KEY_BASE"].secret_arn
+    SENTRY_DSN                  = module.secrets.secrets["SENTRY_DSN"].secret_arn
+    TWILIO_ACCOUNT_SID          = module.secrets.secrets["TWILIO_ACCOUNT_SID"].secret_arn
+    TWILIO_AUTH_TOKEN           = module.secrets.secrets["TWILIO_AUTH_TOKEN"].secret_arn
+    TWILIO_MESSAGING_SERVICE    = module.secrets.secrets["TWILIO_MESSAGING_SERVICE"].secret_arn
+    MAILGUN_API_KEY             = module.secrets.secrets["MAILGUN_API_KEY"].secret_arn
+    MAILGUN_DOMAIN              = module.secrets.secrets["MAILGUN_DOMAIN"].secret_arn
+    MAILGUN_BASIC_AUTH_NAME     = module.secrets.secrets["MAILGUN_BASIC_AUTH_NAME"].secret_arn
+    MAILGUN_BASIC_AUTH_PASSWORD = module.secrets.secrets["MAILGUN_BASIC_AUTH_PASSWORD"].secret_arn
   }
 }
 
@@ -160,15 +161,15 @@ module "workers" {
   environment_secrets = {
     DATABASE_PASSWORD           = "${module.database.secret_arn}:password"
     DATABASE_USER               = "${module.database.secret_arn}:username"
-    SECRET_KEY_BASE             = module.secrets.secrets["rails_secret_key_base"].secret_arn
-    SENTRY_DSN                  = module.secrets.secrets["sentry_dsn"].secret_arn
-    TWILIO_ACCOUNT_SID          = module.secrets.secrets["twilio_account_sid"].secret_arn
-    TWILIO_AUTH_TOKEN           = module.secrets.secrets["twilio_auth_token"].secret_arn
-    TWILIO_MESSAGING_SERVICE    = module.secrets.secrets["twilio_messaging_service_sid"].secret_arn
-    MAILGUN_API_KEY             = module.secrets.secrets["mailgun_api_key"].secret_arn
-    MAILGUN_DOMAIN              = module.secrets.secrets["mailgun_domain"].secret_arn
-    MAILGUN_BASIC_AUTH_NAME     = module.secrets.secrets["mailgun_basic_auth_name"].secret_arn
-    MAILGUN_BASIC_AUTH_PASSWORD = module.secrets.secrets["mailgun_basic_auth_password"].secret_arn
+    SECRET_KEY_BASE             = module.secrets.secrets["SECRET_KEY_BASE"].secret_arn
+    SENTRY_DSN                  = module.secrets.secrets["SENTRY_DSN"].secret_arn
+    TWILIO_ACCOUNT_SID          = module.secrets.secrets["TWILIO_ACCOUNT_SID"].secret_arn
+    TWILIO_AUTH_TOKEN           = module.secrets.secrets["TWILIO_AUTH_TOKEN"].secret_arn
+    TWILIO_MESSAGING_SERVICE    = module.secrets.secrets["TWILIO_MESSAGING_SERVICE"].secret_arn
+    MAILGUN_API_KEY             = module.secrets.secrets["MAILGUN_API_KEY"].secret_arn
+    MAILGUN_DOMAIN              = module.secrets.secrets["MAILGUN_DOMAIN"].secret_arn
+    MAILGUN_BASIC_AUTH_NAME     = module.secrets.secrets["MAILGUN_BASIC_AUTH_NAME"].secret_arn
+    MAILGUN_BASIC_AUTH_PASSWORD = module.secrets.secrets["MAILGUN_BASIC_AUTH_PASSWORD"].secret_arn
   }
 
   container_command = ["bin/jobs"]
