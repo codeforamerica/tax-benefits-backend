@@ -21,7 +21,7 @@ module "logging" {
 module "secrets" {
   source = "github.com/codeforamerica/tofu-modules-aws-secrets?ref=2.0.0"
 
-  project     = "tax-gyraffe"
+  project     = "gyraffe"
   environment = var.environment
   add_suffix  = false
 
@@ -60,7 +60,8 @@ module "doppler" {
   source     = "github.com/codeforamerica/tofu-modules-aws-doppler?ref=1.1.0"
   depends_on = [module.secrets]
 
-  project              = "tax-gyraffe"
+  project              = "gyraffe"
+  doppler_project      = "tax-gyraffe"
   environment          = var.environment
   kms_key_arns         = [module.secrets.kms_key_arn]
   doppler_workspace_id = "08430c37e2a2889dc220"
