@@ -67,3 +67,21 @@ variable "security_scan_cidrs" {
     "3.132.217.0/25"
   ]
 }
+
+variable "rate_limit_requests" {
+  type        = number
+  description = "Number of requests allowed in the rate limit window. Minimum of 10, or set to 0 to disable rate limiting."
+  default     = 100
+}
+
+variable "rate_limit_window" {
+  type        = number
+  description = "Time window, in seconds, for the rate limit. Options are: 60, 120, 300, 600"
+  default     = 60
+}
+
+variable "passive_waf" {
+  type        = bool
+  description = "Enable passive mode for the WAF, counting all requests rather than blocking."
+  default     = false
+}
