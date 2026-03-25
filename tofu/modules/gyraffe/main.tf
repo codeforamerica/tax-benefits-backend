@@ -96,6 +96,7 @@ module "web" {
   private_subnets          = module.vpc.private_subnets
   public_subnets           = module.vpc.public_subnets
   logging_key_id           = module.logging.kms_key_arn
+  ingress_prefix_list_ids  = [data.aws_ec2_managed_prefix_list.cloudfront.id]
   container_port           = 8080
   create_endpoint          = true
   create_repository        = true
@@ -310,7 +311,8 @@ resource "aws_wafv2_ip_set" "scanners" {
 }
 
 module "cloudfront_waf" {
-  source = "github.com/codeforamerica/tofu-modules-aws-cloudfront-waf?ref=1.12.0"
+  source = "github.com/codeforamerica/tofu-modules-aws-cloudfront-waf?ref=2.1.0"
+  depends_on = [module.web.load_balancer_arn]
 
   project        = "gyraffe"
   environment    = var.environment
