@@ -91,6 +91,7 @@ module "web" {
   service_short = "web"
 
   domain                   = var.domain
+  subdomain                = "origin"
   vpc_id                   = module.vpc.vpc_id
   private_subnets          = module.vpc.private_subnets
   public_subnets           = module.vpc.public_subnets
@@ -99,7 +100,7 @@ module "web" {
   create_endpoint          = true
   create_repository        = true
   create_version_parameter = true
-  public                   = true
+  public                   = false
   health_check_path        = "/up"
   enable_execute_command   = true
   force_new_deployment     = true
