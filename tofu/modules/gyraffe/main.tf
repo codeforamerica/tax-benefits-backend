@@ -82,7 +82,7 @@ module "vpc" {
 }
 
 module "web" {
-  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.11.2"
+  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.13.0"
 
   project       = "gyraffe"
   project_short = "gyraffe"
@@ -105,6 +105,7 @@ module "web" {
   health_check_path        = "/up"
   enable_execute_command   = true
   force_new_deployment     = true
+  use_target_group_port_suffix = true
 
   execution_policies = [aws_iam_policy.ecs_s3_access.arn]
   task_policies      = [aws_iam_policy.ecs_s3_access.arn]
@@ -131,7 +132,7 @@ module "web" {
 }
 
 module "workers" {
-  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.11.2"
+  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.13.0"
 
   project       = "gyraffe"
   project_short = "gyraffe"
