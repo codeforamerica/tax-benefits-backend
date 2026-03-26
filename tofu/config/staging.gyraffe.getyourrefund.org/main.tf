@@ -29,7 +29,7 @@ module "gyraffe" {
       account_id = "669097061340",
       vpc_id = "vpc-01e2e29c462af8ecf",
       region = "us-east-1",
-      cidr = "10.0.48.0/22" # TODO: Should I be using the full CIDR block? If not, what subset
+      cidr = "10.0.48.0/22"
     }
   }
 }
