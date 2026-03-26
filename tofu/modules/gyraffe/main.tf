@@ -82,7 +82,7 @@ module "vpc" {
 }
 
 module "web" {
-  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.11.2"
+  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.13.0"
 
   project       = "gyraffe"
   project_short = "gyraffe"
@@ -91,18 +91,21 @@ module "web" {
   service_short = "web"
 
   domain                   = var.domain
+  subdomain                = "origin"
   vpc_id                   = module.vpc.vpc_id
   private_subnets          = module.vpc.private_subnets
   public_subnets           = module.vpc.public_subnets
   logging_key_id           = module.logging.kms_key_arn
+  ingress_prefix_list_ids  = [data.aws_ec2_managed_prefix_list.cloudfront.id]
   container_port           = 8080
   create_endpoint          = true
   create_repository        = true
   create_version_parameter = true
-  public                   = true
+  public                   = false
   health_check_path        = "/up"
   enable_execute_command   = true
   force_new_deployment     = true
+  use_target_group_port_suffix = true
 
   execution_policies = [aws_iam_policy.ecs_s3_access.arn]
   task_policies      = [aws_iam_policy.ecs_s3_access.arn]
@@ -129,7 +132,7 @@ module "web" {
 }
 
 module "workers" {
-  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.11.2"
+  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.13.0"
 
   project       = "gyraffe"
   project_short = "gyraffe"
@@ -295,4 +298,47 @@ resource "aws_cloudwatch_log_subscription_filter" "datadog" {
   log_group_name  = "/aws/ecs/gyraffe/${var.environment}/${each.key}"
   filter_pattern  = ""
   destination_arn = data.aws_lambda_function.datadog["this"].arn
+}
+
+
+resource "aws_wafv2_ip_set" "scanners" {
+  for_each = var.allow_security_scans ? toset(["this"]) : []
+
+  name               = "${var.project}-${var.environment}-security-scanners"
+  description        = "Security scanners that are allowed to access the site."
+  scope              = "CLOUDFRONT"
+  ip_address_version = "IPV4"
+  addresses          = var.security_scan_cidrs
+}
+
+module "cloudfront_waf" {
+  source = "github.com/codeforamerica/tofu-modules-aws-cloudfront-waf?ref=2.1.0"
+  depends_on = [module.web.load_balancer_arn]
+
+  project        = "gyraffe"
+  environment    = var.environment
+  domain         = var.domain
+  subdomain      = ""
+  origin_alb_arn = module.web.load_balancer_arn
+  log_bucket     = module.logging.bucket_domain_name
+  log_group      = module.logging.log_groups["waf"]
+  passive        = var.passive_waf
+
+  ip_set_rules = var.allow_security_scans ? {
+    tenable_one = {
+      name     = "${var.project}-${var.environment}-security-scanners"
+      priority = 0
+      action   = "allow"
+      arn      = aws_wafv2_ip_set.scanners["this"].arn
+    }
+  } : {}
+
+  rate_limit_rules = var.rate_limit_requests > 0 ? {
+    base = {
+      action   = var.passive_waf ? "count" : "block"
+      priority = 100
+      limit    = var.rate_limit_requests
+      window   = var.rate_limit_window
+    }
+  } : {}
 }
