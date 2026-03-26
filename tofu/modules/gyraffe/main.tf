@@ -52,6 +52,9 @@ module "secrets" {
     },
     "SENTRY_DSN" = {
       description = "Data Source Name (DSN) for sentry integration"
+    },
+    "EFILER_API_CLIENT_PRIVATE_KEY_BASE64" = {
+      description = "Private key for signing requests to efiler API"
     }
   }
 }
@@ -128,6 +131,7 @@ module "web" {
     MAILGUN_DOMAIN              = module.secrets.secrets["MAILGUN_DOMAIN"].secret_arn
     MAILGUN_BASIC_AUTH_NAME     = module.secrets.secrets["MAILGUN_BASIC_AUTH_NAME"].secret_arn
     MAILGUN_BASIC_AUTH_PASSWORD = module.secrets.secrets["MAILGUN_BASIC_AUTH_PASSWORD"].secret_arn
+    EFILER_API_CLIENT_PRIVATE_KEY_BASE64 = module.secrets.secrets["EFILER_API_CLIENT_PRIVATE_KEY_BASE64"].secret_arn
   }
 }
 
@@ -173,6 +177,7 @@ module "workers" {
     MAILGUN_DOMAIN              = module.secrets.secrets["MAILGUN_DOMAIN"].secret_arn
     MAILGUN_BASIC_AUTH_NAME     = module.secrets.secrets["MAILGUN_BASIC_AUTH_NAME"].secret_arn
     MAILGUN_BASIC_AUTH_PASSWORD = module.secrets.secrets["MAILGUN_BASIC_AUTH_PASSWORD"].secret_arn
+    EFILER_API_CLIENT_PRIVATE_KEY_BASE64 = module.secrets.secrets["EFILER_API_CLIENT_PRIVATE_KEY_BASE64"].secret_arn
   }
 
   container_command = ["bin/jobs"]
