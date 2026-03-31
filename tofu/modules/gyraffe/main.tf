@@ -114,7 +114,7 @@ module "web" {
   task_policies      = [aws_iam_policy.ecs_s3_access.arn]
 
   environment_variables = {
-    RACK_ENV          = var.environment
+    RAILS_ENV         = var.environment
     DATABASE_HOST     = module.database.cluster_endpoint
     REVIEW_APP        = var.review_app
     SCHEMA_S3_BUCKET  = module.schemas.bucket
@@ -160,7 +160,7 @@ module "workers" {
   task_policies      = [aws_iam_policy.ecs_s3_access.arn]
 
   environment_variables = {
-    RACK_ENV          = var.environment
+    RAILS_ENV         = var.environment
     DATABASE_HOST     = module.database.cluster_endpoint
     REVIEW_APP        = var.review_app
     SCHEMA_S3_BUCKET  = module.schemas.bucket
