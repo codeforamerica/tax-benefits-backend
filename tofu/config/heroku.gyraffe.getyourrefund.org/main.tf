@@ -8,6 +8,8 @@ terraform {
 }
 
 locals {
+  # This could be dynamically read via a terraform_remote_state data source,
+  # but it shouldn't ever change so I'm leaving it hard-coded for now.
   schemas_bucket_name = "gyraffe-staging-schemas"
 }
 
