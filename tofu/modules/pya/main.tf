@@ -152,7 +152,7 @@ module "web" {
   task_policies      = [aws_iam_policy.ecs_s3_access.arn, aws_iam_policy.rds_db_access.arn]
 
   environment_variables = {
-    RACK_ENV      = var.environment
+    RAILS_ENV     = var.environment
     DATABASE_HOST = module.database.cluster_endpoint
     S3_BUCKET     = module.submission_pdfs.bucket
     REVIEW_APP    = var.review_app
@@ -207,7 +207,7 @@ module "workers" {
   task_policies      = [aws_iam_policy.ecs_s3_access.arn, aws_iam_policy.rds_db_access.arn]
 
   environment_variables = {
-    RACK_ENV      = var.environment
+    RAILS_ENV     = var.environment
     DATABASE_HOST = module.database.cluster_endpoint
     S3_BUCKET     = module.submission_pdfs.bucket
     REVIEW_APP    = var.review_app
