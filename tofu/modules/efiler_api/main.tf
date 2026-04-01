@@ -89,7 +89,7 @@ module "web" {
   force_new_deployment         = true
 
   environment_variables = {
-    RACK_ENV      = var.environment
+    RAILS_ENV     = var.environment
     DATABASE_HOST = module.database.cluster_endpoint
   }
 
