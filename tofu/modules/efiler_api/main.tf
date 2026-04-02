@@ -66,13 +66,18 @@ module "secrets" {
 }
 
 module "web" {
-  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.11.2"
+  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.13.0"
 
   project       = "efiler-api"
   project_short = "efiler-api"
   environment   = var.environment
   service       = "web"
   service_short = "web"
+
+  # Wait for the deployment to be in a steady state, and rollback if it fails.
+  enable_circuit_breaker          = true
+  enable_circuit_breaker_rollback = true
+  wait_for_steady_state           = true
 
   domain                       = var.domain
   vpc_id                       = module.vpc.vpc_id

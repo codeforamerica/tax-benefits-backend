@@ -93,6 +93,11 @@ module "web" {
   service       = "web"
   service_short = "web"
 
+  # Wait for the deployment to be in a steady state, and rollback if it fails.
+  enable_circuit_breaker          = true
+  enable_circuit_breaker_rollback = true
+  wait_for_steady_state           = true
+
   domain                   = var.domain
   subdomain                = "origin"
   vpc_id                   = module.vpc.vpc_id
@@ -143,6 +148,11 @@ module "workers" {
   environment   = var.environment
   service       = "worker"
   service_short = "worker"
+
+  # Wait for the deployment to be in a steady state, and rollback if it fails.
+  enable_circuit_breaker          = true
+  enable_circuit_breaker_rollback = true
+  wait_for_steady_state           = true
 
   vpc_id                 = module.vpc.vpc_id
   private_subnets        = module.vpc.private_subnets
