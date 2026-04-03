@@ -22,3 +22,10 @@ output "submission_bundles_bucket_name" {
   description = "S3 bucket where submission bundles are stored"
   value       = module.submission_bundles.bucket
 }
+
+output "db_user_secret_arns" {
+  description = <<-EOT
+    Secrets Manager ARNs for any database users created with credentials.
+    EOT
+  value       = module.database.db_user_secret_arns
+}

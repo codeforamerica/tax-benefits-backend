@@ -1,0 +1,15 @@
+runs:
+  using: composite
+  steps:
+    - name: Normalize TF_VAR environment variables
+      shell: bash
+      run: |
+        for var in $(compgen -e | grep '^TF_VAR_'); do
+          if [ -n "${!var}" ]; then
+            lower_part=$(echo "${var:7}" | tr '[:upper:]' '[:lower:]')
+            echo "Setting TF_VAR_${lower_part}"
+            echo "TF_VAR_${lower_part}=${!var}" >> $GITHUB_ENV
+          else
+            echo "${var} is empty, skipping"
+          fi
+        done

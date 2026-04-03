@@ -72,6 +72,8 @@ jobs:
       APTIBLE_PASSWORD: ${{ secrets.APTIBLE_PASSWORD }}
       DD_API_KEY: ${{ secrets.DD_API_KEY }}
       DD_APP_KEY: ${{ secrets.DD_APP_KEY }}
+      TF_VAR_DATA_SCIENCE_DATABASE_USER: ${{ secrets.TF_VAR_DATA_SCIENCE_DATABASE_USER }}
+      TF_VAR_DATA_SCIENCE_DATABASES: ${{ secrets.TF_VAR_DATA_SCIENCE_DATABASES }}
     outputs:
       plan: ${{ steps.plan.outputs.stdout }}
     steps:
@@ -85,6 +87,10 @@ jobs:
           aws-region: us-east-1
       - name: Setup OpenTofu
         uses: opentofu/setup-opentofu@v1
+        with:
+          tofu_version: 1.11
+      - name: Normalize TF_VAR casing
+        uses: ./.github/actions/normalize-tf-vars
       - name: Initialize OpenTofu
         working-directory: ./tofu/config/${{ inputs.config }}
         run: tofu init
