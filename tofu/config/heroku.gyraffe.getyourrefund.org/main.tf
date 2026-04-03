@@ -14,14 +14,11 @@ locals {
 }
 
 # IAM user for Heroku review apps to access the schemas S3 bucket.
+# Manual step: Create an access key for this user and provide it to heroku review apps via env vars
 #trivy:ignore:AVD-AWS-0143
 resource "aws_iam_user" "heroku" {
   name = "gyraffe-heroku-schemas"
   path = "/heroku/"
-}
-
-resource "aws_iam_access_key" "heroku" {
-  user = aws_iam_user.heroku.name
 }
 
 resource "aws_iam_user_policy" "heroku_schemas_read" {
