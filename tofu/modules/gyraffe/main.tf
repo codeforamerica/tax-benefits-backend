@@ -93,6 +93,11 @@ module "web" {
   service       = "web"
   service_short = "web"
 
+  # Wait for the deployment to be in a steady state, and rollback if it fails.
+  enable_circuit_breaker          = true
+  enable_circuit_breaker_rollback = true
+  wait_for_steady_state           = true
+
   domain                   = var.domain
   subdomain                = "origin"
   vpc_id                   = module.vpc.vpc_id
@@ -114,7 +119,7 @@ module "web" {
   task_policies      = [aws_iam_policy.ecs_s3_access.arn]
 
   environment_variables = {
-    RACK_ENV          = var.environment
+    RAILS_ENV         = var.environment
     DATABASE_HOST     = module.database.cluster_endpoint
     REVIEW_APP        = var.review_app
     SCHEMA_S3_BUCKET  = module.schemas.bucket
@@ -144,6 +149,11 @@ module "workers" {
   service       = "worker"
   service_short = "worker"
 
+  # Wait for the deployment to be in a steady state, and rollback if it fails.
+  enable_circuit_breaker          = true
+  enable_circuit_breaker_rollback = true
+  wait_for_steady_state           = true
+
   vpc_id                 = module.vpc.vpc_id
   private_subnets        = module.vpc.private_subnets
   public_subnets         = module.vpc.public_subnets
@@ -160,7 +170,7 @@ module "workers" {
   task_policies      = [aws_iam_policy.ecs_s3_access.arn]
 
   environment_variables = {
-    RACK_ENV          = var.environment
+    RAILS_ENV         = var.environment
     DATABASE_HOST     = module.database.cluster_endpoint
     REVIEW_APP        = var.review_app
     SCHEMA_S3_BUCKET  = module.schemas.bucket
