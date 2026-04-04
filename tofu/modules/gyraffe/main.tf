@@ -216,7 +216,7 @@ module "database" {
   cluster_parameters = []
 
   db_users = var.data_science_database_user != null && length(var.data_science_databases) > 0 ? {
-      "${var.data_science_database_user}" = {
+      (var.data_science_database_user) = {
         databases  = var.data_science_databases
         privileges = "readonly"
       }
