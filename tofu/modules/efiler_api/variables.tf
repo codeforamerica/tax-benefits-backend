@@ -30,3 +30,8 @@ variable "api_client_names" {
   default     = []
 }
 
+variable "ingress_cidrs" {
+  type = list(string)
+  description = "List of additional CIDR blocks to allow traffic from."
+  default = []
+}

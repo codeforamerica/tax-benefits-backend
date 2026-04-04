@@ -23,33 +23,51 @@ module "secrets" {
 
   project     = "gyraffe"
   environment = var.environment
+  add_suffix  = false
 
   secrets = {
-    "rails_secret_key_base" = {
+    "SECRET_KEY_BASE" = {
       description = "secret_key_base for Rails app"
     },
-    "twilio_account_sid" = {
+    "TWILIO_ACCOUNT_SID" = {
       description = "account sid for twilio"
     },
-    "twilio_auth_token" = {
+    "TWILIO_AUTH_TOKEN" = {
       description = "auth token for twilio"
     },
-    "twilio_messaging_service_sid" = {
+    "TWILIO_MESSAGING_SERVICE" = {
       description = "messaging service sid for twilio"
     },
-    "mailgun_api_key" = {
+    "MAILGUN_API_KEY" = {
       description = "API key for Mailgun"
     },
-    "mailgun_domain" = {
+    "MAILGUN_DOMAIN" = {
       description = "Domain used with Mailgun"
     },
-    "mailgun_basic_auth_name" = {
+    "MAILGUN_BASIC_AUTH_NAME" = {
       description = "Basic auth username for Mailgun"
     },
-    "mailgun_basic_auth_password" = {
+    "MAILGUN_BASIC_AUTH_PASSWORD" = {
       description = "Basic auth password for Mailgun"
+    },
+    "SENTRY_DSN" = {
+      description = "Data Source Name (DSN) for sentry integration"
+    },
+    "EFILER_API_CLIENT_PRIVATE_KEY_BASE64" = {
+      description = "Private key for signing requests to efiler API"
     }
   }
+}
+
+module "doppler" {
+  source     = "github.com/codeforamerica/tofu-modules-aws-doppler?ref=1.1.0"
+  depends_on = [module.secrets]
+
+  project              = "gyraffe"
+  doppler_project      = "tax-gyraffe"
+  environment          = var.environment
+  kms_key_arns         = [module.secrets.kms_key_arn]
+  doppler_workspace_id = "08430c37e2a2889dc220"
 }
 
 module "vpc" {
@@ -62,6 +80,8 @@ module "vpc" {
 
   private_subnets = var.private_subnets
   public_subnets  = var.public_subnets
+
+  peers           = var.vpc_peers
 }
 
 module "web" {
@@ -73,24 +93,33 @@ module "web" {
   service       = "web"
   service_short = "web"
 
+  # Wait for the deployment to be in a steady state, and rollback if it fails.
+  enable_circuit_breaker          = true
+  enable_circuit_breaker_rollback = true
+  wait_for_steady_state           = true
+
   domain                   = var.domain
+  subdomain                = "origin"
   vpc_id                   = module.vpc.vpc_id
   private_subnets          = module.vpc.private_subnets
   public_subnets           = module.vpc.public_subnets
   logging_key_id           = module.logging.kms_key_arn
+  ingress_prefix_list_ids  = [data.aws_ec2_managed_prefix_list.cloudfront.id]
   container_port           = 8080
   create_endpoint          = true
   create_repository        = true
   create_version_parameter = true
-  public                   = true
+  public                   = false
   health_check_path        = "/up"
   enable_execute_command   = true
+  force_new_deployment     = true
+  use_target_group_port_suffix = true
 
   execution_policies = [aws_iam_policy.ecs_s3_access.arn]
   task_policies      = [aws_iam_policy.ecs_s3_access.arn]
 
   environment_variables = {
-    RACK_ENV          = var.environment
+    RAILS_ENV         = var.environment
     DATABASE_HOST     = module.database.cluster_endpoint
     REVIEW_APP        = var.review_app
     SCHEMA_S3_BUCKET  = module.schemas.bucket
@@ -98,14 +127,16 @@ module "web" {
   environment_secrets = {
     DATABASE_PASSWORD           = "${module.database.secret_arn}:password"
     DATABASE_USER               = "${module.database.secret_arn}:username"
-    SECRET_KEY_BASE             = module.secrets.secrets["rails_secret_key_base"].secret_arn
-    TWILIO_ACCOUNT_SID          = module.secrets.secrets["twilio_account_sid"].secret_arn
-    TWILIO_AUTH_TOKEN           = module.secrets.secrets["twilio_auth_token"].secret_arn
-    TWILIO_MESSAGING_SERVICE    = module.secrets.secrets["twilio_messaging_service_sid"].secret_arn
-    MAILGUN_API_KEY             = module.secrets.secrets["mailgun_api_key"].secret_arn
-    MAILGUN_DOMAIN              = module.secrets.secrets["mailgun_domain"].secret_arn
-    MAILGUN_BASIC_AUTH_NAME     = module.secrets.secrets["mailgun_basic_auth_name"].secret_arn
-    MAILGUN_BASIC_AUTH_PASSWORD = module.secrets.secrets["mailgun_basic_auth_password"].secret_arn
+    SECRET_KEY_BASE             = module.secrets.secrets["SECRET_KEY_BASE"].secret_arn
+    SENTRY_DSN                  = module.secrets.secrets["SENTRY_DSN"].secret_arn
+    TWILIO_ACCOUNT_SID          = module.secrets.secrets["TWILIO_ACCOUNT_SID"].secret_arn
+    TWILIO_AUTH_TOKEN           = module.secrets.secrets["TWILIO_AUTH_TOKEN"].secret_arn
+    TWILIO_MESSAGING_SERVICE    = module.secrets.secrets["TWILIO_MESSAGING_SERVICE"].secret_arn
+    MAILGUN_API_KEY             = module.secrets.secrets["MAILGUN_API_KEY"].secret_arn
+    MAILGUN_DOMAIN              = module.secrets.secrets["MAILGUN_DOMAIN"].secret_arn
+    MAILGUN_BASIC_AUTH_NAME     = module.secrets.secrets["MAILGUN_BASIC_AUTH_NAME"].secret_arn
+    MAILGUN_BASIC_AUTH_PASSWORD = module.secrets.secrets["MAILGUN_BASIC_AUTH_PASSWORD"].secret_arn
+    EFILER_API_CLIENT_PRIVATE_KEY_BASE64 = module.secrets.secrets["EFILER_API_CLIENT_PRIVATE_KEY_BASE64"].secret_arn
   }
 }
 
@@ -118,6 +149,11 @@ module "workers" {
   service       = "worker"
   service_short = "worker"
 
+  # Wait for the deployment to be in a steady state, and rollback if it fails.
+  enable_circuit_breaker          = true
+  enable_circuit_breaker_rollback = true
+  wait_for_steady_state           = true
+
   vpc_id                 = module.vpc.vpc_id
   private_subnets        = module.vpc.private_subnets
   public_subnets         = module.vpc.public_subnets
@@ -128,12 +164,13 @@ module "workers" {
   create_endpoint        = false
   create_repository      = false
   enable_execute_command = true
+  force_new_deployment   = true
 
   execution_policies = [aws_iam_policy.ecs_s3_access.arn]
   task_policies      = [aws_iam_policy.ecs_s3_access.arn]
 
   environment_variables = {
-    RACK_ENV          = var.environment
+    RAILS_ENV         = var.environment
     DATABASE_HOST     = module.database.cluster_endpoint
     REVIEW_APP        = var.review_app
     SCHEMA_S3_BUCKET  = module.schemas.bucket
@@ -141,14 +178,16 @@ module "workers" {
   environment_secrets = {
     DATABASE_PASSWORD           = "${module.database.secret_arn}:password"
     DATABASE_USER               = "${module.database.secret_arn}:username"
-    SECRET_KEY_BASE             = module.secrets.secrets["rails_secret_key_base"].secret_arn
-    TWILIO_ACCOUNT_SID          = module.secrets.secrets["twilio_account_sid"].secret_arn
-    TWILIO_AUTH_TOKEN           = module.secrets.secrets["twilio_auth_token"].secret_arn
-    TWILIO_MESSAGING_SERVICE    = module.secrets.secrets["twilio_messaging_service_sid"].secret_arn
-    MAILGUN_API_KEY             = module.secrets.secrets["mailgun_api_key"].secret_arn
-    MAILGUN_DOMAIN              = module.secrets.secrets["mailgun_domain"].secret_arn
-    MAILGUN_BASIC_AUTH_NAME     = module.secrets.secrets["mailgun_basic_auth_name"].secret_arn
-    MAILGUN_BASIC_AUTH_PASSWORD = module.secrets.secrets["mailgun_basic_auth_password"].secret_arn
+    SECRET_KEY_BASE             = module.secrets.secrets["SECRET_KEY_BASE"].secret_arn
+    SENTRY_DSN                  = module.secrets.secrets["SENTRY_DSN"].secret_arn
+    TWILIO_ACCOUNT_SID          = module.secrets.secrets["TWILIO_ACCOUNT_SID"].secret_arn
+    TWILIO_AUTH_TOKEN           = module.secrets.secrets["TWILIO_AUTH_TOKEN"].secret_arn
+    TWILIO_MESSAGING_SERVICE    = module.secrets.secrets["TWILIO_MESSAGING_SERVICE"].secret_arn
+    MAILGUN_API_KEY             = module.secrets.secrets["MAILGUN_API_KEY"].secret_arn
+    MAILGUN_DOMAIN              = module.secrets.secrets["MAILGUN_DOMAIN"].secret_arn
+    MAILGUN_BASIC_AUTH_NAME     = module.secrets.secrets["MAILGUN_BASIC_AUTH_NAME"].secret_arn
+    MAILGUN_BASIC_AUTH_PASSWORD = module.secrets.secrets["MAILGUN_BASIC_AUTH_PASSWORD"].secret_arn
+    EFILER_API_CLIENT_PRIVATE_KEY_BASE64 = module.secrets.secrets["EFILER_API_CLIENT_PRIVATE_KEY_BASE64"].secret_arn
   }
 
   container_command = ["bin/jobs"]
@@ -170,6 +209,7 @@ module "database" {
   ingress_cidrs      = module.vpc.private_subnets_cidr_blocks
   iam_authentication = true
   enable_data_api    = true
+  password_rotation_frequency = 90
 
   min_capacity       = 0
   max_capacity       = 10
@@ -280,4 +320,47 @@ resource "aws_cloudwatch_log_subscription_filter" "datadog" {
   log_group_name  = "/aws/ecs/gyraffe/${var.environment}/${each.key}"
   filter_pattern  = ""
   destination_arn = data.aws_lambda_function.datadog["this"].arn
+}
+
+
+resource "aws_wafv2_ip_set" "scanners" {
+  for_each = var.allow_security_scans ? toset(["this"]) : []
+
+  name               = "${var.project}-${var.environment}-security-scanners"
+  description        = "Security scanners that are allowed to access the site."
+  scope              = "CLOUDFRONT"
+  ip_address_version = "IPV4"
+  addresses          = var.security_scan_cidrs
+}
+
+module "cloudfront_waf" {
+  source = "github.com/codeforamerica/tofu-modules-aws-cloudfront-waf?ref=2.1.0"
+  depends_on = [module.web.load_balancer_arn]
+
+  project        = "gyraffe"
+  environment    = var.environment
+  domain         = var.domain
+  subdomain      = ""
+  origin_alb_arn = module.web.load_balancer_arn
+  log_bucket     = module.logging.bucket_domain_name
+  log_group      = module.logging.log_groups["waf"]
+  passive        = var.passive_waf
+
+  ip_set_rules = var.allow_security_scans ? {
+    tenable_one = {
+      name     = "${var.project}-${var.environment}-security-scanners"
+      priority = 0
+      action   = "allow"
+      arn      = aws_wafv2_ip_set.scanners["this"].arn
+    }
+  } : {}
+
+  rate_limit_rules = var.rate_limit_requests > 0 ? {
+    base = {
+      action   = var.passive_waf ? "count" : "block"
+      priority = 100
+      limit    = var.rate_limit_requests
+      window   = var.rate_limit_window
+    }
+  } : {}
 }

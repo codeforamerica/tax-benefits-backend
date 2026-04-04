@@ -51,3 +51,20 @@ module "waf" {
   secrets_key_arn      = module.secrets.kms_key_arn
   passive              = false
 }
+
+module "sensitive_log_archive" {
+  source = "../../modules/log_archive"
+
+  bucket_name    = "gyr-datadog-sensitive-log-archive"
+  logging_bucket = module.logging.bucket
+}
+
+module "athena" {
+  source = "../../modules/athena"
+
+  workgroup_name     = "gyr-datadog-log-query"
+  database_name      = "gyr_datadog_logs"
+  result_bucket_name = "tax-benefits-gyr-athena-results-prod"
+  source_bucket_arns = ["arn:aws:s3:::gyr-datadog-log-archive"]
+  log_bucket         = module.logging.bucket
+}

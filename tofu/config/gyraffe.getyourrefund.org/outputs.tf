@@ -22,3 +22,8 @@ output "submission_bundles_bucket_name" {
   description = "S3 bucket where submission bundles are stored"
   value       = module.gyraffe.submission_bundles_bucket_name
 }
+
+output "vpc_peer_ids" {
+  description = "The IDs of any created VPC peering connections."
+  value       = module.gyraffe.vpc_peer_ids
+}

@@ -66,13 +66,18 @@ module "secrets" {
 }
 
 module "web" {
-  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.6.0"
+  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.13.0"
 
   project       = "efiler-api"
   project_short = "efiler-api"
   environment   = var.environment
   service       = "web"
   service_short = "web"
+
+  # Wait for the deployment to be in a steady state, and rollback if it fails.
+  enable_circuit_breaker          = true
+  enable_circuit_breaker_rollback = true
+  wait_for_steady_state           = true
 
   domain                       = var.domain
   vpc_id                       = module.vpc.vpc_id
@@ -86,13 +91,15 @@ module "web" {
   public                       = false
   enable_execute_command       = true
   use_target_group_port_suffix = true
+  force_new_deployment         = true
 
   environment_variables = {
-    RACK_ENV      = var.environment
+    RAILS_ENV     = var.environment
     DATABASE_HOST = module.database.cluster_endpoint
   }
 
   environment_secrets = merge(local.static_secret_names, local.api_client_secret_names)
+  ingress_cidrs = var.ingress_cidrs
 }
 
 module "database" {

@@ -1,0 +1,24 @@
+Version: "2012-10-17"
+Statement:
+  - Sid: Enable IAM User Permissions
+    Effect: Allow
+    Principal:
+      AWS: "arn:${partition}:iam::${account}:root"
+    Action: "kms:*"
+    Resource: "*"
+  - Sid: Allow S3 to encrypt and decrypt objects
+    Effect: Allow
+    Principal:
+      AWS: "*"
+    Action:
+      - "kms:Decrypt"
+      - "kms:Encrypt"
+      - "kms:GenerateDataKey"
+      - "kms:ReEncrypt*"
+    Resource: "*"
+    Condition:
+      StringLike:
+        "kms:CallerAccount": "${account}"
+        "kms:EncryptionContext:aws:s3:arn":
+          - "arn:${partition}:s3:::${bucket}"
+          - "arn:${partition}:s3:::${bucket}/*"

@@ -3,13 +3,13 @@ terraform {
 
   required_providers {
     aptible = {
-      version = "~> 0.9"
+      version = ">= 0.9"
       source  = "aptible/aptible"
     }
 
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 5.44"
+      version = ">= 5.44"
     }
   }
 }

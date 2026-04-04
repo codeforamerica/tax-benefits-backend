@@ -1,0 +1,14 @@
+Version: "2012-10-17"
+Statement:
+  - Sid: DatadogUploadAndRehydrateLogArchives
+    Effect: Allow
+    Action:
+      - s3:PutObject
+      - s3:GetObject
+    Resource:
+      - arn:${partition}:s3:::${bucket}/*
+  - Sid: DatadogRehydrateLogArchivesListBucket
+    Effect: Allow
+    Action: s3:ListBucket
+    Resource:
+      - arn:${partition}:s3:::${bucket}

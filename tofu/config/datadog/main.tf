@@ -7,6 +7,10 @@ terraform {
   }
 }
 
+locals {
+  slack_account_name = "Code_for_America_Staff" # obtain this from Integration > Slack > Configure
+}
+
 module "datadog" {
   source = "github.com/codeforamerica/tofu-modules-datadog-waf?ref=1.1.0"
 
@@ -18,4 +22,43 @@ module "datadog" {
     "fyst-production",
     "pya-production"
   ]
+}
+
+#################################
+# Sensitive Data Scanner Config #
+#################################
+
+# NOTE: Datadog needs to be added to any target Slack channels via /invite @Datadog
+resource "datadog_integration_slack_channel" "security_alerts" {
+  account_name = local.slack_account_name
+  channel_name = "#security-alerts"
+
+  display {
+    message  = true
+    notified = true
+    snapshot = false
+    tags     = true
+  }
+}
+
+resource "datadog_integration_slack_channel" "tax_alerts" {
+  account_name = local.slack_account_name
+  channel_name = "#tax-alerts"
+
+  display {
+    message  = true
+    notified = true
+    snapshot = false
+    tags     = true
+  }
+}
+
+module "sensitive_data_scanner" {
+  source = "github.com/codeforamerica/tofu-modules-datadog-sensitive-data-scanner?ref=1.2.0"
+
+  group_name   = "Production Environment Scanning"
+  filter_query = "env:prod"
+  product_list = ["logs", "apm"]
+  enable_monitors = true
+  notification_targets = ["@slack-${local.slack_account_name}-security-alerts", "@slack-${local.slack_account_name}-tax-alerts"]
 }

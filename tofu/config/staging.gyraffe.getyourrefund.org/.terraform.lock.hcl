@@ -2,7 +2,8 @@
 # Manual edits may be lost in future updates.
 
 provider "registry.opentofu.org/dopplerhq/doppler" {
-  version = "1.21.1"
+  version     = "1.21.1"
+  constraints = "~> 1.20"
   hashes = [
     "h1:ylC40WlK4NZi8oOfc/T3lQhdeAT3Lyee1ZhX9ad0bNM=",
     "zh:1f7e9df3d359481976fca12d691f03b8083e47c49294f436a4e35f8f7be8b797",

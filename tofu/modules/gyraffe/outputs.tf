@@ -24,8 +24,11 @@ output "submission_bundles_bucket_name" {
 }
 
 output "db_user_secret_arns" {
-  description = <<-EOT
-    Secrets Manager ARNs for any database users created with credentials.
-    EOT
+  description = "Secrets Manager ARNs for any database users created with credentials."
   value       = module.database.db_user_secret_arns
+}
+
+output "vpc_peer_ids" {
+  description = "The IDs of any created VPC peering connections."
+  value       = module.vpc.peer_ids
 }

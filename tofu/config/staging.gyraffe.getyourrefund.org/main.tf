@@ -23,6 +23,16 @@ module "gyraffe" {
   private_subnets = ["10.0.70.0/26", "10.0.70.64/26", "10.0.70.128/26"]
   public_subnets  = ["10.0.68.0/26", "10.0.68.64/26", "10.0.68.128/26"]
   review_app      = "true"
+
+  vpc_peers = {
+    demo_efiler_api = {
+      account_id = "669097061340",
+      vpc_id = "vpc-01e2e29c462af8ecf",
+      region = "us-east-1",
+      cidr = "10.0.48.0/22"
+    }
+  }
+
   data_science_database_user = var.data_science_database_user
   data_science_databases = var.data_science_databases
 }

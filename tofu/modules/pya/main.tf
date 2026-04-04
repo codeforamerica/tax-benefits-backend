@@ -113,7 +113,7 @@ module "vpc" {
 }
 
 module "web" {
-  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.8.0"
+  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.12.0"
 
   project       = "pya"
   project_short = "pya"
@@ -124,6 +124,12 @@ module "web" {
   memory = var.web_memory
   cpu = var.web_cpu
 
+  # Wait for the deployment to be in a steady state, and rollback if it fails.
+  # Always force a new deployment, even if nothing has changed.
+  enable_circuit_breaker          = true
+  enable_circuit_breaker_rollback = true
+  wait_for_steady_state           = true
+
   domain                   = var.domain
   subdomain                = "origin"
   vpc_id                   = module.vpc.vpc_id
@@ -131,20 +137,22 @@ module "web" {
   public_subnets           = module.vpc.public_subnets
   logging_key_id           = module.logging.kms_key_arn
   ingress_prefix_list_ids  = [data.aws_ec2_managed_prefix_list.cloudfront.id]
-  container_port           = 3000
+  container_port           = 8080
   create_endpoint          = true
   create_repository        = true
   create_version_parameter = true
   public                   = false
   health_check_path        = "/up"
   enable_execute_command   = true
+  force_new_deployment     = true
   manage_performance_log_group = true
+  use_target_group_port_suffix = true
 
   execution_policies = [aws_iam_policy.ecs_s3_access.arn, aws_iam_policy.rds_db_access.arn]
   task_policies      = [aws_iam_policy.ecs_s3_access.arn, aws_iam_policy.rds_db_access.arn]
 
   environment_variables = {
-    RACK_ENV      = var.environment
+    RAILS_ENV     = var.environment
     DATABASE_HOST = module.database.cluster_endpoint
     S3_BUCKET     = module.submission_pdfs.bucket
     REVIEW_APP    = var.review_app
@@ -167,7 +175,7 @@ module "web" {
 }
 
 module "workers" {
-  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.8.0"
+  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.12.0"
 
   project       = "pya"
   project_short = "pya"
@@ -175,23 +183,31 @@ module "workers" {
   service       = "worker"
   service_short = "wrk"
 
+  # Wait for the deployment to be in a steady state, and rollback if it fails.
+  # Always force a new deployment, even if nothing has changed.
+  enable_circuit_breaker          = true
+  enable_circuit_breaker_rollback = true
+  wait_for_steady_state           = true
+
   vpc_id                 = module.vpc.vpc_id
   private_subnets        = module.vpc.private_subnets
   public_subnets         = module.vpc.public_subnets
   logging_key_id         = module.logging.kms_key_arn
-  container_port         = 3000
+  container_port         = 8080
   version_parameter      = module.web.version_parameter
   image_url              = module.web.repository_url
   create_endpoint        = false
   create_repository      = false
   enable_execute_command = true
+  force_new_deployment   = true
   manage_performance_log_group = true
+  use_target_group_port_suffix = true
 
   execution_policies = [aws_iam_policy.ecs_s3_access.arn, aws_iam_policy.rds_db_access.arn]
   task_policies      = [aws_iam_policy.ecs_s3_access.arn, aws_iam_policy.rds_db_access.arn]
 
   environment_variables = {
-    RACK_ENV      = var.environment
+    RAILS_ENV     = var.environment
     DATABASE_HOST = module.database.cluster_endpoint
     S3_BUCKET     = module.submission_pdfs.bucket
     REVIEW_APP    = var.review_app
