@@ -33,4 +33,7 @@ module "gyraffe" {
       cidr       = "10.51.0.0/16"
     }
   }
+
+  data_science_database_user = var.data_science_database_user
+  data_science_databases = var.data_science_databases
 }

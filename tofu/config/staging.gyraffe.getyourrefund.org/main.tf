@@ -32,4 +32,7 @@ module "gyraffe" {
       cidr = "10.0.48.0/22"
     }
   }
+
+  data_science_database_user = var.data_science_database_user
+  data_science_databases = var.data_science_databases
 }

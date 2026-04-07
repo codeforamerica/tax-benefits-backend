@@ -1,5 +1,5 @@
 module "logging" {
-  source = "github.com/codeforamerica/tofu-modules-aws-logging?ref=2.1.0"
+  source = "github.com/codeforamerica/tofu-modules-aws-logging?ref=2.1.2"
 
   project                  = "gyraffe"
   environment              = var.environment
@@ -19,7 +19,7 @@ module "logging" {
 # We don't need to create any secrets here, but we need the infrastructure for
 # other modules to utilize.
 module "secrets" {
-  source = "github.com/codeforamerica/tofu-modules-aws-secrets?ref=2.0.0"
+  source = "github.com/codeforamerica/tofu-modules-aws-secrets?ref=2.1.0"
 
   project     = "gyraffe"
   environment = var.environment
@@ -195,7 +195,7 @@ module "workers" {
 }
 
 module "database" {
-  source = "github.com/codeforamerica/tofu-modules-aws-serverless-database?ref=1.5.1"
+  source = "github.com/codeforamerica/tofu-modules-aws-serverless-database?ref=1.8.0"
 
   project             = "gyraffe"
   environment         = var.environment
@@ -214,6 +214,13 @@ module "database" {
   min_capacity       = 0
   max_capacity       = 10
   cluster_parameters = []
+
+  db_users = var.data_science_database_user != null && length(var.data_science_databases) > 0 ? {
+      (var.data_science_database_user) = {
+        databases  = var.data_science_databases
+        privileges = "readonly"
+      }
+    } : {}
 }
 
 locals {
