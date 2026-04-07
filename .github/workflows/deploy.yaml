@@ -12,7 +12,7 @@ on:
         required: true
         type: environment
       config:
-        description: The OpenTofu configuration to plan.
+        description: The OpenTofu configuration to apply.
         required: true
         type: choice
         options:

@@ -27,3 +27,13 @@ output "vpc_peer_ids" {
   description = "The IDs of any created VPC peering connections."
   value       = module.gyraffe.vpc_peer_ids
 }
+
+output "schemas_bucket_name" {
+  description = "S3 bucket name for schemas."
+  value       = module.gyraffe.schemas_bucket_name
+}
+
+output "schemas_kms_key_arn" {
+  description = "ARN of the KMS key used to encrypt the schemas S3 bucket."
+  value       = module.gyraffe.schemas_kms_key_arn
+}
