@@ -27,3 +27,8 @@ output "vpc_peer_ids" {
   description = "The IDs of any created VPC peering connections."
   value       = module.vpc.peer_ids
 }
+
+output "schemas_kms_key_arn" {
+  description = "ARN of the KMS key used to encrypt the schemas S3 bucket."
+  value       = aws_kms_key.schemas.arn
+}

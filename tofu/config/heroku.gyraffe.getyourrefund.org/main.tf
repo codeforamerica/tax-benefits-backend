@@ -7,10 +7,19 @@ terraform {
   }
 }
 
+data "terraform_remote_state" "staging" {
+  backend = "s3"
+
+  config = {
+    bucket = "gyraffe-staging-tfstate"
+    key    = "staging.gyraffe.getyourrefund.org"
+    region = "us-east-1"
+  }
+}
+
 locals {
-  # This could be dynamically read via a terraform_remote_state data source,
-  # but it shouldn't ever change so I'm leaving it hard-coded for now.
-  schemas_bucket_name = "gyraffe-staging-schemas"
+  schemas_bucket_name = data.terraform_remote_state.staging.outputs.schemas_bucket_name
+  schemas_kms_key_arn = data.terraform_remote_state.staging.outputs.schemas_kms_key_arn
 }
 
 # IAM user for Heroku review apps to access the schemas S3 bucket.
@@ -37,6 +46,16 @@ resource "aws_iam_user_policy" "heroku_schemas_read" {
         Resource = [
           "arn:aws:s3:::${local.schemas_bucket_name}",
           "arn:aws:s3:::${local.schemas_bucket_name}/*",
+        ]
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "kms:Decrypt",
+          "kms:DescribeKey",
+        ]
+        Resource = [
+          local.schemas_kms_key_arn,
         ]
       }
     ]
