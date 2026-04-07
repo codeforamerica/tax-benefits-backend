@@ -19,7 +19,7 @@ module "logging" {
 # We don't need to create any secrets here, but we need the infrastructure for
 # other modules to utilize.
 module "secrets" {
-  source = "github.com/codeforamerica/tofu-modules-aws-secrets?ref=kms-move"
+  source = "github.com/codeforamerica/tofu-modules-aws-secrets?ref=2.1.1"
 
   project     = "gyraffe"
   environment = var.environment
