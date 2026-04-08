@@ -36,4 +36,5 @@ module "gyraffe" {
 
   data_science_database_user = var.data_science_database_user
   data_science_databases = var.data_science_databases
+  additional_database_ingress = ["10.51.0.0/16"]
 }

@@ -206,7 +206,7 @@ module "database" {
   secrets_key_arn    = module.secrets.kms_key_arn
   vpc_id             = module.vpc.vpc_id
   subnets            = module.vpc.private_subnets
-  ingress_cidrs      = module.vpc.private_subnets_cidr_blocks
+  ingress_cidrs      = concat(module.vpc.private_subnets_cidr_blocks, var.additional_database_ingress)
   iam_authentication = true
   enable_data_api    = true
   password_rotation_frequency = 90
