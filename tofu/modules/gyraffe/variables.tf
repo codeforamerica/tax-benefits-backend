@@ -97,3 +97,9 @@ variable "data_science_databases" {
   description = "List of databases to grant data science read-only access to."
   default     = []
 }
+
+variable "additional_database_ingress" {
+  type        = list(string)
+  description = "List of additional CIDRs from which the database should permit ingress"
+  default     = []
+}
