@@ -102,6 +102,43 @@ module "web" {
   ingress_cidrs = var.ingress_cidrs
 }
 
+module "workers" {
+  source = "github.com/codeforamerica/tofu-modules-aws-fargate-service?ref=1.13.0"
+
+  project       = "efiler-api"
+  project_short = "efiler-api"
+  environment   = var.environment
+  service       = "worker"
+  service_short = "worker"
+
+  # Wait for the deployment to be in a steady state, and rollback if it fails.
+  enable_circuit_breaker          = true
+  enable_circuit_breaker_rollback = true
+  wait_for_steady_state           = true
+
+  vpc_id                 = module.vpc.vpc_id
+  private_subnets        = module.vpc.private_subnets
+  public_subnets         = module.vpc.public_subnets
+  logging_key_id         = module.logging.kms_key_arn
+  container_port         = 8080
+  version_parameter      = module.web.version_parameter
+  image_url              = module.web.repository_url
+  create_endpoint        = false
+  create_repository      = false
+  enable_execute_command = true
+  force_new_deployment   = true
+
+  environment_variables = {
+    RAILS_ENV     = var.environment
+    DATABASE_HOST = module.database.cluster_endpoint
+  }
+
+  environment_secrets = merge(local.static_secret_names, local.api_client_secret_names)
+
+  container_command = ["bin/jobs"]
+  repository_arn    = module.web.repository_arn
+}
+
 module "database" {
   source = "github.com/codeforamerica/tofu-modules-aws-serverless-database?ref=1.3.1"
 
