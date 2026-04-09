@@ -118,9 +118,7 @@ module "workers" {
 
   vpc_id                 = module.vpc.vpc_id
   private_subnets        = module.vpc.private_subnets
-  public_subnets         = module.vpc.public_subnets
   logging_key_id         = module.logging.kms_key_arn
-  container_port         = 8080
   version_parameter      = module.web.version_parameter
   image_url              = module.web.repository_url
   create_endpoint        = false
