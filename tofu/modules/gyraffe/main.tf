@@ -53,8 +53,11 @@ module "secrets" {
     "SENTRY_DSN" = {
       description = "Data Source Name (DSN) for sentry integration"
     },
-    "EFILER_API_HOST" = {
-      description = "Hostname for efiler API"
+    "BASE_URL" = {
+      description = "Base application URL"
+    },
+    "EFILER_API_URL" = {
+      description = "Base efiler API URL"
     },
     "EFILER_API_CLIENT_NAME" = {
       description = "Name to use when making requests to efiler API"
@@ -133,6 +136,7 @@ module "web" {
   environment_secrets = {
     DATABASE_PASSWORD           = "${module.database.secret_arn}:password"
     DATABASE_USER               = "${module.database.secret_arn}:username"
+    BASE_URL                    = module.secrets.secrets["BASE_URL"].secret_arn
     SECRET_KEY_BASE             = module.secrets.secrets["SECRET_KEY_BASE"].secret_arn
     SENTRY_DSN                  = module.secrets.secrets["SENTRY_DSN"].secret_arn
     TWILIO_ACCOUNT_SID          = module.secrets.secrets["TWILIO_ACCOUNT_SID"].secret_arn
@@ -142,7 +146,7 @@ module "web" {
     MAILGUN_DOMAIN              = module.secrets.secrets["MAILGUN_DOMAIN"].secret_arn
     MAILGUN_BASIC_AUTH_NAME     = module.secrets.secrets["MAILGUN_BASIC_AUTH_NAME"].secret_arn
     MAILGUN_BASIC_AUTH_PASSWORD = module.secrets.secrets["MAILGUN_BASIC_AUTH_PASSWORD"].secret_arn
-    EFILER_API_HOST             = module.secrets.secrets["EFILER_API_HOST"].secret_arn
+    EFILER_API_URL              = module.secrets.secrets["EFILER_API_URL"].secret_arn
     EFILER_API_CLIENT_NAME      = module.secrets.secrets["EFILER_API_CLIENT_NAME"].secret_arn
     EFILER_API_CLIENT_PRIVATE_KEY_BASE64 = module.secrets.secrets["EFILER_API_CLIENT_PRIVATE_KEY_BASE64"].secret_arn
   }
@@ -186,6 +190,7 @@ module "workers" {
   environment_secrets = {
     DATABASE_PASSWORD           = "${module.database.secret_arn}:password"
     DATABASE_USER               = "${module.database.secret_arn}:username"
+    BASE_URL                    = module.secrets.secrets["BASE_URL"].secret_arn
     SECRET_KEY_BASE             = module.secrets.secrets["SECRET_KEY_BASE"].secret_arn
     SENTRY_DSN                  = module.secrets.secrets["SENTRY_DSN"].secret_arn
     TWILIO_ACCOUNT_SID          = module.secrets.secrets["TWILIO_ACCOUNT_SID"].secret_arn
@@ -195,7 +200,7 @@ module "workers" {
     MAILGUN_DOMAIN              = module.secrets.secrets["MAILGUN_DOMAIN"].secret_arn
     MAILGUN_BASIC_AUTH_NAME     = module.secrets.secrets["MAILGUN_BASIC_AUTH_NAME"].secret_arn
     MAILGUN_BASIC_AUTH_PASSWORD = module.secrets.secrets["MAILGUN_BASIC_AUTH_PASSWORD"].secret_arn
-    EFILER_API_HOST             = module.secrets.secrets["EFILER_API_HOST"].secret_arn
+    EFILER_API_URL              = module.secrets.secrets["EFILER_API_URL"].secret_arn
     EFILER_API_CLIENT_NAME      = module.secrets.secrets["EFILER_API_CLIENT_NAME"].secret_arn
     EFILER_API_CLIENT_PRIVATE_KEY_BASE64 = module.secrets.secrets["EFILER_API_CLIENT_PRIVATE_KEY_BASE64"].secret_arn
   }
