@@ -64,7 +64,9 @@ module "secrets" {
     },
     "IRS_SOFTWARE_ID" = {
       description = "Software ID for this product"
-    }
+    },
+    "MIXPANEL_TOKEN" = {
+      description = "Mixpanel token"}
   }
 }
 
@@ -149,6 +151,7 @@ module "web" {
     IRS_EFIN                    = module.secrets.secrets["IRS_EFIN"].secret_arn
     IRS_ETIN                    = module.secrets.secrets["IRS_ETIN"].secret_arn
     IRS_SOFTWARE_ID             = module.secrets.secrets["IRS_SOFTWARE_ID"].secret_arn
+    MIXPANEL_TOKEN              = module.secrets.secrets["MIXPANEL_TOKEN"].secret_arn
   }
 }
 
@@ -203,6 +206,7 @@ module "workers" {
     IRS_EFIN                    = module.secrets.secrets["IRS_EFIN"].secret_arn
     IRS_ETIN                    = module.secrets.secrets["IRS_ETIN"].secret_arn
     IRS_SOFTWARE_ID             = module.secrets.secrets["IRS_SOFTWARE_ID"].secret_arn
+    MIXPANEL_TOKEN              = module.secrets.secrets["MIXPANEL_TOKEN"].secret_arn
   }
 
   container_command = ["bin/jobs"]
