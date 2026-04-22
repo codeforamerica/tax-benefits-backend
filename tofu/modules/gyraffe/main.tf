@@ -55,7 +55,9 @@ module "secrets" {
     },
     "EFILER_API_CLIENT_PRIVATE_KEY_BASE64" = {
       description = "Private key for signing requests to efiler API"
-    }
+    },
+    "MIXPANEL_TOKEN" = {
+      description = "Mixpanel token"}
   }
 }
 
@@ -137,6 +139,7 @@ module "web" {
     MAILGUN_BASIC_AUTH_NAME     = module.secrets.secrets["MAILGUN_BASIC_AUTH_NAME"].secret_arn
     MAILGUN_BASIC_AUTH_PASSWORD = module.secrets.secrets["MAILGUN_BASIC_AUTH_PASSWORD"].secret_arn
     EFILER_API_CLIENT_PRIVATE_KEY_BASE64 = module.secrets.secrets["EFILER_API_CLIENT_PRIVATE_KEY_BASE64"].secret_arn
+    MIXPANEL_TOKEN              = module.secrets.secrets["MIXPANEL_TOKEN"].secret_arn
   }
 }
 
@@ -188,6 +191,7 @@ module "workers" {
     MAILGUN_BASIC_AUTH_NAME     = module.secrets.secrets["MAILGUN_BASIC_AUTH_NAME"].secret_arn
     MAILGUN_BASIC_AUTH_PASSWORD = module.secrets.secrets["MAILGUN_BASIC_AUTH_PASSWORD"].secret_arn
     EFILER_API_CLIENT_PRIVATE_KEY_BASE64 = module.secrets.secrets["EFILER_API_CLIENT_PRIVATE_KEY_BASE64"].secret_arn
+    MIXPANEL_TOKEN              = module.secrets.secrets["MIXPANEL_TOKEN"].secret_arn
   }
 
   container_command = ["bin/jobs"]

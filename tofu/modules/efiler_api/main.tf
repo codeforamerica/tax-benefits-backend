@@ -61,6 +61,7 @@ module "secrets" {
 
   project     = "efiler-api"
   environment = var.environment
+  add_suffix  = false
 
   secrets = merge(local.static_secrets, local.api_client_secrets)
 }
