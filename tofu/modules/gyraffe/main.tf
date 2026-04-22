@@ -1,5 +1,5 @@
 module "logging" {
-  source = "github.com/codeforamerica/tofu-modules-aws-logging?ref=2.1.0"
+  source = "github.com/codeforamerica/tofu-modules-aws-logging?ref=2.1.2"
 
   project                  = "gyraffe"
   environment              = var.environment
@@ -19,7 +19,7 @@ module "logging" {
 # We don't need to create any secrets here, but we need the infrastructure for
 # other modules to utilize.
 module "secrets" {
-  source = "github.com/codeforamerica/tofu-modules-aws-secrets?ref=2.0.0"
+  source = "github.com/codeforamerica/tofu-modules-aws-secrets?ref=2.1.1"
 
   project     = "gyraffe"
   environment = var.environment
@@ -55,6 +55,15 @@ module "secrets" {
     },
     "EFILER_API_CLIENT_PRIVATE_KEY_BASE64" = {
       description = "Private key for signing requests to efiler API"
+    },
+    "IRS_EFIN" = {
+      description = "Electronic Filing Identification Number for CFA"
+    },
+    "IRS_ETIN" = {
+      description = "Electronic Transmitter Identification Number for CFA testing/prod environment"
+    },
+    "IRS_SOFTWARE_ID" = {
+      description = "Software ID for this product"
     },
     "MIXPANEL_TOKEN" = {
       description = "Mixpanel token"}
@@ -139,6 +148,9 @@ module "web" {
     MAILGUN_BASIC_AUTH_NAME     = module.secrets.secrets["MAILGUN_BASIC_AUTH_NAME"].secret_arn
     MAILGUN_BASIC_AUTH_PASSWORD = module.secrets.secrets["MAILGUN_BASIC_AUTH_PASSWORD"].secret_arn
     EFILER_API_CLIENT_PRIVATE_KEY_BASE64 = module.secrets.secrets["EFILER_API_CLIENT_PRIVATE_KEY_BASE64"].secret_arn
+    IRS_EFIN                    = module.secrets.secrets["IRS_EFIN"].secret_arn
+    IRS_ETIN                    = module.secrets.secrets["IRS_ETIN"].secret_arn
+    IRS_SOFTWARE_ID             = module.secrets.secrets["IRS_SOFTWARE_ID"].secret_arn
     MIXPANEL_TOKEN              = module.secrets.secrets["MIXPANEL_TOKEN"].secret_arn
   }
 }
@@ -191,6 +203,9 @@ module "workers" {
     MAILGUN_BASIC_AUTH_NAME     = module.secrets.secrets["MAILGUN_BASIC_AUTH_NAME"].secret_arn
     MAILGUN_BASIC_AUTH_PASSWORD = module.secrets.secrets["MAILGUN_BASIC_AUTH_PASSWORD"].secret_arn
     EFILER_API_CLIENT_PRIVATE_KEY_BASE64 = module.secrets.secrets["EFILER_API_CLIENT_PRIVATE_KEY_BASE64"].secret_arn
+    IRS_EFIN                    = module.secrets.secrets["IRS_EFIN"].secret_arn
+    IRS_ETIN                    = module.secrets.secrets["IRS_ETIN"].secret_arn
+    IRS_SOFTWARE_ID             = module.secrets.secrets["IRS_SOFTWARE_ID"].secret_arn
     MIXPANEL_TOKEN              = module.secrets.secrets["MIXPANEL_TOKEN"].secret_arn
   }
 
@@ -199,7 +214,7 @@ module "workers" {
 }
 
 module "database" {
-  source = "github.com/codeforamerica/tofu-modules-aws-serverless-database?ref=1.5.1"
+  source = "github.com/codeforamerica/tofu-modules-aws-serverless-database?ref=1.8.0"
 
   project             = "gyraffe"
   environment         = var.environment
@@ -210,7 +225,7 @@ module "database" {
   secrets_key_arn    = module.secrets.kms_key_arn
   vpc_id             = module.vpc.vpc_id
   subnets            = module.vpc.private_subnets
-  ingress_cidrs      = module.vpc.private_subnets_cidr_blocks
+  ingress_cidrs      = concat(module.vpc.private_subnets_cidr_blocks, var.additional_database_ingress)
   iam_authentication = true
   enable_data_api    = true
   password_rotation_frequency = 90
@@ -218,6 +233,13 @@ module "database" {
   min_capacity       = 0
   max_capacity       = 10
   cluster_parameters = []
+
+  db_users = var.data_science_database_user != null && length(var.data_science_databases) > 0 ? {
+      (var.data_science_database_user) = {
+        databases  = var.data_science_databases
+        privileges = "readonly"
+      }
+    } : {}
 }
 
 locals {
