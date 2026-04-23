@@ -132,6 +132,7 @@ module "web" {
     DATABASE_HOST     = module.database.cluster_endpoint
     REVIEW_APP        = var.review_app
     SCHEMA_S3_BUCKET  = module.schemas.bucket
+    SUBMISSION_BUNDLES_S3_BUCKET = module.submission_bundles.bucket
   }
   environment_secrets = {
     DATABASE_PASSWORD           = "${module.database.secret_arn}:password"
