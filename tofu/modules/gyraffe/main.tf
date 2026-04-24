@@ -363,4 +363,19 @@ module "cloudfront_waf" {
       window   = var.rate_limit_window
     }
   } : {}
+
+  # EFiler API submit callbacks contain XML in a JSON `result` field, which
+  # trips CrossSiteScripting_BODY in the AWS managed CommonRuleSet. Allow the
+  # callback path through the WAF until callbacks are signed, at which point
+  # this can be tightened with a header criteria.
+  # TODO(TEF-615) - Add header criteria & change this comment
+  webhooks = {
+    efiler_api_callback = {
+      paths = [
+        { constraint = "EXACTLY", path = "/efiler-api/submit-callback" },
+      ]
+      criteria = []
+      action   = "allow"
+    }
+  }
 }
