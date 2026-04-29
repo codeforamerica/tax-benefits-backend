@@ -409,6 +409,8 @@ module "cloudfront_waf" {
     efiler_api_callback = {
       paths = [
         { constraint = "EXACTLY", path = "/efiler-api/submit-callback" },
+        { constraint = "EXACTLY", path = "/efiler-api/submissions-status-callback" },
+        { constraint = "EXACTLY", path = "/efiler-api/acks-callback" },
       ]
       criteria = []
       action   = "allow"
