@@ -46,12 +46,12 @@ on:
           - demo.fileyourstatetaxes.org
           - demo.getyourrefund.org
           - demo.mireembolso.org
-          - gyraffe.getyourrefund.org
-          - heroku.gyraffe.getyourrefund.org
+          - heroku.simplefile.getyourrefund.org
           - heroku.pya.fileyourstatetaxes.org
+          - simplefile.getyourrefund.org
           - staging.fileyourstatetaxes.org
           - staging.getyourrefund.org
-          - staging.gyraffe.getyourrefund.org
+          - staging.simplefile.getyourrefund.org
           - staging.mireembolso.org
           - staging.pya.fileyourstatetaxes.org
           - pya.fileyourstatetaxes.org
