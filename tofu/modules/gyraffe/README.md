@@ -42,8 +42,8 @@ tofu plan
 ```
 
 > [!IMPORTANT]
->  Currently this module is designed for use for `staging.gyraffe.getyourrefund.org` (staging)
-and `gyraffe.getyourrefund.org` (production).
+>  Currently this module is designed for use for `staging.simplefile.getyourrefund.org` (staging)
+and `simplefile.getyourrefund.org` (production).
 Any changes made to the module will be reflected in the configurations of those environments
 and should be reviewed closely.
 
@@ -60,6 +60,6 @@ and should be reviewed closely.
   merge in the approved PR with the changes, and run [the `deploy` github workflow](https://github.com/codeforamerica/tax-benefits-backend/actions/workflows/deploy.yaml).
   - Use workflow from: `main`
   - Environment to deploy to: `gyraffe-nonprod` (for staging, `gyraffe-prod` for production)
-  - The OpenTofu configuration to plan: `staging.gyraffe.getyourrefund.org` (`gyraffe.getyourrefund.org` for production)
+  - The OpenTofu configuration to plan: `staging.simplefile.getyourrefund.org` (`simplefile.getyourrefund.org` for production)
 - More often, the deploy action will run as a result of updates on [`gyraffe` repository](https://github.com/codeforamerica/gyraffe)
   and the subsequent GitHub deploy actions [which trigger the deploy action on gyraffe infrastructure](https://github.com/codeforamerica/gyraffe/blob/main/.github/workflows/deploy-to-staging.yml#L84-L98).
