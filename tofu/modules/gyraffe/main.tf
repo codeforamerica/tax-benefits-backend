@@ -381,6 +381,7 @@ module "cloudfront_waf" {
   log_bucket     = module.logging.bucket_domain_name
   log_group      = module.logging.log_groups["waf"]
   passive        = var.passive_waf
+  certificate_imported = var.environment == "production"
 
   ip_set_rules = var.allow_security_scans ? {
     tenable_one = {
