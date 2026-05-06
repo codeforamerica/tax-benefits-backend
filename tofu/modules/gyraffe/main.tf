@@ -75,7 +75,14 @@ module "secrets" {
       description = "Software ID for this product"
     },
     "MIXPANEL_TOKEN" = {
-      description = "Mixpanel token"}
+      description = "Mixpanel token"
+    },
+    "INTERCOM_APP_ID" = {
+      description = "Intercom app ID"
+    },
+    "INTERCOM_SECURE_MODE_SECRET_KEY" = {
+      description = "Intercom secure mode secret key"
+    }
   }
 }
 
@@ -165,6 +172,8 @@ module "web" {
     IRS_ETIN                    = module.secrets.secrets["IRS_ETIN"].secret_arn
     IRS_SOFTWARE_ID             = module.secrets.secrets["IRS_SOFTWARE_ID"].secret_arn
     MIXPANEL_TOKEN              = module.secrets.secrets["MIXPANEL_TOKEN"].secret_arn
+    INTERCOM_APP_ID                 = module.secrets.secrets["INTERCOM_APP_ID"].secret_arn
+    INTERCOM_SECURE_MODE_SECRET_KEY = module.secrets.secrets["INTERCOM_SECURE_MODE_SECRET_KEY"].secret_arn
   }
 }
 
@@ -224,6 +233,8 @@ module "workers" {
     IRS_ETIN                    = module.secrets.secrets["IRS_ETIN"].secret_arn
     IRS_SOFTWARE_ID             = module.secrets.secrets["IRS_SOFTWARE_ID"].secret_arn
     MIXPANEL_TOKEN              = module.secrets.secrets["MIXPANEL_TOKEN"].secret_arn
+    INTERCOM_APP_ID                 = module.secrets.secrets["INTERCOM_APP_ID"].secret_arn
+    INTERCOM_SECURE_MODE_SECRET_KEY = module.secrets.secrets["INTERCOM_SECURE_MODE_SECRET_KEY"].secret_arn
   }
 
   container_command = ["bin/jobs"]
