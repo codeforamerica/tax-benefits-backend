@@ -5,6 +5,9 @@ locals {
       start_value = jsonencode({
         key = ""
       })
+    },
+    "efiler_api_callback_secret" = {
+      description = "Shared secret for authenticating EFiler API callbacks"
     }
   }
 
@@ -26,6 +29,7 @@ locals {
     DATABASE_PASSWORD = "${module.database.secret_arn}:password"
     DATABASE_USER     = "${module.database.secret_arn}:username"
     SECRET_KEY_BASE   = "${module.secrets.secrets["rails_secret_key_base"].secret_arn}:key"
+    EFILER_API_CALLBACK_SECRET = module.secrets.secrets["efiler_api_callback_secret"].secret_arn
   }
 
   api_client_secret_names = {

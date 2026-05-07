@@ -82,6 +82,9 @@ module "secrets" {
     },
     "INTERCOM_SECURE_MODE_SECRET_KEY" = {
       description = "Intercom secure mode secret key"
+    },
+    "EFILER_API_CALLBACK_SECRET" = {
+      description = "Shared secret for authenticating EFiler API callbacks"
     }
   }
 }
@@ -174,6 +177,7 @@ module "web" {
     MIXPANEL_TOKEN              = module.secrets.secrets["MIXPANEL_TOKEN"].secret_arn
     INTERCOM_APP_ID                 = module.secrets.secrets["INTERCOM_APP_ID"].secret_arn
     INTERCOM_SECURE_MODE_SECRET_KEY = module.secrets.secrets["INTERCOM_SECURE_MODE_SECRET_KEY"].secret_arn
+    EFILER_API_CALLBACK_SECRET = module.secrets.secrets["EFILER_API_CALLBACK_SECRET"].secret_arn
   }
 }
 
@@ -235,6 +239,7 @@ module "workers" {
     MIXPANEL_TOKEN              = module.secrets.secrets["MIXPANEL_TOKEN"].secret_arn
     INTERCOM_APP_ID                 = module.secrets.secrets["INTERCOM_APP_ID"].secret_arn
     INTERCOM_SECURE_MODE_SECRET_KEY = module.secrets.secrets["INTERCOM_SECURE_MODE_SECRET_KEY"].secret_arn
+    EFILER_API_CALLBACK_SECRET = module.secrets.secrets["EFILER_API_CALLBACK_SECRET"].secret_arn
   }
 
   container_command = ["bin/jobs"]
