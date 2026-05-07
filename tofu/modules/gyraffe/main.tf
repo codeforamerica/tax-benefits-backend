@@ -418,10 +418,9 @@ module "cloudfront_waf" {
   } : {}
 
   # EFiler API submit callbacks contain XML in a JSON `result` field, which
-  # trips CrossSiteScripting_BODY in the AWS managed CommonRuleSet. Allow the
-  # callback path through the WAF until callbacks are signed, at which point
-  # this can be tightened with a header criteria.
-  # TODO(TEF-615) - Add header criteria & change this comment
+  # trips CrossSiteScripting_BODY in the AWS managed CommonRuleSet. Allow
+  # requests to the callback paths through the WAF, but only when the
+  # X-EFiler-Callback-Secret header set by EFiler API is present
   webhooks = {
     efiler_api_callback = {
       paths = [
@@ -429,8 +428,16 @@ module "cloudfront_waf" {
         { constraint = "EXACTLY", path = "/efiler-api/submissions-status-callback" },
         { constraint = "EXACTLY", path = "/efiler-api/acks-callback" },
       ]
-      criteria = []
-      action   = "allow"
+      criteria = [
+        {
+          type       = "size"
+          constraint = "GT"
+          field      = "header"
+          name       = "x-efiler-callback-secret"
+          value      = "0"
+        }
+      ]
+      action = "allow"
     }
   }
 }
