@@ -35,7 +35,7 @@ module "secrets" {
     "TWILIO_AUTH_TOKEN" = {
       description = "auth token for twilio"
     },
-    "TWILIO_MESSAGING_SERVICE" = {
+    "TWILIO_MESSAGING_SERVICE_SID" = {
       description = "messaging service sid for twilio"
     },
     "MAILGUN_API_KEY" = {
@@ -160,7 +160,7 @@ module "web" {
     SENTRY_DSN                  = module.secrets.secrets["SENTRY_DSN"].secret_arn
     TWILIO_ACCOUNT_SID          = module.secrets.secrets["TWILIO_ACCOUNT_SID"].secret_arn
     TWILIO_AUTH_TOKEN           = module.secrets.secrets["TWILIO_AUTH_TOKEN"].secret_arn
-    TWILIO_MESSAGING_SERVICE    = module.secrets.secrets["TWILIO_MESSAGING_SERVICE"].secret_arn
+    TWILIO_MESSAGING_SERVICE_SID = module.secrets.secrets["TWILIO_MESSAGING_SERVICE_SID"].secret_arn
     MAILGUN_API_KEY             = module.secrets.secrets["MAILGUN_API_KEY"].secret_arn
     MAILGUN_DOMAIN              = module.secrets.secrets["MAILGUN_DOMAIN"].secret_arn
     MAILGUN_BASIC_AUTH_NAME     = module.secrets.secrets["MAILGUN_BASIC_AUTH_NAME"].secret_arn
@@ -221,7 +221,7 @@ module "workers" {
     SENTRY_DSN                  = module.secrets.secrets["SENTRY_DSN"].secret_arn
     TWILIO_ACCOUNT_SID          = module.secrets.secrets["TWILIO_ACCOUNT_SID"].secret_arn
     TWILIO_AUTH_TOKEN           = module.secrets.secrets["TWILIO_AUTH_TOKEN"].secret_arn
-    TWILIO_MESSAGING_SERVICE    = module.secrets.secrets["TWILIO_MESSAGING_SERVICE"].secret_arn
+    TWILIO_MESSAGING_SERVICE_SID = module.secrets.secrets["TWILIO_MESSAGING_SERVICE_SID"].secret_arn
     MAILGUN_API_KEY             = module.secrets.secrets["MAILGUN_API_KEY"].secret_arn
     MAILGUN_DOMAIN              = module.secrets.secrets["MAILGUN_DOMAIN"].secret_arn
     MAILGUN_BASIC_AUTH_NAME     = module.secrets.secrets["MAILGUN_BASIC_AUTH_NAME"].secret_arn
