@@ -74,6 +74,9 @@ module "web" {
   service       = "web"
   service_short = "web"
 
+  cpu = 2048
+  memory = 4096
+
   # Wait for the deployment to be in a steady state, and rollback if it fails.
   enable_circuit_breaker          = true
   enable_circuit_breaker_rollback = true
@@ -110,6 +113,9 @@ module "workers" {
   environment   = var.environment
   service       = "worker"
   service_short = "worker"
+
+  cpu = 2048
+  memory = 4096
 
   # Wait for the deployment to be in a steady state, and rollback if it fails.
   enable_circuit_breaker          = true
