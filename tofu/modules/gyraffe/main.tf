@@ -146,18 +146,18 @@ module "web" {
   use_target_group_port_suffix = true
 
   execution_policies = [aws_iam_policy.ecs_s3_access.arn]
-  task_policies      = [aws_iam_policy.ecs_s3_access.arn]
+  task_policies      = [aws_iam_policy.ecs_s3_access.arn, module.database.iam_db_user_policy_arns[var.database_username]]
 
   environment_variables = {
     RAILS_ENV         = var.environment
     DATABASE_HOST     = module.database.cluster_endpoint
+    DATABASE_AUTH     = "iam"
+    DATABASE_USER     = var.database_username
     REVIEW_APP        = var.review_app
     SCHEMA_S3_BUCKET  = module.schemas.bucket
     SUBMISSION_BUNDLES_S3_BUCKET = module.submission_bundles.bucket
   }
   environment_secrets = {
-    DATABASE_PASSWORD           = "${module.database.secret_arn}:password"
-    DATABASE_USER               = "${module.database.secret_arn}:username"
     BASE_URL                    = module.secrets.secrets["BASE_URL"].secret_arn
     SECRET_KEY_BASE             = module.secrets.secrets["SECRET_KEY_BASE"].secret_arn
     SENTRY_DSN                  = module.secrets.secrets["SENTRY_DSN"].secret_arn
@@ -210,18 +210,18 @@ module "workers" {
   force_new_deployment   = true
 
   execution_policies = [aws_iam_policy.ecs_s3_access.arn]
-  task_policies      = [aws_iam_policy.ecs_s3_access.arn]
+  task_policies      = [aws_iam_policy.ecs_s3_access.arn, module.database.iam_db_user_policy_arns[var.database_username]]
 
   environment_variables = {
     RAILS_ENV         = var.environment
     DATABASE_HOST     = module.database.cluster_endpoint
+    DATABASE_AUTH     = "iam"
+    DATABASE_USER     = var.database_username
     REVIEW_APP        = var.review_app
     SCHEMA_S3_BUCKET  = module.schemas.bucket
     SUBMISSION_BUNDLES_S3_BUCKET = module.submission_bundles.bucket
   }
   environment_secrets = {
-    DATABASE_PASSWORD           = "${module.database.secret_arn}:password"
-    DATABASE_USER               = "${module.database.secret_arn}:username"
     BASE_URL                    = module.secrets.secrets["BASE_URL"].secret_arn
     SECRET_KEY_BASE             = module.secrets.secrets["SECRET_KEY_BASE"].secret_arn
     SENTRY_DSN                  = module.secrets.secrets["SENTRY_DSN"].secret_arn
@@ -267,6 +267,12 @@ module "database" {
   min_capacity       = 0
   max_capacity       = 10
   cluster_parameters = []
+
+  iam_db_users = {
+    (var.database_username) = {
+      privileges = "all"
+    }
+  }
 
   db_users = var.data_science_database_user != null && length(var.data_science_databases) > 0 ? {
       (var.data_science_database_user) = {

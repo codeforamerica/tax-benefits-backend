@@ -1,3 +1,8 @@
+variable "database_username" {
+  type        = string
+  description = "Username for the IAM-authenticated database user."
+}
+
 variable "data_science_database_user" {
   type        = string
   description = "Username for the data science read-only database user."
