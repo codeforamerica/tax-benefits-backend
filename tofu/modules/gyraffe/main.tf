@@ -383,6 +383,13 @@ module "cloudfront_waf" {
   passive        = var.passive_waf
   certificate_imported = var.environment == "production"
 
+  # Forward CloudFront-Viewer-Address (and the rest of the AllViewer headers) to
+  # the origin so the app can read the real client IP from the CloudFront edge.
+  # Without this, traffic arriving at the ALB carries an AWS-owned IP in
+  # X-Forwarded-For, which ActionDispatch::RemoteIp treats as a trusted proxy
+  # and rejects, leaving request.remote_ip as the ALB IP.
+  request_policy = "AllViewerAndCloudFrontHeaders-2022-06"
+
   ip_set_rules = var.allow_security_scans ? {
     tenable_one = {
       name     = "${var.project}-${var.environment}-security-scanners"
