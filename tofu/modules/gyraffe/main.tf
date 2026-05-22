@@ -404,6 +404,7 @@ module "cloudfront_waf" {
   log_group      = module.logging.log_groups["waf"]
   passive        = var.passive_waf
   certificate_imported = var.environment == "production"
+  request_policy = "AllViewerAndCloudFrontHeaders-2022-06"
 
   ip_set_rules = var.allow_security_scans ? {
     tenable_one = {
