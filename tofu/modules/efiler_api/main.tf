@@ -174,6 +174,12 @@ module "database" {
   min_capacity       = 0
   max_capacity       = 10
   cluster_parameters = []
+
+  iam_db_users = {
+    (var.database_username) = {
+      privileges = "all"
+    }
+  }
 }
 
 module "bastion" {

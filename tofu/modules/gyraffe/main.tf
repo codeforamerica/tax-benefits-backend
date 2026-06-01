@@ -279,7 +279,7 @@ module "database" {
   cluster_parameters = []
 
   iam_db_users = {
-    "${var.database_username}" = {
+    (var.database_username) = {
       privileges = "all"
     }
   }
