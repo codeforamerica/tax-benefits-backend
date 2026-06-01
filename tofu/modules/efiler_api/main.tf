@@ -100,9 +100,13 @@ module "web" {
   use_target_group_port_suffix = true
   force_new_deployment         = true
 
+  task_policies = [module.database.iam_db_user_policy_arns[var.database_username]
+
   environment_variables = {
     RAILS_ENV     = var.environment
+    DATABASE_AUTH = "iam"
     DATABASE_HOST = module.database.cluster_endpoint
+    DATABASE_USER = var.database_username
   }
 
   environment_secrets = merge(local.static_secret_names, local.api_client_secret_names)
@@ -136,9 +140,13 @@ module "workers" {
   enable_execute_command = true
   force_new_deployment   = true
 
+  task_policies = [module.database.iam_db_user_policy_arns[var.database_username]
+
   environment_variables = {
     RAILS_ENV     = var.environment
+    DATABASE_AUTH = "iam"
     DATABASE_HOST = module.database.cluster_endpoint
+    DATABASE_USER = var.database_username
   }
 
   environment_secrets = merge(local.static_secret_names, local.api_client_secret_names)
@@ -148,7 +156,7 @@ module "workers" {
 }
 
 module "database" {
-  source = "github.com/codeforamerica/tofu-modules-aws-serverless-database?ref=1.3.1"
+  source = "github.com/codeforamerica/tofu-modules-aws-serverless-database?ref=1.8.0"
 
   project             = "efiler-api"
   environment         = var.environment
@@ -160,6 +168,8 @@ module "database" {
   vpc_id          = module.vpc.vpc_id
   subnets         = module.vpc.private_subnets
   ingress_cidrs   = module.vpc.private_subnets_cidr_blocks
+  iam_authentication = true
+  enable_data_api    = true
 
   min_capacity       = 0
   max_capacity       = 10
