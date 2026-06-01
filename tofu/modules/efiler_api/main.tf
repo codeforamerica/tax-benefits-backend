@@ -100,7 +100,7 @@ module "web" {
   use_target_group_port_suffix = true
   force_new_deployment         = true
 
-  task_policies = [module.database.iam_db_user_policy_arns[var.database_username]
+  task_policies = [module.database.iam_db_user_policy_arns[var.database_username]]
 
   environment_variables = {
     RAILS_ENV     = var.environment
@@ -140,7 +140,7 @@ module "workers" {
   enable_execute_command = true
   force_new_deployment   = true
 
-  task_policies = [module.database.iam_db_user_policy_arns[var.database_username]
+  task_policies = [module.database.iam_db_user_policy_arns[var.database_username]]
 
   environment_variables = {
     RAILS_ENV     = var.environment

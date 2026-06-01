@@ -149,7 +149,10 @@ module "web" {
   use_target_group_port_suffix = true
 
   execution_policies = [aws_iam_policy.ecs_s3_access.arn]
-  task_policies      = [aws_iam_policy.ecs_s3_access.arn, module.database.iam_db_user_policy_arns[var.database_username]
+  task_policies      = [
+    aws_iam_policy.ecs_s3_access.arn,
+    module.database.iam_db_user_policy_arns[var.database_username]
+  ]
 
   environment_variables = {
     RAILS_ENV         = var.environment
@@ -214,7 +217,10 @@ module "workers" {
   force_new_deployment   = true
 
   execution_policies = [aws_iam_policy.ecs_s3_access.arn]
-  task_policies      = [aws_iam_policy.ecs_s3_access.arn, module.database.iam_db_user_policy_arns[var.database_username]
+  task_policies      = [
+    aws_iam_policy.ecs_s3_access.arn,
+    module.database.iam_db_user_policy_arns[var.database_username]
+  ]
 
   environment_variables = {
     RAILS_ENV         = var.environment
