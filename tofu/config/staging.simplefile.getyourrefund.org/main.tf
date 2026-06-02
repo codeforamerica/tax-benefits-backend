@@ -33,7 +33,7 @@ module "gyraffe" {
     }
   }
 
-  database_user = var.database_user
+  database_username = var.database_username
   data_science_database_user = var.data_science_database_user
   data_science_databases = var.data_science_databases
 }
