@@ -71,7 +71,7 @@ variable "security_scan_cidrs" {
 variable "rate_limit_requests" {
   type        = number
   description = "Number of requests allowed in the rate limit window. Minimum of 10, or set to 0 to disable rate limiting."
-  default     = 200
+  default     = 400
 }
 
 variable "rate_limit_window" {
