@@ -35,3 +35,8 @@ variable "ingress_cidrs" {
   description = "List of additional CIDR blocks to allow traffic from."
   default = []
 }
+
+variable "database_username" {
+  type        = string
+  description = "Username for the database IAM user."
+}
