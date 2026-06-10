@@ -32,7 +32,7 @@ module "gyraffe" {
       region     = "us-east-1",
       cidr       = "10.51.0.0/16"
     },
-    demo_efiler_api = {
+    efiler_api = {
       account_id = "300080618842",
       vpc_id = "vpc-06c9bb3d6f4b4c85d",
       region = "us-east-1",
